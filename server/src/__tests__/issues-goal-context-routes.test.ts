@@ -110,6 +110,7 @@ vi.mock("../services/index.js", () => ({
   }),
   accessService: () => mockAccessService,
   agentService: () => mockAgentService,
+  agentDeliberationRunService: () => ({}),
   compoundFollowupService: () => ({ processChecklist: vi.fn(async () => []) }),
   documentService: () => mockDocumentsService,
   environmentService: () => mockEnvironmentService,

@@ -27,6 +27,7 @@ const mockSecretService = vi.hoisted(() => ({
 const mockLogActivity = vi.hoisted(() => vi.fn());
 
 vi.mock("../services/index.js", () => ({
+  agentDeliberationRunService: () => ({}),
   secretService: () => mockSecretService,
   logActivity: mockLogActivity,
 }));

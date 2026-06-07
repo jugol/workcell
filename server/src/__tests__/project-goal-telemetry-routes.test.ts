@@ -34,6 +34,7 @@ vi.mock("../telemetry.js", () => ({
 }));
 
 vi.mock("../services/index.js", () => ({
+  agentDeliberationRunService: () => ({}),
   environmentService: () => mockEnvironmentService,
   goalService: () => mockGoalService,
   logActivity: mockLogActivity,
@@ -53,6 +54,7 @@ function registerModuleMocks() {
   }));
 
   vi.doMock("../services/index.js", () => ({
+    agentDeliberationRunService: () => ({}),
     environmentService: () => mockEnvironmentService,
     goalService: () => mockGoalService,
     logActivity: mockLogActivity,

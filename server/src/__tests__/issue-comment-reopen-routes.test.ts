@@ -126,6 +126,7 @@ vi.mock("../services/index.js", () => ({
   }),
   accessService: () => mockAccessService,
   agentService: () => mockAgentService,
+  agentDeliberationRunService: () => ({}),
   compoundFollowupService: () => ({ processChecklist: vi.fn(async () => []) }),
   issueRequiresProofForDone: (issue: { workMode?: string | null }) => issue.workMode !== "planning",
   documentService: () => ({}),

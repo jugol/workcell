@@ -37,6 +37,7 @@ vi.mock("../services/index.js", () => ({
     // suite's create-route assertions reach svc.create (no QA agents → no policy injected).
     list: vi.fn(async () => []),
   }),
+  agentDeliberationRunService: () => ({}),
   companyService: () => ({
     getById: vi.fn(async () => ({ id: "company-1", attachmentMaxBytes: 10 * 1024 * 1024 })),
   }),

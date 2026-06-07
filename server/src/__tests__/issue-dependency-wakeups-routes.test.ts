@@ -27,6 +27,7 @@ vi.mock("../services/index.js", () => ({
   agentService: () => ({
     getById: vi.fn(),
   }),
+  agentDeliberationRunService: () => ({}),
   compoundFollowupService: () => ({ processChecklist: vi.fn(async () => []) }),
   issueRequiresProofForDone: (issue: { workMode?: string | null }) => issue.workMode !== "planning",
   documentService: () => ({

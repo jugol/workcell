@@ -42,6 +42,7 @@ const mockInstanceSettingsService = vi.hoisted(() => ({
 
 vi.mock("../services/index.js", () => ({
   agentService: () => mockAgentService,
+  agentDeliberationRunService: () => ({}),
   agentInstructionsService: () => ({}),
   accessService: () => mockAccessService,
   approvalService: () => ({}),

@@ -28,6 +28,7 @@ vi.mock("../services/activity.js", () => ({
 }));
 
 vi.mock("../services/index.js", () => ({
+  agentDeliberationRunService: () => ({}),
   issueService: () => mockIssueService,
   heartbeatService: () => mockHeartbeatService,
 }));

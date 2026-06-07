@@ -16,6 +16,7 @@ vi.mock("../services/index.js", () => ({
   agentService: () => ({
     getById: vi.fn(),
   }),
+  agentDeliberationRunService: () => ({}),
   boardAuthService: () => ({
     createChallenge: vi.fn(),
     resolveBoardAccess: vi.fn(),

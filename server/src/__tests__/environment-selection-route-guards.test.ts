@@ -71,6 +71,7 @@ vi.mock("../services/index.js", () => ({
     // suite's route under test reaches svc.create (no QA agents → no policy injected).
     list: vi.fn(async () => []),
   }),
+  agentDeliberationRunService: () => ({}),
   executionWorkspaceService: () => ({}),
   goalService: () => ({
     getById: vi.fn(),
