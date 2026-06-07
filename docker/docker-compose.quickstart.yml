@@ -1,0 +1,18 @@
+services:
+  workcell:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "${WORKCELL_PORT:-3100}:3100"
+    environment:
+      HOST: "0.0.0.0"
+      WORKCELL_HOME: "/workcell"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      WORKCELL_DEPLOYMENT_MODE: "authenticated"
+      WORKCELL_DEPLOYMENT_EXPOSURE: "private"
+      WORKCELL_PUBLIC_URL: "${WORKCELL_PUBLIC_URL:-http://localhost:3100}"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}"
+    volumes:
+      - "${WORKCELL_DATA_DIR:-../data/docker-workcell}:/workcell"

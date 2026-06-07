@@ -1,0 +1,57 @@
+{
+  "name": "workcell",
+  "version": "0.3.1",
+  "description": "Workcell CLI — orchestrate AI agent teams to run a business",
+  "type": "module",
+  "bin": {
+    "workcell": "./dist/index.js"
+  },
+  "keywords": [
+    "workcell",
+    "ai",
+    "agents",
+    "orchestration",
+    "cli"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/workcell/workcell",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/workcell/workcell",
+  "bugs": {
+    "url": "https://github.com/workcell/workcell/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "node --input-type=module -e \"import esbuild from 'esbuild'; import config from './esbuild.config.mjs'; await esbuild.build(config);\" && node -e \"require('fs').chmodSync('dist/index.js',0o755)\"",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "@workcell/adapter-claude-local": "workspace:*",
+    "@workcell/adapter-codex-local": "workspace:*",
+    "@workcell/adapter-utils": "workspace:*",
+    "@workcell/db": "workspace:*",
+    "@workcell/server": "workspace:*",
+    "@workcell/shared": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "dotenv": "^17.0.1",
+    "commander": "^13.1.0",
+    "embedded-postgres": "^18.1.0-beta.16",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

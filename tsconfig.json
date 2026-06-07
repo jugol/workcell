@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./packages/adapter-utils" },
+    { "path": "./packages/mcp-server" },
+    { "path": "./packages/shared" },
+    { "path": "./packages/db" },
+    { "path": "./packages/adapters/claude-local" },
+    { "path": "./packages/adapters/codex-local" },
+    { "path": "./server" },
+    { "path": "./ui" },
+    { "path": "./cli" }
+  ]
+}

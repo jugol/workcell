@@ -1,0 +1,11 @@
+-- WC-163: optimistic-concurrency version column for issues.execution_state.
+--
+-- The issue PATCH path recomputes execution_state from a prior read, so two
+-- concurrent PATCHes (e.g. a reviewer approving a stage vs. an agent setting a
+-- reviewRequest) could silently clobber each other's executionState write.
+-- svc.update now reads this version, guards the executionState write WHERE the
+-- version is unchanged, and bumps it — so the loser of a race gets a 409 conflict
+-- instead of a silent lost update. An integer token (rather than comparing the raw
+-- jsonb pre-image) avoids the serialization-mismatch trap that broke the first
+-- OCC attempt: a processed read-model jsonb never byte-matches the stored jsonb.
+ALTER TABLE "issues" ADD COLUMN IF NOT EXISTS "execution_state_version" integer DEFAULT 0 NOT NULL;

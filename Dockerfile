@@ -1,0 +1,79 @@
+# syntax=docker/dockerfile:1.20
+FROM node:lts-trixie-slim AS base
+ARG USER_UID=1000
+ARG USER_GID=1000
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates gosu curl gh git wget ripgrep python3 \
+  && rm -rf /var/lib/apt/lists/* \
+  && corepack enable
+
+# Modify the existing node user/group to have the specified UID/GID to match host user
+RUN usermod -u $USER_UID --non-unique node \
+  && groupmod -g $USER_GID --non-unique node \
+  && usermod -g $USER_GID -d /workcell node
+
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+COPY cli/package.json cli/
+COPY server/package.json server/
+COPY ui/package.json ui/
+COPY packages/shared/package.json packages/shared/
+COPY packages/db/package.json packages/db/
+COPY packages/adapter-utils/package.json packages/adapter-utils/
+COPY packages/mcp-server/package.json packages/mcp-server/
+COPY packages/adapters/claude-local/package.json packages/adapters/claude-local/
+COPY packages/adapters/codex-local/package.json packages/adapters/codex-local/
+COPY packages/plugins/sdk/package.json packages/plugins/sdk/
+COPY --parents packages/plugins/sandbox-providers/./*/package.json packages/plugins/sandbox-providers/
+COPY packages/plugins/workcell-plugin-fake-sandbox/package.json packages/plugins/workcell-plugin-fake-sandbox/
+COPY packages/plugins/plugin-llm-wiki/package.json packages/plugins/plugin-llm-wiki/
+COPY packages/plugins/plugin-workspace-diff/package.json packages/plugins/plugin-workspace-diff/
+COPY patches/ patches/
+COPY scripts/link-plugin-dev-sdk.mjs scripts/
+
+RUN pnpm install --frozen-lockfile
+
+FROM base AS build
+WORKDIR /app
+COPY --from=deps /app /app
+COPY . .
+RUN pnpm --filter @workcell/ui build
+RUN pnpm --filter @workcell/plugin-sdk build
+RUN pnpm --filter @workcell/server build
+RUN test -f server/dist/index.js || (echo "ERROR: server build output missing" && exit 1)
+
+FROM base AS production
+ARG USER_UID=1000
+ARG USER_GID=1000
+WORKDIR /app
+COPY --chown=node:node --from=build /app /app
+RUN npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/codex@latest opencode-ai \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends openssh-client jq \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /workcell \
+  && chown node:node /workcell
+
+COPY scripts/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENV NODE_ENV=production \
+  HOME=/workcell \
+  HOST=0.0.0.0 \
+  PORT=3100 \
+  SERVE_UI=true \
+  WORKCELL_HOME=/workcell \
+  WORKCELL_INSTANCE_ID=default \
+  USER_UID=${USER_UID} \
+  USER_GID=${USER_GID} \
+  WORKCELL_CONFIG=/workcell/instances/default/config.json \
+  WORKCELL_DEPLOYMENT_MODE=authenticated \
+  WORKCELL_DEPLOYMENT_EXPOSURE=private \
+  OPENCODE_ALLOW_ALL_MODELS=true
+
+VOLUME ["/workcell"]
+EXPOSE 3100
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["node", "--import", "./server/node_modules/tsx/dist/loader.mjs", "server/dist/index.js"]

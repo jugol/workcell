@@ -1,0 +1,80 @@
+# === Workcell (upstream) base ===
+node_modules
+node_modules/
+**/node_modules
+**/node_modules/
+dist/
+ui/storybook-static/
+.env
+*.tsbuildinfo
+drizzle/meta/
+.vite/
+coverage/
+.DS_Store
+data/
+.workcell/
+.pnpm-store/
+tmp-*
+cli/tmp/
+*.log
+
+# Graphify (D20) code-graph build output — `workcell code-graph from-repo`
+# writes <repo>/graphify-out/graph.json; it is a regenerable build artifact.
+graphify-out/
+**/graphify-out/
+
+# Scratch/seed scripts (but not scripts/ dir)
+check-*.mjs
+!scripts/check-*.mjs
+new-agent*.json
+newcompany.json
+seed-*.mjs
+server/check-*.mjs
+server/seed-*.mjs
+packages/db/seed-*.mjs
+
+# npm publish build artifacts
+cli/package.dev.json
+
+# Build artifacts in src directories
+server/src/**/*.js
+server/src/**/*.js.map
+server/src/**/*.d.ts
+server/src/**/*.d.ts.map
+tmp/
+feedback-export-*
+diagnostics/
+
+# Editor / tool temp files
+*.tmp
+.vscode/
+.claude/settings.local.json
+.workcell-local/
+/.idea/
+/.agents/
+
+# Doc maintenance cursor
+.doc-review-cursor
+
+# Playwright
+/test-results/
+/playwright-report/
+tests/e2e/test-results/
+tests/e2e/playwright-report/
+tests/release-smoke/test-results/
+tests/release-smoke/playwright-report/
+.superset/
+.superpowers/
+.claude/worktrees/
+.herenow
+
+# === Workcell (issueflow) additions ===
+# issueflow 병렬 lane 워크트리
+.worktrees/
+# 시크릿
+.env.*
+!.env.example
+*.key
+*.pem
+# OS
+Thumbs.db

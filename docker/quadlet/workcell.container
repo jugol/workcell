@@ -1,0 +1,23 @@
+[Unit]
+Description=Workcell AI Agent Orchestrator
+Requires=workcell-db.service
+After=workcell-db.service
+
+[Container]
+Image=workcell-local
+ContainerName=workcell
+Pod=workcell.pod
+Volume=%h/.local/share/workcell:/workcell:Z
+Environment=HOST=0.0.0.0
+Environment=WORKCELL_HOME=/workcell
+Environment=WORKCELL_DEPLOYMENT_MODE=authenticated
+Environment=WORKCELL_DEPLOYMENT_EXPOSURE=private
+Environment=WORKCELL_PUBLIC_URL=http://localhost:3100
+EnvironmentFile=%h/.config/containers/systemd/workcell.env
+
+[Service]
+Restart=on-failure
+TimeoutStartSec=120
+
+[Install]
+WantedBy=default.target

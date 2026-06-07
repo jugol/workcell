@@ -1,0 +1,3 @@
+[Pod]
+PodName=workcell
+PublishPort=3100:3100
