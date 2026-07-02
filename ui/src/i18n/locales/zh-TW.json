@@ -1,0 +1,6049 @@
+{
+  "app": {
+    "noCompanies": {
+      "title": "建立您的第一家公司",
+      "description": "從建立公司開始。",
+      "newCompany": "新公司"
+    }
+  },
+  "agentConfigForm": {
+    "deliberation": {
+      "heading": "雙腦（自我審查）",
+      "enabledLabel": "啟用雙腦",
+      "hint": "啟用後，此代理人的議題工作會以自我審查回合進行：工作腦（A）執行工作，審查腦（B，可選用不同的模型）批判性地審查並修訂結果，待審查通過後結束。相同的腦設定也會用於臨時的審議（審議面板）。",
+      "brainALabel": "工作腦（A）",
+      "brainAIsAgent": "此代理人本身——直接沿用上方的轉接器與模型設定運作。",
+      "reviewModeLabel": "審查模式",
+      "reviewModeHint": "單一＝一個審查腦。面板＝多個審查腦各自獨立審查，再依共識（多數決）決定——更為穩健，但成本較高。",
+      "reviewModeSingle": "單一（一個審查腦）",
+      "reviewModePanel": "面板（獨立多數決）",
+      "brainBLabel": "審查腦（B）",
+      "inheritDefault": "預設（代理人的預設模型）",
+      "differentModelNote": "提示：審查腦應使用與工作腦不同的模型／廠商——相同的模型會繼承自身的盲點（生成者—驗證者落差）。",
+      "trackLabel": "審查重點（軌道）",
+      "trackHint": "自動＝依工作成果進行推理。產出物＝直接執行並驗證，依行為判斷。研究＝對照證據交叉檢核主張。",
+      "trackAuto": "自動",
+      "trackA": "產出物（執行並驗證）",
+      "trackB": "研究（交叉檢核證據）",
+      "maxRoundsLabel": "最大回合數（maxRounds）",
+      "maxRoundsHint": "A↔B 在未通過前可往來的最大次數（1–8）。",
+      "pairNote": "注意：此雙腦是單一代理人的內部共識，與既有兩個代理人協作的配對設定不同。",
+      "panelLabel": "審查面板（獨立成員）",
+      "panelEmpty": "請至少新增一位成員（留空時行為等同單一審查）。",
+      "panelRemove": "移除成員",
+      "panelAdd": "＋ 新增成員",
+      "panelMinAgreeLabel": "共識門檻（minAgree）",
+      "panelMinAgreeHint": "達到此數量的審查者通過即視為通過。留空則採多數決。",
+      "inheritAdapter": "代理人預設（繼承轉接器）"
+    },
+    "unsavedChanges": "未儲存的變更",
+    "saving": "儲存中...",
+    "save": "儲存",
+    "identityHeading": "身分識別",
+    "nameLabel": "名稱",
+    "namePlaceholder": "代理人名稱",
+    "titleLabel": "職稱",
+    "titlePlaceholder": "例如：工程副總裁",
+    "reportsToLabel": "回報對象",
+    "chooseManagerLabel": "選擇主管…",
+    "capabilitiesLabel": "能力",
+    "capabilitiesPlaceholder": "描述此代理人的能力...",
+    "promptTemplateLabel": "提示範本",
+    "promptTemplateHint": "提示範本會在每次心跳時重播。保持簡潔且動態，以避免重複的 token 成本與快取更新。",
+    "executionHeading": "執行",
+    "defaultEnvironmentLabel": "預設環境",
+    "defaultEnvironmentHint": "代理人層級的預設執行目標。專案和議題設定仍可覆寫此設定。",
+    "companyDefaultOption": "團隊預設（本機）",
+    "adapterHeading": "介面卡",
+    "testing": "測試中...",
+    "test": "測試",
+    "adapterTypeLabel": "介面卡類型",
+    "environmentTestFailed": "環境測試失敗",
+    "workingDirectoryLabel": "工作目錄（已棄用）",
+    "workingDirectoryPlaceholder": "/path/to/project",
+    "permissionsHeading": "權限與設定",
+    "commandLabel": "指令",
+    "bootstrapPromptLabel": "引導提示（舊版）",
+    "bootstrapPromptPlaceholder": "首次執行的選填初始設定提示",
+    "bootstrapPromptHint": "引導提示為舊版功能，將在未來版本中移除。請考慮將此內容移至代理人的提示範本或指示檔案。",
+    "extraArgsLabel": "額外引數（以逗號分隔）",
+    "extraArgsPlaceholder": "例如：--verbose, --foo=bar",
+    "envVarsLabel": "環境變數",
+    "timeoutLabel": "逾時（秒）",
+    "graceLabel": "中斷寬限期（秒）",
+    "runPolicyHeading": "執行原則",
+    "heartbeatOnIntervalLabel": "按間隔心跳",
+    "secLabel": "秒",
+    "runHeartbeatEveryPrefix": "每隔以下時間執行心跳",
+    "advancedRunPolicyTitle": "進階執行原則",
+    "wakeOnDemandLabel": "按需喚醒",
+    "cooldownLabel": "冷卻時間（秒）",
+    "maxConcurrentRunsLabel": "最大同時執行數",
+    "continueAfterMaxTurnStopLabel": "達到最大回合停止後繼續",
+    "continuationAttemptsLabel": "繼續嘗試次數",
+    "continuationDelayLabel": "繼續延遲（秒）",
+    "resultStatusPassed": "通過",
+    "resultStatusWarnings": "警告",
+    "resultStatusFailed": "失敗",
+    "resultHintPrefix": "提示：",
+    "comingSoon": "即將推出",
+    "experimentalBadge": "實驗性",
+    "model": {
+      "primaryModel": "主要模型",
+      "loadFailed": "無法載入介面卡模型。",
+      "openCodeDiscovery": "即時 OpenCode 模型探索僅適用於本機環境。對 {{name}} 使用精選清單與手動輸入。",
+      "default": "預設",
+      "usesLocalCli": "使用您本機 CLI 的模型",
+      "useManual": "手動指定模型",
+      "noModelDetected": "尚未偵測到模型。請手動輸入提供者/模型。",
+      "noModelsFound": "找不到模型。"
+    },
+    "cheapModel": {
+      "adapterDefault": "介面卡預設 · {{model}}",
+      "noAdapterDefault": "無介面卡預設 — 選擇較低成本的模型",
+      "heading": "低成本模型",
+      "description": "在執行請求低成本設定檔時使用（例如：例行摘要）。主要模型維持不變。",
+      "fallbackBefore": "未明確選取低成本模型 — 執行時回退至",
+      "noDefaultWarning": "未選取低成本模型且介面卡無預設。低成本通道的執行將繼續使用主要模型並附上回退備註。"
+    }
+  },
+  "agents": {
+    "title": "代理人",
+    "selectCompany": "選擇團隊以檢視代理人。",
+    "tabs": {
+      "all": "全部",
+      "active": "進行中",
+      "paused": "已暫停",
+      "error": "錯誤"
+    },
+    "filters": "篩選",
+    "showTerminated": "顯示已終止",
+    "newAgent": "新增代理人",
+    "countUnit": "位代理人",
+    "countUnitPlural": "位代理人",
+    "recommendedTeamHint": "Workcell 開發團隊以協調者 + 工程師 + 設計師 + QA 的組合運作最佳。仍缺少的角色：",
+    "emptyMessage": "建立您的第一位代理人即可開始。",
+    "noMatch": "沒有符合所選篩選條件的代理人。",
+    "noOrgHierarchy": "尚未定義組織層級。",
+    "live": "即時"
+  },
+  "deliberation": {
+    "brain": {
+      "a": "A 腦",
+      "b": "B 腦",
+      "unknown": "腦"
+    },
+    "action": {
+      "accept": "審查並接受",
+      "revise": "修訂",
+      "propose": "提案"
+    },
+    "status": {
+      "completed": "已完成",
+      "failed": "失敗",
+      "running": "執行中"
+    },
+    "feedbackLabel": "意見回饋",
+    "acceptedBy": "由 {{brain}} 接受",
+    "roundsSummary": "{{rounds}} 回合",
+    "taskLabel": "任務",
+    "awaitingTurns": "雙腦開始審議中…",
+    "noTurns": "尚無回合紀錄。",
+    "finalOutputLabel": "最終議定結果",
+    "heading": "內部審議執行（雙腦）",
+    "subheading": "兩個腦反覆進行提案 → 審查 → 修訂，直到對單一結論達成共識。",
+    "liveDisabled": "即時 LLM 已停用（WORKCELL_PAIR_LIVE_LLM）。審議執行僅在開啟即時 LLM 時才能運作。",
+    "taskPlaceholder": "輸入兩個腦需要達成共識的任務…",
+    "maxRoundsLabel": "最大回合數（選填）",
+    "maxRoundsPlaceholder": "預設",
+    "starting": "啟動中…",
+    "run": "執行審議",
+    "detailError": "載入審議執行失敗。",
+    "loadingRun": "載入審議執行中…",
+    "pastRuns": "近期審議執行",
+    "untitledRun": "（無任務）"
+  },
+  "inbox": {
+    "designReview": {
+      "pendingCount": "{{count}} 份시안待看板審查",
+      "pendingOne": "시안待看板審查",
+      "label": "設計審查"
+    },
+    "tabs": {
+      "todo": "待辦",
+      "mine": "我的",
+      "recent": "最近",
+      "unread": "未讀",
+      "blocked": "已封鎖",
+      "all": "全部"
+    },
+    "emptyState": {
+      "todoZero": "目前沒有需要處理的事項——需要您處理的核可與審查會顯示在這裡。",
+      "noSearchMatch": "沒有符合搜尋條件的收件匣項目。",
+      "inboxZero": "收件匣清空。",
+      "noNew": "沒有新的收件匣項目。",
+      "noRecent": "沒有最近的收件匣項目。",
+      "noFilterMatch": "沒有符合篩選條件的收件匣項目。"
+    },
+    "breadcrumb": "收件匣",
+    "selectCompany": "選擇團隊以檢視收件匣。",
+    "searchPlaceholder": "搜尋收件匣…",
+    "toolbar": {
+      "group": "分組",
+      "groupAria": "議題分組",
+      "sort": "排序",
+      "sortAria": "議題排序",
+      "columnsTitle": "選擇收件匣中要顯示的欄位",
+      "disableNesting": "停用父子層級嵌套",
+      "enableNesting": "啟用父子層級嵌套"
+    },
+    "groupBy": {
+      "none": "無",
+      "type": "類型",
+      "assignee": "負責人",
+      "project": "專案",
+      "workspace": "工作區"
+    },
+    "markAllRead": {
+      "pending": "標記中…",
+      "button": "全部標為已讀",
+      "confirmTitle": "全部標為已讀？",
+      "cancel": "取消"
+    },
+    "categoryFilter": {
+      "placeholder": "類別",
+      "all": "所有類別",
+      "myRecentIssues": "我的近期議題",
+      "joinRequests": "加入申請",
+      "approvals": "審核",
+      "failedRuns": "失敗執行",
+      "alerts": "警示"
+    },
+    "approvalFilter": {
+      "placeholder": "審核狀態",
+      "all": "所有審核狀態",
+      "actionable": "待處理",
+      "resolved": "已解決"
+    },
+    "searchSection": {
+      "archived": "已封存",
+      "other": "其他結果"
+    },
+    "newIssueInGroup": "在 {{group}} 中建立新議題",
+    "earlierDivider": "更早",
+    "alerts": {
+      "heading": "警示",
+      "agentHas": "代理有",
+      "agentsHave": "代理有",
+      "errorsSuffix": "個錯誤",
+      "budgetAt": "預算已達",
+      "utilizationThisMonth": "本月使用率"
+    },
+    "markAsRead": "標為已讀",
+    "dismissFromInbox": "從收件匣中移除",
+    "dismiss": "移除",
+    "approve": "核准",
+    "reject": "拒絕",
+    "failedRun": {
+      "title": "執行失敗",
+      "retrying": "重試中…",
+      "retry": "重試"
+    },
+    "approval": {
+      "requestedBy": "由 {{name}} 申請",
+      "updated": "{{time}} 更新"
+    },
+    "joinRequest": {
+      "requestedFromIp": "於 {{time}} 從 IP {{ip}} 申請",
+      "adapter": "介接器：{{type}}"
+    },
+    "errors": {
+      "approveFailed": "核准失敗",
+      "rejectFailed": "拒絕失敗",
+      "approveJoinFailed": "核准加入申請失敗",
+      "rejectJoinFailed": "拒絕加入申請失敗",
+      "retrySkipped": "已略過重試。",
+      "archiveFailed": "封存議題失敗",
+      "undoArchiveFailed": "取消收件匣封存失敗",
+      "loadFailed": "載入收件匣項目失敗，請重試。"
+    }
+  },
+  "issueDesignCompare": {
+    "previewTitle": "設計預覽：{{title}}",
+    "noPreview": "此設計沒有可用的預覽。",
+    "title": "重現——設計系統檢查",
+    "subtitle": "將擷取出的設計系統（原始基準）與重現的畫面樣稿並排比較。",
+    "tokenSummary": "{{colors}} 種顏色 · {{fontSizes}} 種字級",
+    "systemLabel": "擷取的設計系統（基準）",
+    "reproducedLabel": "重現的畫面樣稿",
+    "reproducedEmpty": "尚無重現的樣稿——設計師依此設計系統重現畫面後，便會顯示於此。"
+  },
+  "issueDesignReview": {
+    "expandPreview": "展開",
+    "openPreviewNewTab": "在新分頁開啟",
+    "designRequest": {
+      "heading": "設計任務——製作 시안",
+      "body": "此議題是 시안製作任務，本身不需要設計。請為母畫面建立設計並附加到母議題，接著申請看板審查——核准後，母議題的實作即會繼續。",
+      "attachTo": "將 시안附加到 {{parent}} →",
+      "attachToParent": "將 시안附加到母議題 →",
+      "reviewHeading": "設計任務——시안 正在等待看板審查",
+      "reviewBody": "此設計任務帶有自己的 시안，正在等待看板審查。請在此核准或要求修改——核准後，母議題的設計關卡即會解除。",
+      "openParent": "開啟母議題 {{parent}} →",
+      "openParentGeneric": "開啟母議題 →"
+    },
+    "requirement": {
+      "setByAi": "· 由 AI 設定",
+      "exempt": "不需要設計——此議題已豁免設計關卡",
+      "required": "等待設計——此議題的實作以已核准的設計為目標",
+      "met": "設計優先——以下已核准的設計為實作目標",
+      "makeRequired": "要求設計",
+      "makeExempt": "標記為豁免"
+    },
+    "screens": {
+      "count": "此議題共有 {{count}} 個畫面",
+      "approvedCount": "已核准 {{approved}}/{{total}}",
+      "canStartDev": " · 可開始開發"
+    },
+    "approvedImplementing": "設計已核准。這代表「依此樣稿實作」，並不表示議題已完成——負責人需依此樣稿實作、附上佐證，之後才能將議題標記為完成。（議題完成的核可是另外處理。）",
+    "title": "設計（唯一真實來源）",
+    "subtitle": "此設計是本次工作的唯一真實來源——開發與 QA 均以此為依據。",
+    "loading": "載入設計中…",
+    "empty": "尚無設計——設計師附加後，您可以在此處查看。",
+    "noPreview": "此設計無可用預覽。",
+    "previewTitle": "設計預覽：{{title}}",
+    "hold": "設計審查中——核准後，此設計將成為實作目標。",
+    "candidatesNote": "尚無設計被設為唯一真實來源。選擇一個使其具有權威性並請求審查。",
+    "designSystemNote": "設計遵循專案的設計系統。",
+    "projectDesignSystem": "專案設計系統 →",
+    "target": {
+      "title": "實作目標",
+      "view": "查看設計",
+      "note": "請完全按照此設計實作——QA 將對照驗證結果。"
+    },
+    "reasonPlaceholder": "應該更改什麼？（可選）",
+    "submitting": "請求中…",
+    "approving": "核准中…",
+    "requesting": "傳送中…",
+    "action": {
+      "submit": "請求審查",
+      "approve": "核准",
+      "requestChanges": "請求修改",
+      "sendChanges": "傳送修改請求",
+      "reopen": "請求修改",
+      "resubmit": "重新提交審查",
+      "designate": "設為唯一真實來源並請求審查"
+    },
+    "attach": {
+      "button": "附加設計",
+      "titlePlaceholder": "設計標題",
+      "urlPlaceholder": "https://… 或留空",
+      "submit": "附加",
+      "submitting": "附加中…"
+    },
+    "toast": {
+      "failed": {
+        "title": "設計審查操作失敗",
+        "body": "Workcell 無法更新設計審查。"
+      }
+    },
+    "pick": {
+      "button": "從設計系統中選擇",
+      "loading": "載入設計系統中…",
+      "empty": "專案設計系統中尚無畫面設計。",
+      "use": "設為唯一真實來源",
+      "close": "取消"
+    }
+  },
+  "issuePlanRevision": {
+    "title": "企劃（기획）",
+    "subtitle": "提供對此計劃的回饋，規劃者將據此修訂。",
+    "feedbackPlaceholder": "規劃者應對此計劃做出哪些更改？",
+    "sending": "傳送中…",
+    "action": {
+      "requestRevision": "請求計劃修訂",
+      "send": "傳送給規劃者",
+      "cancel": "取消"
+    },
+    "toast": {
+      "success": {
+        "title": "已請求計劃修訂",
+        "body": "已將您的回饋傳送給規劃者以修訂計劃。"
+      },
+      "failed": {
+        "title": "無法請求計劃修訂",
+        "body": "Workcell 無法請求計劃修訂。"
+      }
+    }
+  },
+  "pairBadge": {
+    "labelShort": "⇄ 配對",
+    "label": "⇄ 配對：{{name}}",
+    "title": "與 {{name}} 配對於 {{ref}}",
+    "unknownCounterpart": "未指派"
+  },
+  "projectWorkspaceDetail": {
+    "relocateDone": "已移動資料夾並更新路徑：{{path}}",
+    "relocateTitle": "移動儲存庫位置",
+    "relocateHint": "一次完成將此工作區的程式碼資料夾移至新路徑並更新 cwd。若有進行中的工作階段或執行中的開發伺服器，請先清理（鎖定的資料夾會被拒絕）。",
+    "relocateCurrent": "目前位置",
+    "relocateAbsolute": "新路徑必須是絕對路徑。",
+    "relocatePlaceholder": "新的絕對路徑（例如 C:\\Project\\loing\\MyApp）",
+    "relocateAction": "移動位置",
+    "breadcrumbProjects": "專案",
+    "breadcrumbWorkspaces": "工作區",
+    "errorSaveWorkspace": "儲存工作區失敗。",
+    "errorUpdateWorkspace": "更新工作區失敗。",
+    "runtimeJobCompleted": "工作區任務已完成。",
+    "runtimeServiceStopped": "工作區服務已停止。議題執行未暫停。",
+    "runtimeServiceRestarted": "工作區服務已重啟。議題執行未暫停。",
+    "runtimeServiceStarted": "工作區服務已啟動。",
+    "errorControlCommands": "控制工作區指令失敗。",
+    "loading": "正在載入工作區…",
+    "errorLoad": "載入工作區失敗",
+    "notFound": "此專案找不到工作區。",
+    "backToWorkspaces": "返回工作區清單",
+    "kicker": "專案工作區",
+    "makePrimary": "設為主要",
+    "primaryBadge": "這是專案的主要程式碼庫工作區。",
+    "configIntro": "設定 Workcell 附加至此專案的具體工作區。這些值驅動每個工作區的簽出行為、子執行工作區的預設執行時服務，並允許在某個工作區需要特殊處理時覆蓋設定或清理指令。",
+    "fieldWorkspaceName": "工作區名稱",
+    "fieldVisibility": "可見性",
+    "fieldSourceType": "來源類型",
+    "fieldLocalPath": "本機路徑",
+    "fieldRepoUrl": "儲存庫 URL",
+    "fieldRepoRef": "儲存庫引用",
+    "fieldDefaultRef": "預設引用",
+    "fieldSharedWorkspaceKey": "共享工作區金鑰",
+    "fieldRemoteProvider": "遠端提供者",
+    "fieldRemoteWorkspaceRef": "遠端工作區引用",
+    "fieldSetupCommand": "設定指令",
+    "hintSetupCommand": "當此工作區需要自訂初始化時執行",
+    "fieldCleanupCommand": "清理指令",
+    "hintCleanupCommand": "在專案層級執行工作區拆除前執行",
+    "advancedRuntimeJsonSummary": "進階執行時 JSON",
+    "advancedRuntimeJsonDescription": "Workcell 從此 JSON 衍生服務和任務。建議先編輯已命名的指令；對進階生命週期、連接埠、就緒狀態或環境設定使用原始 JSON。",
+    "fieldWorkspaceCommandsJson": "工作區指令 JSON",
+    "hintWorkspaceCommandsJson": "執行工作區繼承此設定，除非已覆蓋。舊版 `services` 陣列仍然有效，但 `commands` 同時支援服務和任務。",
+    "saveChanges": "儲存變更",
+    "reset": "重設",
+    "noUnsavedChanges": "沒有未儲存的變更。",
+    "workspaceFacts": "工作區資訊",
+    "currentState": "目前狀態",
+    "detailProject": "專案",
+    "detailWorkspaceId": "工作區 ID",
+    "detailRepo": "儲存庫",
+    "detailUpdated": "更新時間",
+    "none": "無",
+    "workspaceCommands": "工作區指令",
+    "servicesAndJobs": "服務與任務",
+    "servicesAndJobsDescription": "長期執行的服務在此受監督，而一次性任務則按需對此工作區執行。執行工作區繼承此設定，除非已覆蓋。",
+    "serviceEmptyStarted": "此工作區尚未啟動任何服務。",
+    "serviceEmptyNoConfig": "此工作區尚未定義任何工作區指令設定。",
+    "jobEmpty": "此工作區尚未設定任何一次性任務。",
+    "disabledHint": "專案工作區需要工作目錄才能執行本機指令，服務還需要執行時設定。",
+    "loadingPlugin": "正在載入工作區外掛...",
+    "backToConfiguration": "返回設定",
+    "tabs": {
+      "configuration": "設定"
+    },
+    "visibility": {
+      "default": "預設",
+      "advanced": "進階"
+    },
+    "sourceType": {
+      "local_path": {
+        "label": "本機 Git 簽出",
+        "description": "Workcell 可直接使用的本機路徑。"
+      },
+      "non_git_path": {
+        "label": "本機非 Git 路徑",
+        "description": "不含 Git 語義的本機資料夾。"
+      },
+      "git_repo": {
+        "label": "遠端 Git 儲存庫",
+        "description": "含有選填引用和本機簽出的儲存庫 URL。"
+      },
+      "remote_managed": {
+        "label": "遠端託管工作區",
+        "description": "由外部參照追蹤的託管工作區。"
+      }
+    }
+  },
+  "wireframeFlow": {
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "fit": "符合視窗",
+    "nodeTooltip": "{{screenName}} — 拖曳以移動，點擊以開啟畫面企劃",
+    "noPreview": "無預覽",
+    "entryScreen": "代表／入口畫面"
+  },
+  "flowDashboard": {
+    "loadingFlow": "載入流程中…",
+    "emptyState": "尚無畫面。將畫面樣稿附加到議題後，便會以線框流程顯示於此。",
+    "statusApproved": "已核准",
+    "statusInReview": "審查中",
+    "preview": "預覽",
+    "screenNavLinksHeading": "畫面導覽連結",
+    "fromScreenLabel": "來源畫面",
+    "searchScreenPlaceholder": "搜尋畫面…",
+    "toScreenLabel": "目標畫面",
+    "labelOptional": "標籤（選填）",
+    "labelExamplePlaceholder": "登入按鈕",
+    "addLink": "新增",
+    "deleteLink": "刪除連結",
+    "noLinks": "尚無連結。輸入 screenKey 以規劃導覽流程。"
+  },
+  "screenPlan": {
+    "reviseIssueTitle": "[{{screenName}}] 畫面修訂",
+    "reviseIssueDescription": "正在修訂 App Blueprint 的 {{screenName}} 畫面（`screenKey: {{screenKey}}`）。\n\n## 修訂請求\n{{request}}\n\n## 指南\n- 此為編輯既有畫面，因此請在**相同的 screenKey（`{{screenKey}}`）**下重繪並替換樣稿（請勿將版本／議題 ID 寫入 screenKey）。\n- 樣稿 HTML 為純畫面；請將規格、狀態與互動寫在畫面企劃（planMarkdown）中。\n- 看板核准後，此畫面的舊版本會自動清理。",
+    "reviseIssueRequestPlaceholder": "（請描述需要修正的內容）",
+    "backToFlow": "返回流程",
+    "statusApproved": "已核准",
+    "statusInReview": "審查中",
+    "reviseIssueCreated": "已建立修訂議題（待辦）。",
+    "openIssueWithId": "開啟 {{identifier}}",
+    "openIssue": "開啟議題",
+    "createAnother": "再建立一個",
+    "reviseSectionTitle": "此畫面的修訂議題",
+    "reviseSectionHint": "即使是已定案的畫面，只要有需要修正之處，都可在此建立議題。",
+    "reviseNotePlaceholder": "需要修正什麼？（選填——留空則僅以標題建立）",
+    "creating": "建立中…",
+    "createReviseIssue": "建立修訂議題",
+    "createFailed": "建立失敗——請重試。",
+    "navigationHeading": "導覽",
+    "linksOutgoing": "由此前往 · {{count}}",
+    "linksIncoming": "進入此處 · {{count}}",
+    "linksNone": "無",
+    "mockupHeading": "畫面（樣稿）",
+    "noPreview": "無預覽",
+    "openInNewTab": "在新分頁開啟",
+    "planHeading": "畫面企劃",
+    "loading": "載入中…",
+    "planEmpty": "此畫面尚無企劃。待設計師代理人連同樣稿撰寫畫面企劃後，便會顯示於此。"
+  },
+  "designGuide": {
+    "philosophyTemplate": "## 設計理念\n用一兩句話描述這個 App 想帶給使用者的體驗。（例如：降低學習者的認知負擔，讓他們經常體驗小小的成就。）\n\n## 核心原則\n1. 一個畫面，一個任務——一次只詢問一件事。\n2. 即時回饋——對每個動作給予明確回應。\n3. 峰終定律——以正向的方式收尾。\n\n## 語氣與調性\n溫暖、鼓勵的語氣。以淺白的字詞取代術語。\n\n## 該做／不該做\n- 該做：隨時顯示進度。\n- 不該做：別在一個畫面放超過 5 個選項。",
+    "loading": "載入指南中…",
+    "philosophyHeading": "設計理念與原則",
+    "save": "儲存",
+    "philosophyHelp": "請自行撰寫這個 App 的設計理念、原則與語氣（下方自動擷取的 token 僅供參考）。支援 Markdown。",
+    "startFromTemplate": "從範本開始",
+    "principlesHeading": "從樣稿中偵測到的設計原則",
+    "principlesHelp": "在已核准畫面樣稿的註解中找到的 UX 原則——請檢查是否與上方的理念相符。",
+    "tokensHelp": "自動擷取的 token · 僅供參考——從 {{count}} 個已核准畫面機械式擷取出的顏色、字體排印、間距與元件。",
+    "tokenColors": "顏色",
+    "tokenTypography": "字體排印",
+    "tokenSpacing": "間距",
+    "tokenComponents": "元件",
+    "empty": "未從已核准畫面擷取到任何項目。"
+  },
+  "designSystem": {
+    "title": "App Blueprint",
+    "breadcrumb": "App Blueprint",
+    "description": "一覽整個 App 的畫面組成與企劃。在流程中查看畫面如何相互連結（拖曳排列、捲動縮放），再點擊畫面開啟其企劃（細節）。「畫面」是純樣稿；「畫面企劃」則是描述它的文件——兩者成對移動。",
+    "tab": {
+      "flow": "流程",
+      "screens": "畫面",
+      "guide": "指南"
+    },
+    "badge": {
+      "approved": "已核准",
+      "review": "審查中",
+      "changes": "已要求修改"
+    },
+    "openIssue": "來源議題",
+    "catalogNote": "{{n}} 個畫面。核准同一畫面的新版本會自動清理該畫面的舊版本；一個議題可包含多個畫面。",
+    "empty": "尚無畫面樣稿——指派設計代理人到議題或附加樣稿，便會顯示於此。",
+    "confirmDelete": "永久刪除「{{title}}」設計？此操作無法復原。要繼續嗎？",
+    "confirmDeleteMultiNote": "此畫面還有 {{count}} 個其他版本，因此刪除後卡片不會消失——會改為顯示下一個版本。",
+    "versionCount": "{{count}} 個版本",
+    "delete": "刪除"
+  },
+  "nav": {
+    "home": "首頁",
+    "issues": "議題",
+    "create": "建立",
+    "agents": "代理人",
+    "inbox": "收件匣",
+    "mobileNavigation": "行動版導覽"
+  },
+  "accountMenu": {
+    "openMenu": "開啟帳戶選單",
+    "viewProfile": {
+      "label": "檢視個人檔案",
+      "description": "開啟您的活動、任務與用量紀錄。"
+    },
+    "editProfile": {
+      "label": "編輯個人檔案",
+      "description": "更新您的顯示名稱與頭像。"
+    },
+    "instanceSettings": {
+      "label": "實例設定",
+      "description": "回到您上次開啟的設定頁面。"
+    },
+    "documentation": {
+      "label": "文件",
+      "description": "在新分頁開啟 Workcell 文件。"
+    },
+    "language": {
+      "label": "語言",
+      "description": "選擇您的介面語言。"
+    },
+    "theme": {
+      "toDark": "切換至深色模式",
+      "toLight": "切換至淺色模式",
+      "description": "切換應用程式外觀。"
+    },
+    "signOut": {
+      "label": "登出",
+      "pending": "登出中…",
+      "description": "結束此瀏覽器工作階段。"
+    },
+    "version": "Workcell v{{version}}"
+  },
+  "sidebar": {
+    "newIssue": "新增議題",
+    "openSearch": "開啟搜尋",
+    "newProject": "新增專案",
+    "newAgent": "新增代理人",
+    "nav": {
+      "dashboard": "儀表板",
+      "inbox": "收件匣",
+      "issues": "議題",
+      "routines": "例行作業",
+      "goals": "目標",
+      "workspaces": "工作區",
+      "org": "組織",
+      "skills": "技能",
+      "costs": "成本",
+      "activity": "活動",
+      "settings": "設定",
+      "approvals": "核可"
+    },
+    "section": {
+      "work": "工作",
+      "company": "團隊",
+      "projects": "專案",
+      "agents": "代理人"
+    }
+  },
+  "dashboard": {
+    "welcome": {
+      "message": "歡迎使用 Workcell。設定您的第一個團隊與代理人即可開始。",
+      "action": "開始使用",
+      "selectCompany": "建立或選擇團隊以檢視儀表板。"
+    },
+    "openBudgets": "開啟預算",
+    "last14Days": "過去 14 天",
+    "recentActivity": "近期活動",
+    "recentTasks": "近期任務",
+    "noTasks": "尚無任務。",
+    "noAgents": {
+      "message": "您沒有任何代理人。",
+      "action": "在此建立一個"
+    },
+    "metrics": {
+      "agentsEnabled": "已啟用的代理人",
+      "agentsDesc": "{{running}} 個執行中、{{paused}} 個已暫停、{{errors}} 個錯誤",
+      "tasksInProgress": "進行中的任務",
+      "tasksDesc": "{{open}} 個開啟、{{blocked}} 個受阻",
+      "monthSpend": "本月支出",
+      "costsDesc": "已用預算 {{budget}} 的 {{percent}}%",
+      "costsUnlimited": "無限制預算",
+      "pendingApprovals": "待核可項目",
+      "approvalsDesc": "{{count}} 項預算覆寫待看板審查",
+      "approvalsAwaiting": "等待看板審查"
+    },
+    "charts": {
+      "runActivity": "執行活動",
+      "issuesByPriority": "依優先順序分類的議題",
+      "issuesByStatus": "依狀態分類的議題",
+      "successRate": "成功率"
+    },
+    "budgetIncidents_one": "{{count}} 起進行中的預算事件",
+    "budgetIncidents_other": "{{count}} 起進行中的預算事件",
+    "budgetPausedSummary": "{{agents}} 個代理人已暫停 · {{projects}} 個專案已暫停 · {{approvals}} 項待核可的預算",
+    "breadcrumb": "儀表板"
+  },
+  "issueStatus": {
+    "backlog": "待規劃",
+    "todo": "待辦",
+    "in_progress": "進行中",
+    "in_review": "審查中",
+    "done": "已完成",
+    "cancelled": "已取消",
+    "blocked": "受阻",
+    "none": "尚未提交",
+    "needs_board_review": "需要看板審查",
+    "approved": "已核准",
+    "changes_requested": "已要求修改"
+  },
+  "issuePriority": {
+    "critical": "緊急",
+    "high": "高",
+    "medium": "中",
+    "low": "低"
+  },
+  "issues": {
+    "selectCompany": "選擇團隊以檢視議題。",
+    "draftPlaceholder": "描述一個想法——規劃者會草擬一份結構化議題…",
+    "draftAriaLabel": "與規劃者一起草擬議題",
+    "draftDisabledHint": "新增一位具規劃者、PM 或協調者角色的進行中代理人，以啟用草擬功能。",
+    "draftButton": "用規劃者草擬",
+    "draftButtonPending": "草擬中…",
+    "draftHelper": "描述您想完成的事，規劃者便會草擬一份結構化議題——附帶驗收標準與佐證介面——讓代理人可直接接手。",
+    "searchPlaceholder": "搜尋議題…",
+    "searchAriaLabel": "搜尋議題",
+    "emptyState": "沒有符合目前篩選條件或搜尋的議題。",
+    "searchAssigneesPlaceholder": "搜尋負責人…",
+    "listViewTooltip": "清單檢視",
+    "boardViewTooltip": "看板檢視",
+    "nestingDisableTooltip": "停用母子層巢狀結構",
+    "nestingEnableTooltip": "啟用母子層巢狀結構",
+    "boardUseComfortableCards": "使用寬鬆卡片",
+    "boardUseCompactCards": "使用精簡卡片",
+    "boardExpandColdLanes": "展開閒置欄位",
+    "boardCollapseColdLanes": "收合閒置欄位",
+    "cardsPerColumnTooltip": "每欄卡片數",
+    "resetBoardDensityTooltip": "重設看板密度",
+    "columnsPickerTooltip": "選擇要保持顯示的議題欄位",
+    "needsNextStepTooltip": "此議題需要下一步動作",
+    "needsNextStepAria": "需要下一步",
+    "needsNextStepLabel": "需要下一步",
+    "pausedBadge": "已暫停",
+    "proofBadgeTooltip": "已附上佐證包——可進行簽核",
+    "proofBadgeAria": "已附佐證",
+    "proofBadgeLabel": "佐證",
+    "compoundBadgeTooltip": "由複合檢查清單的後續項目衍生而來",
+    "compoundBadgeAria": "來自複合檢查清單",
+    "compoundBadgeLabel": "複合",
+    "pairBadgeTooltip": "配對協作模式（多代理人回合）",
+    "pairBadgeAria": "配對模式",
+    "pairBadgeLabel": "配對",
+    "assigneeNone": "無負責人",
+    "assigneeMe": "我",
+    "assigneePlaceholder": "負責人",
+    "firstRun": {
+      "title": "工作就在這裡誕生",
+      "body": "在上方的輸入框中輸入您想完成的事——規劃者會將它轉成一份附帶驗收標準與佐證介面的結構化議題。或自行建立一個。",
+      "createAction": "新增議題"
+    },
+    "perColumn": "每欄 {{count}} 個",
+    "searchLimit": "最多顯示 {{count}} 個符合項目。請縮小搜尋範圍以進一步篩選。",
+    "loadError": "無法重新整理議題清單——您看到的內容可能已過時或不完整。",
+    "retry": "重試",
+    "boardColumnLimit": "部分看板欄位最多顯示 {{count}} 個議題。請調整篩選或搜尋以顯示其餘項目。",
+    "subIssueStrip": {
+      "done": "{{done}}/{{total}} 已完成",
+      "inProgress": "{{count}} 個進行中",
+      "blocked": "{{count}} 個受阻",
+      "tokens": "{{tokens}} 個 token",
+      "runtime": "執行時間 {{duration}}",
+      "progressAria": "子議題完成進度",
+      "nextUp": "接下來",
+      "waitingOnBlockers": "等待阻擋項目",
+      "noActive": "沒有進行中的子議題",
+      "allDone": "所有子議題已完成",
+      "noActionable": "沒有可處理的子議題"
+    }
+  },
+  "issueRow": {
+    "parkedBlockerTooltip": "被擱置的工作所阻擋——至少有一個指派的阻擋項目仍在待規劃中，不會喚醒其負責人。",
+    "parkedBlockerLabel": "被擱置的工作所阻擋",
+    "plannerDraftTooltip": "規劃者草稿——由自然語言提示產生。",
+    "plannerDraftLabel": "草稿",
+    "productivityReviewAria": "生產力審查已開啟",
+    "markAsReadAria": "標記為已讀",
+    "dismissFromInboxAria": "從收件匣移除"
+  },
+  "onboarding": {
+    "tabs": {
+      "step1": "團隊",
+      "step2": "代理人",
+      "step3": "任務",
+      "step4": "啟動"
+    },
+    "step1": {
+      "title": "為您的團隊命名",
+      "description": "這是您的代理人將逐一專案進行工作的團隊。"
+    },
+    "step2": {
+      "title": "建立您的第一位代理人",
+      "description": "選擇此代理人執行任務的方式。",
+      "recommendedTeamHint": "第一位代理人是您的協調者。啟動後，再聘請一位工程師、一位設計師與一位 QA——這是 Workcell 建議的開發團隊。"
+    },
+    "step3": {
+      "title": "給它一件事做",
+      "description": "先給您的代理人一件小任務——修個錯誤、研究一個問題、寫一段腳本。"
+    },
+    "step4": {
+      "title": "準備啟動",
+      "description": "一切都已設定完成。立即啟動將建立起始任務、喚醒代理人並開啟議題。"
+    },
+    "back": "返回",
+    "next": "下一步",
+    "creating": "建立中…",
+    "launch": "建立並開啟議題",
+    "closeLabel": "關閉",
+    "companyNameLabel": "團隊名稱",
+    "companyNamePlaceholder": "Acme Corp",
+    "missionGoalLabel": "使命／目標（選填）",
+    "missionGoalPlaceholder": "這個團隊想達成什麼？",
+    "planReportLanguageLabel": "計畫報告語言",
+    "planReportLanguageHint": "您的協調者將以此語言撰寫計畫報告與議題草稿。",
+    "designFirstLabel": "設計優先（建議）",
+    "designFirstHint": "設計系統是專案的單一事實來源：畫面工作須等候看板核准的設計後才能進行實作。非視覺議題可逐一議題選擇退出。",
+    "agentNameLabel": "代理人名稱",
+    "agentNamePlaceholder": "協調者",
+    "adapterTypeLabel": "轉接器類型",
+    "recommendedBadge": "建議",
+    "moreAdapterTypes": "更多代理人轉接器類型",
+    "comingSoon": "即將推出",
+    "modelLabel": "模型",
+    "thinkingEffortLabel": "思考強度",
+    "adapterEnvCheckTitle": "轉接器環境檢查",
+    "adapterEnvCheckDescription": "執行即時探測，要求轉接器 CLI 回應 hello。",
+    "adapterEnvTesting": "測試中…",
+    "adapterEnvTestNow": "立即測試",
+    "adapterEnvPassed": "已通過",
+    "anthropicKeyNoticePrefix": "Claude 在",
+    "anthropicKeyNoticeSuffix": "已設定時失敗。您可在此代理人的轉接器設定中清除它，再重試探測。",
+    "anthropicKeyRetrying": "重試中…",
+    "anthropicKeyUnset": "取消設定 ANTHROPIC_API_KEY",
+    "manualDebug": "手動除錯",
+    "promptLabel": "提示：",
+    "authFailsSet": "若驗證失敗，請設定",
+    "authFailsInEnvOrRun": "於環境變數或執行",
+    "loginRequiredRun": "若需要登入，請執行",
+    "loginRequiredAndRetry": "後重試。",
+    "gatewayUrlLabel": "閘道 URL",
+    "webhookUrlLabel": "Webhook URL",
+    "projectNameLabel": "專案名稱",
+    "projectNamePlaceholder": "第一個專案",
+    "projectNameHint": "您的第一個正式專案——設計系統與議題都會存放於此。",
+    "taskTitleLabel": "任務標題",
+    "taskTitlePlaceholder": "例如：研究競爭對手定價",
+    "descriptionLabel": "說明（選填）",
+    "descriptionPlaceholder": "補充更多關於代理人應做什麼的細節…",
+    "taskTitleDefault": "規劃第一個里程碑",
+    "taskDescriptionDefault": "這就是方向——請把它轉成一份我們可以執行的計畫。\n\n- 將目標拆解成議題，並附上清楚的驗收標準與佐證介面\n- 將每個議題分派給合適的角色（工程、設計、QA、研究）\n- 在開始執行前，先把計畫帶回給看板核准",
+    "summaryCompany": "團隊",
+    "summaryTask": "任務",
+    "adapterEnvWarnings": "警告",
+    "adapterEnvFailed": "失敗",
+    "hintPrefix": "提示：",
+    "useThisModel": "使用此模型",
+    "noModelsDiscovered": "未找到任何模型。",
+    "agentModeSolo": "單人",
+    "agentModePair": "配對",
+    "pairModeHint": "兩個代理人輪流協作以產出結果。",
+    "ownerAgentNameLabel": "代理人 1 · 協調者名稱",
+    "counterpartTitle": "搭檔代理人",
+    "counterpartNameLabel": "搭檔名稱",
+    "counterpartNamePlaceholder": "審查者",
+    "counterpartNameRequired": "請輸入搭檔代理人的名稱。",
+    "counterpartModelLabel": "模型（選填）",
+    "counterpartModelPlaceholder": "預設（轉接器自身的模型）",
+    "counterpartModelHint": "留空則使用轉接器的預設模型。"
+  },
+  "myIssues": {
+    "breadcrumb": "我的議題",
+    "selectCompany": "選擇團隊以檢視您的議題。",
+    "emptyState": "沒有指派給您的議題。"
+  },
+  "approvals": {
+    "breadcrumb": "核可",
+    "errors": {
+      "approveFailed": "核可失敗",
+      "rejectFailed": "拒絕失敗"
+    },
+    "selectCompany": "請先選擇團隊。",
+    "tabs": {
+      "pending": "待處理",
+      "all": "全部"
+    },
+    "empty": {
+      "pending": "沒有待核可的項目。",
+      "all": "尚無核可項目。"
+    }
+  },
+  "goals": {
+    "title": "目標",
+    "selectCompany": "選擇團隊以檢視目標。",
+    "emptyMessage": "尚無目標。",
+    "addGoal": "新增目標",
+    "newGoal": "新目標",
+    "levels": {
+      "company": "團隊",
+      "team": "團隊",
+      "agent": "代理人",
+      "task": "任務"
+    }
+  },
+  "goalDetail": {
+    "showProperties": "顯示屬性",
+    "goals": "目標",
+    "goalFallback": "目標",
+    "descriptionPlaceholder": "新增說明…",
+    "subGoalsTab": "子目標（{{count}}）",
+    "projectsTab": "專案（{{count}}）",
+    "subGoal": "子目標",
+    "noSubGoals": "沒有子目標。",
+    "noLinkedProjects": "沒有連結的專案。",
+    "updateFailed": "無法儲存變更——請重試。",
+    "uploadFailed": "無法上傳圖片——請重試。"
+  },
+  "projects": {
+    "breadcrumb": "專案",
+    "empty": {
+      "noCompany": "選擇團隊以檢視專案。",
+      "noProjects": "尚無專案。"
+    },
+    "sort": {
+      "title": "排序",
+      "label": "排序：{{label}}",
+      "asc": "遞增",
+      "desc": "遞減",
+      "options": {
+        "name": "名稱",
+        "updated": "更新時間",
+        "created": "建立時間",
+        "targetDate": "目標日期"
+      }
+    },
+    "actions": {
+      "add": "新增專案"
+    },
+    "groups": {
+      "mine": "我的專案",
+      "other": "其他專案"
+    },
+    "count": "{{count}} 個專案"
+  },
+  "projectDetail": {
+    "overview": {
+      "descriptionPlaceholder": "新增說明…",
+      "status": "狀態",
+      "targetDate": "目標日期"
+    },
+    "colorPicker": {
+      "change": "變更專案顏色",
+      "select": "選擇顏色 {{color}}"
+    },
+    "fallbackName": "專案",
+    "toast": {
+      "archived": "「{{name}}」已封存",
+      "unarchived": "「{{name}}」已取消封存",
+      "archiveFailed": "封存專案失敗",
+      "unarchiveFailed": "取消封存專案失敗"
+    },
+    "breadcrumb": {
+      "projects": "專案"
+    },
+    "leftNotice": {
+      "message": "您已離開此專案。它不再顯示於您的側邊欄。",
+      "dismiss": "關閉專案成員通知"
+    },
+    "pausedByBudget": "因預算硬性停止而暫停",
+    "managedByPlugin": "由 {{name}} 管理",
+    "tabs": {
+      "issues": "議題",
+      "overview": "總覽",
+      "pluginOperations": "外掛作業",
+      "workspaces": "工作區",
+      "configuration": "組態",
+      "budget": "預算",
+      "design": "App Blueprint"
+    },
+    "workspaces": {
+      "loading": "載入工作區中…"
+    }
+  },
+  "notFound": {
+    "breadcrumb": "找不到",
+    "companyTitle": "找不到團隊",
+    "title": "找不到頁面",
+    "companyDescription": "沒有團隊符合前綴「{{prefix}}」。",
+    "description": "此路由不存在。",
+    "requestedPath": "請求的路徑：",
+    "openDashboard": "開啟儀表板",
+    "goHome": "返回首頁"
+  },
+  "capabilities": {
+    "breadcrumb": "功能",
+    "title": "功能",
+    "description": "團隊已安裝的功能登錄，以及它們如何分派給代理人。核可流程將於後續版本推出；此頁面讓管理員可檢視並轉換既有的分派。",
+    "manifestHeading": "資訊清單（{{count}}）",
+    "manifestEmpty": "此團隊尚未登錄任何功能。後續版本將在此新增註冊表單。",
+    "assignmentsHeading": "分派（{{count}}）",
+    "assignmentsEmpty": "沒有進行中的分派。一旦功能被分派到某個範圍（全團隊或個別代理人），就會顯示於此。",
+    "scopeLabel": "範圍：",
+    "scopeCompanyWide": "全團隊",
+    "approving": "核可中…",
+    "approve": "核可",
+    "statusLabel": "狀態",
+    "visibilityLabel": "可見度",
+    "loadError": "載入功能失敗。請重試。"
+  },
+  "search": {
+    "breadcrumb": "搜尋",
+    "scope": {
+      "all": "全部",
+      "issues": "議題",
+      "comments": "留言",
+      "documents": "文件",
+      "agents": "代理人",
+      "projects": "專案"
+    },
+    "title": "搜尋",
+    "inputPlaceholder": "搜尋議題、留言、文件、代理人、專案…",
+    "inputAriaLabel": "搜尋查詢",
+    "clearAriaLabel": "清除搜尋",
+    "initial": {
+      "heading": "輸入即可搜尋團隊記憶。",
+      "subheading": "議題、留言、計畫文件、代理人、專案——同一介面，依關聯度排序。",
+      "identifierLabel": "識別碼查詢：",
+      "identifierBefore": "輸入",
+      "identifierAfter": "即可直接跳至某個議題。",
+      "quotedLabel": "引號片語：",
+      "quotedText": "用引號括住片語即可比對完全一致的序列。",
+      "commandKeyLabel": "⌘K：",
+      "commandKeyText": "重新開啟命令選擇盤，並預先帶入您目前的查詢。"
+    },
+    "recentSearches": "近期搜尋",
+    "error": {
+      "heading": "無法執行該搜尋",
+      "serverReturned": "伺服器回傳 {{status}}。",
+      "requestFailed": "請求失敗。",
+      "body": "您的輸入與篩選條件仍保留著，因此您可重試，或退回使用議題篩選。",
+      "retry": "重試"
+    },
+    "openIssuesFilter": "開啟議題篩選檢視",
+    "loading": "正在搜尋「{{query}}」…",
+    "empty": {
+      "heading": "找不到「{{query}}」的結果",
+      "body": "我們在 {{scope}} 中找不到符合項目。請嘗試擴大範圍或重新措辭查詢。",
+      "searchAllScopes": "搜尋所有範圍",
+      "createIssue": "依此查詢建立議題",
+      "tipTokens": "試試更少的關鍵字或單一鮮明的詞彙。",
+      "tipIdentifierBefore": "使用識別碼捷徑，例如",
+      "tipQuotes": "用引號括住多字片語。"
+    },
+    "results": {
+      "countSingular": "1 個結果",
+      "countPlural": "{{total}} 個結果",
+      "sortedByRelevance": "· 依關聯度排序",
+      "updating": "更新中…"
+    },
+    "subgroup": {
+      "issues": "議題",
+      "comments": "留言",
+      "documents": "文件",
+      "agents": "代理人",
+      "projects": "專案"
+    }
+  },
+  "auth": {
+    "loading": "載入中…",
+    "error": {
+      "authenticationFailed": "驗證失敗",
+      "requiredFields": "請填寫所有必填欄位。"
+    },
+    "heading": {
+      "signIn": "登入 Workcell",
+      "signUp": "建立您的 Workcell 帳戶"
+    },
+    "subheading": {
+      "signIn": "使用您的電子郵件與密碼存取此實例。",
+      "signUp": "為此實例建立帳戶。v1 不需要電子郵件確認。"
+    },
+    "field": {
+      "name": "名稱",
+      "email": "電子郵件",
+      "password": "密碼"
+    },
+    "button": {
+      "working": "處理中…",
+      "signIn": "登入",
+      "createAccount": "建立帳戶"
+    },
+    "toggle": {
+      "needAccount": "需要帳戶嗎？",
+      "haveAccount": "已經有帳戶了？",
+      "createOne": "建立一個",
+      "signIn": "登入"
+    }
+  },
+  "cliAuth": {
+    "invalidUrl": "無效的 CLI 驗證 URL。",
+    "loading": "載入 CLI 驗證挑戰中…",
+    "unavailable": {
+      "title": "CLI 驗證挑戰無法使用",
+      "invalidOrExpired": "挑戰無效或已過期。",
+      "short": "CLI 驗證挑戰無法使用。"
+    },
+    "approved": {
+      "title": "CLI 存取已核准",
+      "description": "Workcell CLI 現在可在發出請求的機器上完成驗證。",
+      "commandLabel": "命令："
+    },
+    "expired": {
+      "title": "CLI 驗證挑戰已過期"
+    },
+    "cancelled": {
+      "title": "CLI 驗證挑戰已取消"
+    },
+    "expiredCancelled": {
+      "description": "請從您的終端機重新啟動 CLI 驗證流程，以產生新的核可請求。"
+    },
+    "signInRequired": {
+      "title": "需要登入",
+      "description": "請登入或建立帳戶，然後返回此頁面以核可 CLI 存取請求。",
+      "cta": "登入／建立帳戶"
+    },
+    "approve": {
+      "title": "核可 Workcell CLI 存取",
+      "description": "有一個本機 Workcell CLI 程序正在請求對此實例的看板存取權。",
+      "command": "命令",
+      "client": "用戶端",
+      "clientFallback": "workcell cli",
+      "requestedAccess": "請求的存取權",
+      "accessInstanceAdmin": "實例管理員",
+      "accessBoard": "看板",
+      "requestedCompany": "請求的團隊",
+      "updateFailed": "更新 CLI 驗證挑戰失敗",
+      "requiresInstanceAdmin": "此挑戰需要實例管理員存取權。請以實例管理員帳戶登入以核可它。",
+      "approving": "核可中…",
+      "approveButton": "核可 CLI 存取",
+      "cancelling": "取消中…",
+      "cancelButton": "取消"
+    }
+  },
+  "boardClaim": {
+    "invalidUrl": "無效的看板認領 URL。",
+    "loading": "載入認領挑戰中…",
+    "unavailable": {
+      "title": "認領挑戰無法使用",
+      "invalidOrExpired": "挑戰無效或已過期。",
+      "short": "認領挑戰無法使用。"
+    },
+    "claimed": {
+      "title": "已認領看板擁有權",
+      "description": "此實例現已連結至您驗證過的使用者。"
+    },
+    "openBoard": "開啟看板",
+    "signInRequired": {
+      "title": "需要登入",
+      "description": "請登入或建立帳戶，然後返回此頁面以認領看板擁有權。",
+      "cta": "登入／建立帳戶"
+    },
+    "claim": {
+      "title": "認領看板擁有權",
+      "description": "這會將您的使用者提升為實例管理員，並將團隊擁有權的存取權從本機信任模式遷移過來。",
+      "failed": "認領看板擁有權失敗",
+      "claiming": "認領中…",
+      "claimButton": "認領擁有權"
+    }
+  },
+  "companies": {
+    "breadcrumb": "團隊",
+    "newCompany": "新團隊",
+    "loading": "載入團隊中…",
+    "editName": {
+      "save": "儲存名稱",
+      "cancel": "取消編輯",
+      "rename": "重新命名團隊"
+    },
+    "menu": {
+      "rename": "重新命名",
+      "deleteCompany": "刪除團隊",
+      "openMenu": "團隊操作"
+    },
+    "stats": {
+      "agent": "個代理人",
+      "agents": "個代理人",
+      "issue": "個議題",
+      "issues": "個議題",
+      "unlimitedBudget": "無限制預算",
+      "created": "建立於"
+    },
+    "rename": {
+      "failed": "無法重新命名團隊——請重試。"
+    },
+    "delete": {
+      "confirm": "要刪除此團隊及其所有資料嗎？此操作無法復原。",
+      "cancel": "取消",
+      "delete": "刪除",
+      "deleting": "刪除中…",
+      "failed": "無法刪除團隊——請重試。"
+    }
+  },
+  "joinRequestQueue": {
+    "breadcrumb": {
+      "company": "團隊",
+      "inbox": "收件匣",
+      "joinRequests": "加入請求"
+    },
+    "toast": {
+      "approved": "加入請求已核准",
+      "rejected": "加入請求已拒絕"
+    },
+    "selectCompany": "選擇團隊以審查加入請求。",
+    "loading": "載入加入請求中…",
+    "error": {
+      "forbidden": "您沒有權限審查此團隊的加入請求。",
+      "loadFailed": "載入加入請求失敗。"
+    },
+    "title": "加入請求佇列",
+    "description": "在混合收件匣動態之外審查人員與代理人的加入請求。此佇列使用與內嵌收件匣卡片相同的核可變更操作。",
+    "filters": {
+      "statusLabel": "狀態",
+      "statusPending": "待核可",
+      "statusApproved": "已核准",
+      "statusRejected": "已拒絕",
+      "requestTypeLabel": "請求類型",
+      "typeAll": "全部",
+      "typeHuman": "人員",
+      "typeAgent": "代理人"
+    },
+    "empty": "沒有符合目前篩選條件的加入請求。",
+    "card": {
+      "unknownHuman": "未知的人員請求者",
+      "unknownAgent": "未知的代理人請求者",
+      "reject": "拒絕",
+      "approve": "核可",
+      "inviteContext": "邀請背景資訊",
+      "inviteMetadataUnavailable": "邀請中繼資料無法使用",
+      "requestDetails": "請求詳情",
+      "submitted": "已提交",
+      "sourceIp": "來源 IP"
+    }
+  },
+  "activity": {
+    "breadcrumb": "活動",
+    "selectCompany": "選擇團隊以檢視活動。",
+    "filterByType": "依類型篩選",
+    "allTypes": "所有類型",
+    "empty": "尚無活動。"
+  },
+  "newIssueDialog": {
+    "titlePlaceholder": "議題標題",
+    "descriptionPlaceholder": "新增說明…",
+    "uploadWarningsTitle": "已建立 {{issueRef}}，但有上傳警告",
+    "uploadWarningsBody": "有 {{count}} 個暫存的{{noun}}無法新增。",
+    "openIssueAction": "開啟 {{issueRef}}",
+    "claudeOptions": "Claude 選項",
+    "codexOptions": "Codex 選項",
+    "opencodeOptions": "OpenCode 選項",
+    "agentOptions": "代理人選項",
+    "createErrorFallback": "建立議題失敗。請重試。",
+    "newSubIssue": "新增子議題",
+    "newIssue": "新增議題",
+    "forLabel": "負責對象",
+    "assigneePlaceholder": "負責人",
+    "assigneeNoneLabel": "無負責人",
+    "assigneeSearchPlaceholder": "搜尋負責人…",
+    "assigneeEmptyMessage": "找不到負責人。",
+    "inLabel": "於",
+    "projectPlaceholder": "專案",
+    "projectNoneLabel": "無專案",
+    "projectSearchPlaceholder": "搜尋專案…",
+    "projectEmptyMessage": "找不到專案。",
+    "addReviewerOrApprover": "新增審查者或核可者",
+    "reviewer": "審查者",
+    "approver": "核可者",
+    "reviewerPlaceholder": "審查者",
+    "reviewerNoneLabel": "無審查者",
+    "reviewerSearchPlaceholder": "搜尋審查者…",
+    "reviewerEmptyMessage": "找不到審查者。",
+    "approverPlaceholder": "核可者",
+    "approverNoneLabel": "無核可者",
+    "approverSearchPlaceholder": "搜尋核可者…",
+    "approverEmptyMessage": "找不到核可者。",
+    "subIssueOf": "子議題隸屬於",
+    "executionWorkspace": "執行工作區",
+    "executionWorkspaceDescription": "控制此議題要在共用工作區、新的隔離工作區，或既有工作區中執行。",
+    "chooseExistingWorkspace": "選擇既有工作區",
+    "reusingWorkspace": "正在沿用來自 {{source}} 的 {{name}}。",
+    "existingExecutionWorkspaceFallback": "既有執行工作區",
+    "parentWorkspaceWarning": "警告：此子議題將不再使用母議題的工作區{{suffix}}。",
+    "modelLane": "模型線路",
+    "lanePrimary": "主要",
+    "laneCheap": "經濟",
+    "laneCustom": "自訂",
+    "lanePrimaryHint": "以代理人的主要模型執行。",
+    "laneCustomHint": "僅針對此議題覆寫模型與強度。",
+    "cheapLane": {
+      "sends": "送出",
+      "adapterDefault": "· 轉接器預設",
+      "usesProfile": "· 使用代理人設定的經濟設定檔",
+      "fallback": "· 若未設定經濟設定檔，則回退至主要模型"
+    },
+    "backlogNote": {
+      "before": "指派即代表可執行的意圖——僅在刻意擱置時才將狀態保留為",
+      "middle": "。在狀態變更為下列之前，負責人不會被喚醒：",
+      "or": "或"
+    },
+    "modelLabel": "模型",
+    "defaultModelPlaceholder": "預設模型",
+    "modelSearchPlaceholder": "搜尋模型…",
+    "modelEmptyMessage": "找不到模型。",
+    "thinkingEffort": "思考強度",
+    "enableChrome": "啟用 Chrome（--chrome）",
+    "documents": "文件",
+    "removeDocument": "移除文件",
+    "attachments": "附件",
+    "removeAttachment": "移除附件",
+    "priority": "優先順序",
+    "upload": "上傳",
+    "startDate": "開始日期",
+    "dueDate": "到期日",
+    "discardDraft": "捨棄草稿",
+    "creatingIssue": "建立議題中…",
+    "creating": "建立中…",
+    "createSubIssue": "建立子議題",
+    "createIssue": "建立議題"
+  },
+  "issueWorkspaceCard": {
+    "copyable": {
+      "copied": "已複製！",
+      "copy": "複製"
+    },
+    "mode": {
+      "isolatedWorkspace": "隔離工作區",
+      "operatorBranch": "操作者分支",
+      "cloudSandbox": "雲端沙箱",
+      "adapterManaged": "由轉接器管理",
+      "workspace": "工作區"
+    },
+    "configured": {
+      "isolated": "新的隔離工作區",
+      "existingIsolated": "既有隔離工作區",
+      "reuseExisting": "沿用既有工作區",
+      "projectDefault": "專案預設"
+    },
+    "actions": {
+      "cancel": "取消",
+      "save": "儲存",
+      "edit": "編輯"
+    },
+    "readonly": {
+      "repo": "儲存庫：",
+      "environmentLabel": "環境：",
+      "environmentReused": " · 沿用的工作區",
+      "environmentProjectDefault": " · 專案預設",
+      "willCreateIsolated": "此議題執行時將建立一個全新的隔離工作區。",
+      "willReuse": "此議題執行時將沿用既有的工作區。",
+      "willUseProjectDefault": "此議題執行時將使用專案預設的工作區組態。",
+      "reusing": "正在沿用：",
+      "viewDetails": "檢視工作區詳情 →",
+      "current": "目前："
+    },
+    "option": {
+      "shared": "專案預設",
+      "isolated": "新的隔離工作區",
+      "reuseExisting": "沿用既有工作區",
+      "existingIsolated": "既有隔離工作區",
+      "chooseExisting": "選擇既有工作區"
+    },
+    "environment": {
+      "noneOnReused": "沿用的工作區上沒有環境",
+      "selectToInspect": "選擇既有工作區以檢視其環境",
+      "projectDefault": "專案預設環境",
+      "none": "無環境",
+      "lockedReused": "沿用既有工作區時，環境選擇會被鎖定。下次執行將使用該工作區持久保存的環境組態。",
+      "lockedChooseFirst": "請先選擇既有工作區。其持久保存的環境組態將決定下次執行。"
+    }
+  },
+  "commandPalette": {
+    "searchPlaceholder": "搜尋議題、代理人、專案…",
+    "empty": {
+      "noQuickMatchesPress": "沒有快速符合的議題。請按",
+      "to": "以",
+      "searchAll": "搜尋全部",
+      "orKeepTyping": "或繼續輸入以縮小範圍。",
+      "noResults": "找不到結果。"
+    },
+    "group": {
+      "search": "搜尋",
+      "actions": "操作",
+      "pages": "頁面",
+      "issues": "議題",
+      "agents": "代理人",
+      "projects": "專案"
+    },
+    "searchAllFor": "搜尋全部以查找",
+    "openFullSearch": "開啟完整搜尋",
+    "actions": {
+      "createIssue": "建立新議題",
+      "createAgent": "建立新代理人",
+      "createProject": "建立新專案"
+    },
+    "pages": {
+      "dashboard": "儀表板",
+      "inbox": "收件匣",
+      "issues": "議題",
+      "projects": "專案",
+      "goals": "目標",
+      "agents": "代理人",
+      "costs": "成本",
+      "activity": "活動"
+    }
+  },
+  "sidebarCompanyMenu": {
+    "reorder": "重新排序 {{name}}",
+    "trigger": {
+      "withCompany": "開啟 {{name}} 的工作區切換器",
+      "default": "開啟工作區切換器"
+    },
+    "selectWorkspace": "選擇工作區",
+    "switchWorkspace": "切換工作區",
+    "editOrder": {
+      "done": "完成",
+      "edit": "編輯"
+    },
+    "noWorkspaces": "沒有工作區",
+    "addCompany": "新增團隊…",
+    "invitePeople": {
+      "withCompany": "邀請人員加入 {{name}}",
+      "default": "邀請人員"
+    },
+    "companySettings": "團隊設定",
+    "signOut": {
+      "pending": "登出中…",
+      "label": "登出"
+    }
+  },
+  "instanceSidebar": {
+    "heading": "實例設定",
+    "nav": {
+      "profile": "個人檔案",
+      "general": "一般",
+      "access": "存取權",
+      "heartbeats": "心跳訊號",
+      "experimental": "實驗性功能",
+      "plugins": "外掛",
+      "adapters": "轉接器"
+    }
+  },
+  "systemNotice": {
+    "defaultLabel": {
+      "notice": "系統通知",
+      "warning": "系統警告",
+      "alert": "系統警示"
+    },
+    "hideDetails": "隱藏詳情",
+    "details": "詳情"
+  },
+  "newAgentDialog": {
+    "clipboardUnavailableTitle": "剪貼簿無法使用",
+    "copyPromptManuallyBelow": "請從下方欄位手動複製代理人引導提示。",
+    "inviteCreatedTitle": "已建立代理人邀請",
+    "inviteCreatedBodyCopied": "代理人引導提示已在下方備妥，並已複製到剪貼簿。",
+    "inviteCreatedBody": "代理人引導提示已在下方備妥。",
+    "inviteFailedTitle": "建立代理人邀請失敗",
+    "unknownError": "未知錯誤",
+    "headerTitle": "新增代理人",
+    "choicesIntro": "請領導者提議新增代理人、自行設定一個執行環境，或將引導提示傳送給外部代理人。",
+    "choicesIntroNoOrchestrator": "目前還沒有可委派的協調者。請直接建立您的第一位代理人——您新增的第一位代理人通常就是協調者。",
+    "askOrchestratorButton": "請協調者建立新代理人",
+    "configureRuntimeButton": "手動設定執行環境",
+    "inviteExternalButton": "邀請外部代理人",
+    "inviteExternalHint": "（OpenClaw、Hermes，或任何能呼叫邀請 API 的代理人。）",
+    "backButton": "返回",
+    "runtimeIntro": "選擇 Workcell 應直接啟動或恢復的執行環境。",
+    "recommendedBadge": "建議",
+    "inviteHeading": "邀請外部代理人",
+    "inviteDescription": "產生一次性的引導提示，任何相容的代理人都可用它來請求存取、等待核可，並領取其 Workcell API 金鑰。",
+    "optionalMessageLabel": "給代理人的選填訊息",
+    "optionalMessagePlaceholder": "補充引導背景、預期角色或初始指示。",
+    "inviteApprovalNote": "代理人邀請會先建立加入請求。在代理人能領取其 API 金鑰之前，仍須由團隊管理員核可該請求。",
+    "generatingButton": "產生中…",
+    "generatePromptButton": "產生引導提示",
+    "promptHeading": "代理人引導提示",
+    "copiedIndicator": "已複製",
+    "promptDescription": "將此提示傳送給應加入此團隊的外部代理人。",
+    "copyPromptManuallyAbove": "請從上方欄位手動複製代理人引導提示。",
+    "copiedPromptButton": "已複製提示",
+    "copyPromptButton": "複製提示",
+    "askOrchestratorIssueTitle": "建立新代理人",
+    "askOrchestratorIssueDescription": "（在此輸入您想要的代理人類型）",
+    "pairOrLabel": "或讓兩個代理人協作",
+    "pairButton": "設定一組配對（兩個代理人）",
+    "pairHint": "兩個代理人逐回合輪流，協力共同產出結果。"
+  },
+  "kanbanBoard": {
+    "column": {
+      "showMore": "再顯示 {{count}} 個",
+      "showingCount": "顯示 {{total}} 個中的 {{shown}} 個"
+    },
+    "card": {
+      "nextStep": {
+        "title": "此議題需要下一步動作",
+        "ariaLabel": "需要下一步",
+        "label": "下一步"
+      },
+      "live": "即時",
+      "ownerRole": "負責人角色：{{role}}",
+      "proof": {
+        "title": "已附上佐證包——可進行簽核",
+        "ariaLabel": "已附佐證",
+        "label": "佐證"
+      },
+      "cost": {
+        "title": "累計成本：${{amount}}"
+      },
+      "compound": {
+        "title": "由複合檢查清單的後續項目衍生而來",
+        "ariaLabel": "來自複合檢查清單",
+        "label": "複合"
+      },
+      "pair": {
+        "title": "配對協作模式（多代理人回合）",
+        "ariaLabel": "配對模式",
+        "label": "配對"
+      }
+    }
+  },
+  "issueFiltersPopover": {
+    "trigger": {
+      "withCount": "篩選：{{count}}",
+      "label": "篩選"
+    },
+    "heading": "篩選",
+    "clear": "清除",
+    "quickFilters": "快速篩選",
+    "section": {
+      "status": "狀態",
+      "priority": "優先順序",
+      "assignee": "負責人",
+      "creator": "建立者",
+      "project": "專案",
+      "labels": "標籤",
+      "workspace": "工作區",
+      "visibility": "可見度"
+    },
+    "noAssignee": "無負責人",
+    "me": "我",
+    "removeCreator": "移除建立者 {{creator}}",
+    "searchCreatorsPlaceholder": "搜尋建立者…",
+    "noCreatorsMatch": "沒有符合的建立者。",
+    "liveRunsOnly": "僅即時執行",
+    "hideRoutineRuns": "隱藏例行執行"
+  },
+  "approvalCard": {
+    "requestedBy": "請求者",
+    "requestCreated": "核可請求建立於 {{time}}",
+    "decisionNote": "決策備註。",
+    "approving": "核可中…",
+    "approve": "核可",
+    "rejecting": "拒絕中…",
+    "reject": "拒絕",
+    "viewDetails": "檢視詳情"
+  },
+  "companySwitcher": {
+    "selectCompany": "選擇團隊",
+    "companies": "團隊",
+    "noCompanies": "沒有團隊",
+    "archived": "已封存",
+    "companySettings": "團隊設定",
+    "manageCompanies": "管理團隊"
+  },
+  "companySettingsSidebar": {
+    "company": "團隊",
+    "companySettings": "團隊設定"
+  },
+  "sidebarAgents": {
+    "editAgent": "編輯代理人"
+  },
+  "sidebarNavItem": {
+    "live": "{{count}} 個即時"
+  },
+  "keyboardShortcuts": {
+    "then": "接著",
+    "pressBefore": "按",
+    "pressAfter": "以關閉 · 快捷鍵在文字欄位中會停用",
+    "title": "鍵盤快捷鍵"
+  },
+  "layout": {
+    "skipToMain": "跳至主要內容"
+  },
+  "errorBoundary": {
+    "title": "發生錯誤",
+    "description": "此檢視遇到非預期的錯誤。您可以重試，或重新載入頁面。",
+    "retry": "重試",
+    "reload": "重新載入頁面",
+    "detailsLabel": "技術細節"
+  },
+  "issueColumns": {
+    "desktopIssueRows": "桌面版議題列",
+    "resetDefaults": "重設預設值",
+    "user": "使用者",
+    "subIssue": "子議題",
+    "noProject": "無專案",
+    "filterByWorkspace": "依工作區篩選"
+  },
+  "newProjectDialog": {
+    "newProject": "新增專案",
+    "repoUrl": "儲存庫 URL",
+    "optional": "選填",
+    "repoUrlHint": "連結一個 GitHub 儲存庫，讓代理人可為此專案複製、讀取並推送程式碼。",
+    "localFolder": "本機資料夾",
+    "localFolderHint": "在此機器上設定一個絕對路徑，本機代理人將在此為此專案讀寫檔案。",
+    "addGoal": "+ 目標",
+    "goal": "目標",
+    "noGoal": "無目標",
+    "allGoalsSelected": "已選擇所有目標。",
+    "createFailed": "建立專案失敗。",
+    "creating": "建立中…",
+    "createProject": "建立專案"
+  },
+  "ui": {
+    "dialog": {
+      "close": "關閉"
+    },
+    "breadcrumb": {
+      "more": "更多"
+    }
+  },
+  "projectProperties": {
+    "saving": "儲存中",
+    "saved": "已儲存",
+    "failed": "失敗",
+    "noDescription": "無說明",
+    "goal": "目標",
+    "allGoalsLinked": "已連結所有目標。",
+    "envHint": "套用至此專案中所有議題的執行。當金鑰衝突時，專案值會覆寫代理人的環境變數。",
+    "codebase": "程式碼庫",
+    "codebaseHelp": "儲存庫標明事實來源。本機資料夾是代理人寫入程式碼的預設位置。",
+    "repo": "儲存庫",
+    "changeRepo": "變更儲存庫",
+    "notSet": "未設定。",
+    "setRepo": "設定儲存庫",
+    "localFolder": "本機資料夾",
+    "managedFolder": "Workcell 管理的資料夾。",
+    "changeLocalFolder": "變更本機資料夾",
+    "setLocalFolder": "設定本機資料夾",
+    "legacyWorkspaces": "此專案上還有額外的舊版工作區紀錄。Workcell 正使用主要工作區作為程式碼庫檢視。",
+    "noUrl": "無 URL",
+    "save": "儲存",
+    "cancel": "取消",
+    "saveWorkspaceFailed": "儲存工作區失敗。",
+    "deleteWorkspaceFailed": "刪除工作區失敗。",
+    "updateWorkspaceFailed": "更新工作區失敗。",
+    "executionWorkspaces": "執行工作區",
+    "executionWorkspacesHelp": "專案自有的預設值，用於隔離的議題簽出與執行工作區行為。",
+    "enableIsolated": "啟用隔離的議題簽出",
+    "enableIsolatedHint": "讓議題可在專案的主要簽出與隔離執行工作區之間選擇。",
+    "enabled": "已啟用",
+    "disabled": "已停用",
+    "newIssuesIsolated": "新議題預設使用隔離簽出",
+    "newIssuesIsolatedHint": "若停用，除非有人選擇加入，否則新議題會留在專案的主要簽出上。",
+    "hideAdvanced": "隱藏進階簽出設定",
+    "showAdvanced": "顯示進階簽出設定",
+    "hostManaged": "主機管理的實作：",
+    "gitWorktree": "Git worktree",
+    "environment": "環境",
+    "noEnvironment": "無環境",
+    "baseRef": "基準 ref",
+    "branchTemplate": "分支範本",
+    "worktreeParentDir": "Worktree 母目錄",
+    "provisionCommand": "佈建命令",
+    "teardownCommand": "拆除命令",
+    "provisionTeardownHint": "佈建會在代理人執行前，於衍生的 worktree 內執行。拆除命令儲存於此，供未來的清理流程使用。",
+    "dangerZone": "危險區",
+    "archive": "封存",
+    "unarchive": "取消封存",
+    "archiveHint": "封存此專案，將其從側邊欄與專案選擇器中隱藏。",
+    "unarchiveHint": "取消封存此專案，將其還原至側邊欄與專案選擇器中。",
+    "archiving": "封存中…",
+    "unarchiving": "取消封存中…",
+    "confirmAction": "{{action}}「{{name}}」？",
+    "confirm": "確認",
+    "archiveProject": "{{action}}專案"
+  },
+  "liveUpdates": {
+    "action": {
+      "viewRef": "檢視 {{ref}}",
+      "viewInbox": "檢視收件匣",
+      "viewAgent": "檢視代理人",
+      "viewRun": "檢視執行"
+    },
+    "joinRequest": {
+      "titleAgent": "代理人想要加入",
+      "titleSomeone": "有人想要加入",
+      "body": "有一筆新的加入請求正在等待核可。"
+    }
+  },
+  "grillMode": {
+    "toggle": "深問模式",
+    "toggleHint": "先深問再規劃——規劃師在起草前會提出重點釐清問題，每題附帶建議答案。",
+    "askButton": "先提問",
+    "askingButtonPending": "提問中…",
+    "helper": "深問模式已啟用——規劃師在起草前會提出重點釐清問題（每題附帶建議答案）。",
+    "questionsHeading": "回答幾個問題，再以釐清後的意圖起草",
+    "noQuestions": "規劃師沒有需要釐清的問題——您的需求描述已足夠清晰，直接起草。",
+    "answerAriaLabel": "回答：{{question}}",
+    "rationaleLabel": "原因",
+    "draftWithAnswers": "以這些答案起草",
+    "skipAndDraft": "跳過並起草",
+    "error": "無法取得釐清問題，請重試，或直接起草。"
+  },
+  "agentIconPicker": {
+    "searchPlaceholder": "搜尋圖示...",
+    "noIconsMatch": "找不到符合的圖示"
+  },
+  "documentDiffModal": {
+    "selectRevision": "選擇版本",
+    "old": "舊版",
+    "new": "新版",
+    "content": "內容",
+    "loadingRevisions": "載入版本中...",
+    "selectTwoRevisions": "請選擇兩個版本進行比較。",
+    "sameRevision": "兩側為相同版本。",
+    "diffPrefix": "差異—"
+  },
+  "jsonSchemaForm": {
+    "selectAnOption": "選擇選項",
+    "selectExistingSecret": "選擇既有密鑰",
+    "noConfigOptions": "目前無可用的設定選項。",
+    "noItemsAdded": "尚未新增任何項目。",
+    "addItem": "新增項目",
+    "add": "新增",
+    "itemLabel": "項目 {{number}}",
+    "removeItem": "移除項目",
+    "hideSecret": "隱藏密鑰",
+    "showSecret": "顯示密鑰",
+    "sensitiveHidden": "敏感內容——已隱藏 {{count}} 個字元，點擊眼睛圖示以顯示。",
+    "secretDescription": "選擇現有的團隊密鑰，或直接貼上原始值（儲存時 Workcell 將自動以密鑰形式存放）。",
+    "noActiveSecrets": "目前沒有使用中的密鑰，請建立一個或於下方貼上原始值。",
+    "orPasteRawValue": "或貼上原始值",
+    "hideRawValueInput": "隱藏原始值輸入欄"
+  },
+  "envVarEditor": {
+    "createSecretTooltip": "從目前的純文字值建立密鑰",
+    "sealTooltip": "將值儲存為密鑰並以參照取代",
+    "newButton": "新增",
+    "sealButton": "封存",
+    "keyPlaceholder": "KEY",
+    "sourcePlain": "純文字",
+    "sourceSecret": "密鑰",
+    "selectSecretOption": "選擇密鑰...",
+    "missingSecretOption": "遺失（{{id}}…）",
+    "versionAria": "版本",
+    "versionLatest": "最新",
+    "secretNamePrompt": "密鑰名稱",
+    "createSecretFailed": "建立密鑰失敗",
+    "helperText": "將 KEY 設為程序所需的環境變數名稱，例如 GH_TOKEN。選擇「密鑰」可在執行開始時解析已儲存的值。WORKCELL_* 變數會自動注入。"
+  },
+  "approvalDetail": {
+    "breadcrumb": {
+      "root": "審核",
+      "fallback": "審核"
+    },
+    "errors": {
+      "approveFailed": "核准失敗",
+      "rejectFailed": "拒絕失敗",
+      "revisionFailed": "修訂申請失敗",
+      "resubmitFailed": "重新提交失敗",
+      "commentFailed": "留言失敗",
+      "deleteFailed": "刪除失敗"
+    },
+    "notFound": "找不到審核記錄。",
+    "cta": {
+      "reviewLinkedIssues": "檢視關聯議題",
+      "reviewLinkedIssue": "檢視關聯議題",
+      "openHiredAgent": "開啟受僱代理",
+      "backToApprovals": "返回審核列表"
+    },
+    "banner": {
+      "title": "審核已確認",
+      "description": "已通知申請代理審閱此審核及相關議題。"
+    },
+    "requestedBy": "申請人",
+    "seeFullRequest": "查看完整申請",
+    "decisionNote": "決策備註：{{note}}",
+    "linkedIssues": {
+      "title": "關聯議題",
+      "note": "關聯議題在申請代理跟進並關閉前會持續開放。"
+    },
+    "budgetStop": {
+      "prefix": "請從以下位置的預算控制項解除此預算停止："
+    },
+    "actions": {
+      "approve": "核准",
+      "reject": "拒絕",
+      "requestRevision": "申請修訂",
+      "markResubmitted": "標記為已重新提交",
+      "deleteDisapprovedAgent": "刪除已拒絕的代理"
+    },
+    "confirmDeleteAgent": "刪除此已拒絕的代理？此操作無法復原。",
+    "comments": {
+      "heading": "留言（{{count}}）",
+      "boardAuthor": "審核板",
+      "placeholder": "新增留言...",
+      "posting": "發布中…",
+      "post": "發布留言"
+    }
+  },
+  "agentConfig": {
+    "instructionsFileLabel": "代理指令檔",
+    "runtimeServicesJsonLabel": "執行階段服務 JSON",
+    "payloadTemplateJsonLabel": "有效負載範本 JSON",
+    "help": {
+      "name": "此代理的顯示名稱。",
+      "title": "組織圖中顯示的職稱。",
+      "role": "組織角色，決定位置和能力。",
+      "reportsTo": "此代理在組織階層中的直屬上級。",
+      "capabilities": "說明此代理的能力，顯示於組織圖並用於任務路由。",
+      "adapterType": "此代理的執行方式：本地端 CLI（Claude/Codex/OpenCode）、OpenClaw Gateway、衍生程序或通用 HTTP Webhook。",
+      "cwd": "本地端介接器的舊版工作目錄回退設定（已棄用）。現有代理可能仍保有此值，但新設定應改用專案工作區。",
+      "promptTemplate": "每次心跳時發送，請保持簡短且動態。用於當前任務框架，而非大型靜態指令。支援 {{ agent.id }}、{{ agent.name }}、{{ agent.role }} 及其他範本變數。",
+      "model": "覆寫介接器使用的預設模型。",
+      "thinkingEffort": "控制模型推理深度，支援的值因介接器/模型而異。",
+      "chrome": "傳遞 --chrome 參數以啟用 Claude 的 Chrome 整合。",
+      "dangerouslySkipPermissions": "在支援的情況下，自動核准介接器權限提示以實現無人值守執行。",
+      "dangerouslyBypassSandbox": "不受沙盒限制地執行 Codex，需要存取檔案系統或網路時為必要設定。",
+      "search": "在執行期間啟用 Codex 網頁搜尋功能。",
+      "fastMode": "啟用 Codex 快速模式，消耗點數/Token 的速度大幅增加，僅支援 GPT-5.4 及手動指定的 Codex 模型 ID。",
+      "workspaceStrategy": "Workcell 為此代理建立執行工作區的方式。一般 cwd 執行請保持 project_primary，或使用 git_worktree 進行議題隔離的分支檢出。",
+      "workspaceBaseRef": "建立 Worktree 分支時所用的基礎 git ref，留空則使用已解析的工作區 ref 或 HEAD。",
+      "workspaceBranchTemplate": "衍生分支的命名範本，支援 {{issue.identifier}}、{{issue.title}}、{{agent.name}}、{{project.id}}、{{workspace.repoRef}} 及 {{slug}}。",
+      "worktreeParentDir": "衍生 Worktree 的建立目錄，支援絕對路徑、~前置路徑及相對於儲存庫的路徑。",
+      "runtimeServicesJson": "可選的工作區執行階段服務定義，用於共用應用程式伺服器、Worker 或其他附加至工作區的長期伴隨程序。",
+      "maxTurnsPerRun": "每次心跳執行中的最大代理輪次（工具呼叫）數量。",
+      "command": "要執行的命令（例如 node、python）。",
+      "localCommand": "覆寫介接器呼叫的 CLI 命令路徑（例如 /usr/local/bin/claude、codex、opencode）。",
+      "args": "命令列引數，以逗號分隔。",
+      "extraArgs": "本地端介接器的額外 CLI 引數，以逗號分隔。",
+      "envVars": "注入介接器程序的環境變數，可使用純文字值或密鑰參照。",
+      "bootstrapPrompt": "僅在 Workcell 啟動全新工作階段時發送，用於穩定的設定指引，不應在每次心跳時重複。",
+      "payloadTemplateJson": "可選的 JSON，在 Workcell 加入標準喚醒和工作區欄位前合併至遠端介接器請求有效負載。",
+      "webhookUrl": "代理被呼叫時接收 POST 請求的 URL。",
+      "heartbeatInterval": "依計時器自動執行此代理，適用於定期檢查新工作等週期性任務。",
+      "intervalSec": "自動心跳呼叫之間的間隔秒數。",
+      "timeoutSec": "執行被終止前的最大等待秒數，0 表示無逾時。",
+      "graceSec": "傳送中斷信號後強制結束程序前的等待秒數。",
+      "wakeOnDemand": "允許此代理由指派、API 呼叫、UI 操作或自動化系統喚醒。",
+      "cooldownSec": "連續心跳執行之間的最短間隔秒數。",
+      "maxConcurrentRuns": "此代理可同時執行的最大心跳執行數量。",
+      "maxTurnContinuationEnabled": "當介接器因達到每次執行的輪次上限而停止時，自動排程有限的後續執行。",
+      "maxTurnContinuationMaxAttempts": "一次達到最大輪次後的最大自動續行次數，與每次執行的最大輪次無關。",
+      "maxTurnContinuationDelaySec": "開始每次最大輪次續行前的等待秒數。",
+      "budgetMonthlyCents": "月度支出上限（單位：分），0 表示無上限。"
+    },
+    "claudeLocal": {
+      "instructionsFileHint": "定義此代理行為的 Markdown 檔案絕對路徑（例如 AGENTS.md），在執行階段注入至系統提示。",
+      "enableChrome": "啟用 Chrome",
+      "skipPermissions": "略過權限",
+      "maxTurnsPerRun": "每次執行最大輪次"
+    },
+    "codexLocal": {
+      "instructionsFileHint": "定義此代理行為的 Markdown 檔案絕對路徑（例如 AGENTS.md），在執行階段注入至系統提示。注意：Codex 仍可能自動套用工作區中儲存庫範圍的 AGENTS.md 檔案。",
+      "bypassSandbox": "略過沙盒",
+      "enableSearch": "啟用搜尋",
+      "fastMode": "快速模式",
+      "fastModeManualMessage": "快速模式將傳遞至此手動模型，若 Codex 拒絕，請關閉此切換。",
+      "fastModeSupportedMessage": "快速模式消耗點數/Token 的速度遠高於標準 Codex 執行。",
+      "fastModeUnsupportedMessage": "快速模式目前僅支援 {{models}} 或手動模型 ID。切換模型前，Workcell 將忽略此設定。"
+    },
+    "http": {
+      "webhookUrl": "Webhook URL"
+    },
+    "process": {
+      "commandLabel": "命令",
+      "commandPlaceholder": "例如 node、python",
+      "argsLabel": "引數（以逗號分隔）",
+      "argsPlaceholder": "例如 script.js、--flag"
+    }
+  },
+  "routines": {
+    "breadcrumb": "例行程序",
+    "toast": {
+      "created": {
+        "title": "例行程序已建立",
+        "bodyReady": "新增第一個觸發器以啟動即時工作流程。",
+        "bodyDraft": "草稿已儲存，啟用自動化前請先新增預設代理。"
+      },
+      "updateFailed": {
+        "title": "更新例行程序失敗",
+        "body": "Workcell 無法更新例行程序。"
+      },
+      "runFailed": {
+        "title": "例行程序執行失敗",
+        "body": "Workcell 無法啟動例行程序執行。"
+      },
+      "defaultAgentRequired": {
+        "title": "需要預設代理",
+        "body": "啟用例行程序自動化前，請先設定預設代理。"
+      }
+    },
+    "tabs": {
+      "recentRuns": "最近執行",
+      "routines": "例行程序"
+    },
+    "empty": {
+      "noCompany": "選擇團隊以檢視例行程序。",
+      "noRoutines": "尚無例行程序，請使用「建立例行程序」定義第一個週期性工作流程。"
+    },
+    "heading": "例行程序",
+    "subheading": "週期性工作定義，會具現化為可稽核的執行議題。",
+    "actions": {
+      "create": "建立例行程序"
+    },
+    "count": "{{count}} 個例行程序",
+    "sort": {
+      "title": "排序",
+      "label": "排序",
+      "asc": "升冪",
+      "desc": "降冪",
+      "options": {
+        "updated": "更新時間",
+        "created": "建立時間",
+        "lastRun": "最後執行",
+        "title": "標題"
+      }
+    },
+    "group": {
+      "title": "分組",
+      "label": "分組",
+      "options": {
+        "project": "專案",
+        "assignee": "代理",
+        "none": "無"
+      }
+    },
+    "composer": {
+      "eyebrow": "新增例行程序",
+      "subtitle": "先定義週期性工作，草稿例行程序的預設專案和代理為選填。",
+      "cancel": "取消",
+      "titlePlaceholder": "例行程序標題",
+      "for": "對象",
+      "assignee": {
+        "placeholder": "負責人",
+        "none": "無負責人",
+        "search": "搜尋負責人...",
+        "empty": "找不到負責人。"
+      },
+      "in": "於",
+      "project": {
+        "placeholder": "專案",
+        "none": "無專案",
+        "search": "搜尋專案...",
+        "empty": "找不到專案。"
+      },
+      "instructionsPlaceholder": "新增指令...",
+      "advanced": {
+        "title": "進階配送設定",
+        "subtitle": "將策略控制項置於工作定義之後。"
+      },
+      "concurrency": "並行",
+      "catchUp": "補執行",
+      "footerHint": "建立後，Workcell 會直接帶您進行觸發器設定。草稿例行程序在指派預設代理前會保持暫停。",
+      "creating": "建立中...",
+      "createFailed": "建立例行程序失敗"
+    },
+    "loadFailed": "載入例行程序失敗",
+    "concurrencyDescriptions": {
+      "coalesce_if_active": "若有執行中的任務，僅保留一個後續執行在佇列中。",
+      "always_enqueue": "將每次觸發事件加入佇列，即使例行程序已在執行中。",
+      "skip_if_active": "執行中時略過新的觸發事件。"
+    },
+    "catchUpDescriptions": {
+      "skip_missed": "忽略排程器或例行程序暫停期間錯過的時間窗口。",
+      "enqueue_missed_with_cap": "恢復後以有上限的批次補執行錯過的排程時間窗口。"
+    }
+  },
+  "routineDetail": {
+    "trigger": {
+      "next": "下次：{{time}}",
+      "webhook": "Webhook",
+      "api": "API",
+      "label": "標籤",
+      "schedule": "排程",
+      "signingMode": "簽署模式",
+      "replayWindow": "重放時間窗口（秒）",
+      "last": "上次：{{result}}",
+      "rotateSecret": "輪替密鑰",
+      "save": "儲存觸發器"
+    },
+    "dirtyFields": {
+      "title": "標題",
+      "description": "描述",
+      "project": "專案",
+      "defaultAgent": "預設代理",
+      "priority": "優先順序",
+      "concurrencyPolicy": "並行策略",
+      "catchUpPolicy": "補執行策略",
+      "variables": "變數",
+      "secrets": "密鑰"
+    },
+    "breadcrumb": "例行程序",
+    "secretBanner": {
+      "copied": "已複製 {{label}}",
+      "copyFailed": "複製 {{label}} 失敗",
+      "clipboardDenied": "剪貼板存取遭拒。",
+      "webhookCreated": "Webhook 觸發器已建立",
+      "webhookRotated": "Webhook 密鑰已輪替",
+      "saveHint": "請立即儲存，Workcell 不會再次顯示此密鑰值。",
+      "entryLabel": "Webhook 觸發器 {{index}}/{{total}}",
+      "webhookUrlLabel": "Webhook URL",
+      "url": "URL",
+      "webhookSecretLabel": "Webhook 密鑰",
+      "secret": "密鑰",
+      "webhookRestoredOne": "Webhook 觸發器已還原",
+      "webhookRestoredMany": "已還原 {{count}} 個 Webhook 觸發器"
+    },
+    "toast": {
+      "routineChanged": {
+        "title": "例行程序已變更",
+        "body": "其他人更新了此例行程序，請重新載入以查看最新版本。"
+      },
+      "saveFailed": {
+        "title": "儲存例行程序失敗",
+        "body": "Workcell 無法儲存例行程序。"
+      },
+      "runStarted": "例行程序執行已啟動",
+      "runFailed": {
+        "title": "例行程序執行失敗",
+        "body": "Workcell 無法啟動例行程序執行。"
+      },
+      "routineSaved": "例行程序已儲存",
+      "automationPaused": "自動化已暫停。",
+      "automationEnabled": "自動化已啟用。",
+      "updateFailed": {
+        "title": "更新例行程序失敗",
+        "body": "Workcell 無法更新例行程序。"
+      },
+      "triggerAdded": {
+        "title": "觸發器已新增",
+        "body": "例行程序排程已儲存。"
+      },
+      "addTriggerFailed": {
+        "title": "新增觸發器失敗",
+        "body": "Workcell 無法建立觸發器。"
+      },
+      "triggerSaved": {
+        "title": "觸發器已儲存",
+        "body": "例行程序週期更新已儲存。"
+      },
+      "updateTriggerFailed": {
+        "title": "更新觸發器失敗",
+        "body": "Workcell 無法更新觸發器。"
+      },
+      "triggerDeleted": "觸發器已刪除",
+      "deleteTriggerFailed": {
+        "title": "刪除觸發器失敗",
+        "body": "Workcell 無法刪除觸發器。"
+      },
+      "rotateSecretFailed": {
+        "title": "輪替 Webhook 密鑰失敗",
+        "body": "Workcell 無法輪替 Webhook 密鑰。"
+      },
+      "defaultAgentRequired": {
+        "title": "需要預設代理",
+        "body": "啟用例行程序自動化前，請先設定預設代理。"
+      }
+    },
+    "empty": {
+      "noCompany": "選擇團隊以檢視例行程序。"
+    },
+    "notFound": "找不到例行程序",
+    "automation": {
+      "archived": "已封存",
+      "draft": "草稿",
+      "active": "使用中",
+      "paused": "已暫停",
+      "pauseAria": "暫停自動觸發",
+      "enableAria": "啟用自動觸發"
+    },
+    "titlePlaceholder": "例行程序標題",
+    "managedByPlugin": "由 {{name}} 管理",
+    "conflict": {
+      "title": "版本已過期",
+      "body": "您編輯期間此例行程序已被修改，請重新載入以合併最新版本後再儲存。",
+      "reload": "重新載入最新版本"
+    },
+    "defaultAgentNotice": "需要預設代理。此例行程序可保持草稿狀態並手動執行，但在指派預設代理前自動化將保持暫停。",
+    "assignment": {
+      "for": "對象",
+      "assignee": {
+        "placeholder": "負責人",
+        "none": "無負責人",
+        "search": "搜尋負責人...",
+        "empty": "找不到負責人。"
+      },
+      "in": "於",
+      "project": {
+        "placeholder": "專案",
+        "none": "無專案",
+        "search": "搜尋專案...",
+        "empty": "找不到專案。"
+      }
+    },
+    "instructionsPlaceholder": "新增指令...",
+    "advanced": {
+      "title": "進階配送設定",
+      "concurrency": "並行",
+      "catchUp": "補執行"
+    },
+    "unsavedChanges": "未儲存的變更",
+    "saveRoutine": "儲存例行程序",
+    "tabs": {
+      "triggers": "觸發器",
+      "runs": "執行",
+      "activity": "活動",
+      "secrets": "密鑰",
+      "history": "歷程"
+    },
+    "addTrigger": {
+      "title": "新增觸發器",
+      "kind": "類型",
+      "comingSoon": "——即將推出",
+      "schedule": "排程",
+      "signingMode": "簽署模式",
+      "replayWindow": "重放時間窗口（秒）",
+      "adding": "新增中..."
+    },
+    "triggers": {
+      "empty": "尚未設定觸發器。"
+    },
+    "runs": {
+      "empty": "尚無執行記錄。"
+    },
+    "activity": {
+      "empty": "尚無活動。"
+    },
+    "secrets": {
+      "description": "例行程序密鑰適用於此例行程序建立的每個議題，並覆蓋專案和代理環境中相符的鍵。",
+      "reservedSuffix": "變數已保留。"
+    },
+    "concurrencyDescriptions": {
+      "coalesce_if_active": "執行中時，佇列中僅保留一個後續執行。",
+      "always_enqueue": "將每次觸發事件加入佇列，即使多個執行堆積。",
+      "skip_if_active": "例行程序已執行時，略過重疊的觸發事件。"
+    },
+    "catchUpDescriptions": {
+      "skip_missed": "忽略例行程序或排程器暫停期間錯過的排程時間窗口。",
+      "enqueue_missed_with_cap": "恢復後以有上限的批次補執行錯過的排程時間窗口。"
+    },
+    "signingModeDescriptions": {
+      "bearer": "要求在 Authorization 標頭中提供共用持有者 Token。",
+      "hmac_sha256": "要求使用共用密鑰對請求進行 HMAC SHA-256 簽署。",
+      "github_hmac": "接受 GitHub 風格的 X-Hub-Signature-256 標頭（對原始 body 的 HMAC，無時間戳記）。",
+      "none": "無驗證——Webhook URL 本身作為共用密鑰。"
+    }
+  },
+  "costs": {
+    "breadcrumb": "費用",
+    "emptyNoCompany": "選擇團隊以檢視費用。",
+    "title": "費用",
+    "subtitle": "推論支出、平台費用、點數及即時配額時間窗口。",
+    "dateRange": {
+      "to": "至"
+    },
+    "tabs": {
+      "overview": "總覽",
+      "budgets": "預算",
+      "providers": "供應商",
+      "billers": "計費方",
+      "finance": "財務"
+    },
+    "selectDatePrompt": "選擇起始和結束日期以載入資料。",
+    "metrics": {
+      "inferenceSpend": {
+        "label": "推論支出",
+        "subtitle": "{{tokens}} 個 Token，涵蓋請求範圍的事件"
+      },
+      "budget": {
+        "label": "預算",
+        "open": "開放",
+        "pausedSubtitle": "{{agents}} 個代理已暫停·{{projects}} 個專案已暫停",
+        "utilizationSubtitle": "{{spend}}（共 {{budget}}）",
+        "noCapSubtitle": "未設定每月上限"
+      },
+      "financeNet": {
+        "label": "財務淨額",
+        "subtitle": "{{debits}} 筆支出·{{credits}} 筆收入"
+      },
+      "financeEvents": {
+        "label": "財務事件",
+        "subtitle": "範圍內預估 {{estimated}}"
+      }
+    },
+    "overview": {
+      "inferenceLedger": {
+        "title": "推論帳簿",
+        "description": "所選期間的請求範圍推論支出。"
+      },
+      "budgetAmount": "預算 {{budget}}",
+      "unlimitedBudget": "無限制預算",
+      "usage": "使用量",
+      "utilizationConsumed": "此範圍內已消耗每月預算的 {{percent}}%。",
+      "byAgent": {
+        "title": "依代理",
+        "description": "所選期間每個代理的消耗量。",
+        "empty": "尚無費用事件。",
+        "inOut": "輸入 {{input}}·輸出 {{output}}",
+        "apiRuns": "{{count}} 次 API",
+        "subscriptionRuns": "{{count}} 次訂閱",
+        "deletedAgent": "已刪除的代理"
+      },
+      "byProject": {
+        "title": "依專案",
+        "description": "透過專案關聯議題歸因的執行費用。",
+        "empty": "尚無專案歸因的執行費用。",
+        "unattributed": "未歸因"
+      },
+      "financeTimelineEmpty": "尚無財務事件，計費方開立發票或點數到帳後請新增帳戶層級費用。"
+    },
+    "budgets": {
+      "controlPlane": {
+        "title": "預算控制平面",
+        "description": "代理和專案的硬性支出上限。供應商訂閱配額獨立管理，顯示於「供應商」頁面。"
+      },
+      "metrics": {
+        "activeIncidents": {
+          "label": "使用中事件",
+          "subtitle": "開放中的軟性或硬性閾值突破"
+        },
+        "pendingApprovals": {
+          "label": "待審核",
+          "subtitle": "等待審核板處理的預算覆蓋審核"
+        },
+        "pausedAgents": {
+          "label": "已暫停的代理",
+          "subtitle": "因預算封鎖的代理心跳"
+        },
+        "pausedProjects": {
+          "label": "已暫停的專案",
+          "subtitle": "因預算封鎖的專案執行"
+        }
+      },
+      "activeIncidents": {
+        "heading": "使用中事件",
+        "description": "在此處透過提高預算或明確保持範圍暫停來解除硬性停止。"
+      },
+      "scopeHeading": "{{scope}} 預算",
+      "scopeDescription": {
+        "company": "全團隊每月政策。",
+        "agent": "個別代理的週期性每月支出政策。",
+        "project": "執行相關專案的終身支出政策。"
+      },
+      "noPolicies": "尚無預算政策。請從代理或專案詳情頁面設定各自的預算，或使用現有的團隊每月預算控制。"
+    },
+    "providers": {
+      "allProviders": "所有供應商",
+      "empty": "此期間無費用事件。"
+    },
+    "billers": {
+      "allBillers": "所有計費方",
+      "empty": "此期間無可計費事件。"
+    },
+    "finance": {
+      "ledgerTitle": "財務帳簿",
+      "ledgerDescription": "無法對應至單一推論請求的帳戶層級費用。",
+      "debits": {
+        "label": "支出",
+        "subtitle_one": "範圍內共 {{count}} 筆事件",
+        "subtitle_other": "範圍內共 {{count}} 筆事件"
+      },
+      "credits": {
+        "label": "收入",
+        "subtitle": "退款、抵銷及點數返還"
+      },
+      "net": {
+        "label": "淨額",
+        "subtitle": "所選期間的支出減去收入"
+      },
+      "estimated": {
+        "label": "預估",
+        "subtitle": "尚未具發票權威性的預估支出"
+      },
+      "byBiller": {
+        "title": "依計費方",
+        "description": "按收費或貸記方分組的帳戶層級財務事件。",
+        "empty": "尚無財務事件。"
+      }
+    }
+  },
+  "org": {
+    "breadcrumb": "組織圖",
+    "emptyNoCompany": "選擇團隊以檢視組織圖。",
+    "emptyNoAgents": "組織中尚無代理，請建立代理以構建您的組織圖。"
+  },
+  "orgChart": {
+    "breadcrumb": "組織圖",
+    "emptyNoCompany": "選擇團隊以檢視組織圖。",
+    "emptyNoHierarchy": "未定義組織層級結構。",
+    "importCompany": "匯入團隊",
+    "exportCompany": "匯出團隊",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "fitToScreen": "縮放至螢幕",
+    "fitChartToScreen": "將圖表縮放至螢幕",
+    "loadError": "載入組織圖失敗，請重試。"
+  },
+  "workspaces": {
+    "breadcrumb": "工作區",
+    "heading": "工作區",
+    "emptyNoActivity": "尚無工作區活動。",
+    "workspaceCount_one": "{{count}} 個工作區",
+    "workspaceCount_other": "{{count}} 個工作區"
+  },
+  "secrets": {
+    "breadcrumb": "密鑰",
+    "toast": {
+      "secretCreated": "密鑰已建立",
+      "rotated": "已輪替",
+      "statusUpdateFailed": "狀態更新失敗",
+      "secretDeleted": "密鑰已刪除",
+      "deleteFailed": "刪除失敗",
+      "providerVaultUpdated": "供應商保管庫已更新",
+      "providerVaultCreated": "供應商保管庫已建立",
+      "providerVaultDisabled": "供應商保管庫已停用",
+      "disableFailed": "停用失敗",
+      "providerVaultRemoved": "供應商保管庫已移除",
+      "removeFailed": "移除失敗",
+      "defaultVaultSet": "預設保管庫已設定",
+      "defaultUpdateFailed": "預設更新失敗",
+      "healthChecked": "健康狀態已檢查",
+      "healthCheckFailed": "健康狀態檢查失敗",
+      "tryAgain": "重試"
+    },
+    "selectCompany": "選擇團隊以管理密鑰。",
+    "title": "密鑰",
+    "tab": {
+      "secrets": "密鑰",
+      "vaults": "供應商保管庫"
+    },
+    "searchPlaceholder": "依名稱、鍵、參照搜尋",
+    "searchAriaLabel": "搜尋密鑰",
+    "newSecret": "新增密鑰",
+    "loadError": "載入密鑰失敗：",
+    "retry": "重試",
+    "emptyMessage": "尚無密鑰，請建立第一個受管密鑰或連結外部參照。",
+    "noMatch": "沒有符合篩選條件的密鑰。",
+    "table": {
+      "name": "名稱",
+      "mode": "模式",
+      "provider": "供應商",
+      "status": "狀態",
+      "version": "版本",
+      "lastRotated": "最後輪替",
+      "lastResolved": "最後解析",
+      "references": "參照",
+      "reference": "參照"
+    },
+    "viewReferencesFor": "檢視 {{name}} 的參照",
+    "owned": "自有",
+    "open": "開啟",
+    "updateReference": "更新參照",
+    "updateValue": "更新值",
+    "disable": "停用",
+    "activate": "啟用",
+    "unarchive": "取消封存",
+    "archive": "封存",
+    "delete": "刪除",
+    "detailTab": {
+      "details": "詳細資訊",
+      "usageCount": "使用情況（{{count}}）",
+      "usage": "使用情況",
+      "events": "存取事件"
+    },
+    "references": {
+      "title": "密鑰參照",
+      "summary": "{{name}} 被 {{count}} 個 {{places}} 參照。"
+    },
+    "create": {
+      "title": "建立密鑰",
+      "description": "選擇 Workcell 是否應負責未來的供應商寫入，或僅在執行階段解析現有的供應商參照。",
+      "managedTab": "受管值",
+      "externalTab": "外部參照",
+      "nameLabel": "名稱",
+      "keyLabel": "鍵",
+      "keyPlaceholder": "由名稱自動產生",
+      "providerLabel": "供應商",
+      "providerNotConfigured": "（未設定）",
+      "providerExternalOnly": "（僅外部）",
+      "deploymentLevelHint": "現有的部署層級供應商設定可向後相容使用。",
+      "managedInfo": "Workcell 受管密鑰會在所選供應商中建立，未來的輪替透過 Workcell 寫入新的供應商版本。",
+      "awsManagedPath": "AWS 受管路徑：",
+      "valueLabel": "值",
+      "valuePlaceholder": "儲存一次後不再顯示",
+      "externalRefLabel": "外部參照",
+      "externalRefHint": "現有的供應商密鑰在 Workcell 中僅供解析。請在供應商中輪替實際值，僅在路徑、ARN 或版本變更時才更新此 Workcell 參照。",
+      "descriptionLabel": "描述",
+      "descriptionPlaceholder": "此密鑰的用途？（請勿填入值）",
+      "submitManaged": "建立密鑰",
+      "submitExternal": "連結參照"
+    },
+    "optional": "（選填）",
+    "providerVault": "供應商保管庫",
+    "deploymentDefault": "部署預設值",
+    "defaultSuffix": "（預設）",
+    "cancel": "取消",
+    "vault": {
+      "editTitle": "編輯供應商保管庫",
+      "createTitle": "建立供應商保管庫",
+      "description": "僅儲存非敏感的路由中繼資料，憑證保留在執行階段環境或供應商身份中。",
+      "providerLabel": "供應商",
+      "displayNameLabel": "顯示名稱",
+      "displayNamePlaceholder": "正式環境本地保管庫",
+      "statusLabel": "狀態",
+      "statusReady": "就緒",
+      "statusWarning": "警告",
+      "statusComingSoon": "即將推出",
+      "statusDisabled": "已停用",
+      "defaultFor": "{{provider}} 的預設值",
+      "comingSoonNote": "此供應商可儲存草稿路由中繼資料，但在供應商模組實作並審查完成前，執行階段的寫入和解析功能仍停用。",
+      "saveButton": "儲存保管庫",
+      "createButton": "建立保管庫"
+    },
+    "rotate": {
+      "titleExternal": "更新外部參照",
+      "titleManaged": "更新密鑰值",
+      "descriptionExternal": "建立指向現有供應商密鑰的新 Workcell 中繼資料版本，Workcell 不會寫入新的供應商值。",
+      "descriptionManaged": "建立新的供應商支持版本，固定使用最新版本的使用者將在下次執行時取得新值。",
+      "deploymentDefaultHint": "使用部署預設值輪替可保留目前的回退行為。",
+      "externalRefLabel": "外部參照",
+      "externalRefPlaceholder": "更新後的參照",
+      "externalRefHint": "更改此 Workcell 參照前，請先在供應商中輪替實際值。",
+      "newValueLabel": "新值",
+      "newValuePlaceholder": "貼上新值"
+    },
+    "deleteDialog": {
+      "title": "刪除密鑰",
+      "before": "永久移除",
+      "after": "。有效的綁定將在重新對應前發生故障。"
+    },
+    "removeVault": {
+      "title": "移除供應商保管庫",
+      "before": "移除",
+      "fromWorkcell": "僅從 Workcell 中移除。",
+      "noDeleteAws": "此操作不會刪除遠端 AWS Secrets Manager 保管庫、密鑰或任何 AWS 資料。",
+      "noDeleteGeneric": "此操作不會刪除任何遠端供應商資料。",
+      "loseAssociation": "使用此保管庫的密鑰將失去保管庫關聯，直到您指派另一個保管庫。",
+      "confirmButton": "從 Workcell 移除"
+    },
+    "howTo": {
+      "heading": "透過將密鑰綁定至執行階段環境變數來使用密鑰。",
+      "body1Before": "在此建立或連結密鑰，然後開啟代理的「環境變數」或專案的「環境」欄位。新增程序所需的環境鍵，例如",
+      "body1Choose": "，選擇",
+      "secretWord": "密鑰",
+      "body1After": "，並選取已儲存的密鑰版本。",
+      "body2": "執行開始時，Workcell 會在伺服器端解析該值並以環境變數形式注入。專案環境適用於專案中的每個議題，並在相符的鍵上覆蓋代理環境。"
+    },
+    "filters": {
+      "statusActive": "使用中",
+      "statusAll": "所有狀態",
+      "statusDisabled": "已停用",
+      "statusArchived": "已封存",
+      "titleActive": "篩選：{{count}}",
+      "title": "篩選",
+      "heading": "篩選條件",
+      "clear": "清除",
+      "statusGroup": "狀態",
+      "providerGroup": "供應商",
+      "allProviders": "所有供應商"
+    },
+    "inlineWarning": {
+      "defaultVault": "預設保管庫",
+      "vault": "保管庫"
+    },
+    "import": {
+      "disabledTitle": "設定 AWS 供應商保管庫以啟用遠端匯入",
+      "disabledLabel": "AWS 保管庫已停用——管理",
+      "button": "從保管庫匯入"
+    },
+    "vaults": {
+      "loading": "載入供應商保管庫中",
+      "loadError": "載入供應商保管庫失敗：",
+      "comingSoon": "即將推出",
+      "addVault": "新增保管庫",
+      "notSupported": "尚不支援。",
+      "empty": "尚無團隊專屬保管庫，密鑰仍可使用部署預設供應商設定。"
+    },
+    "card": {
+      "default": "預設",
+      "healthPrefix": "健康狀態",
+      "healthNotChecked": "未檢查健康狀態",
+      "checkHealth": "檢查健康狀態",
+      "makeDefault": "設為預設",
+      "remove": "移除"
+    },
+    "fields": {
+      "backupReminder": "我了解備份和還原需要同時具備資料庫中繼資料和本地端加密主鍵檔案。",
+      "awsRegion": "AWS 區域",
+      "namespace": "命名空間",
+      "secretNamePrefix": "密鑰名稱前綴",
+      "kmsKeyId": "KMS 金鑰 ID",
+      "ownerTag": "擁有者標籤",
+      "environmentTag": "環境標籤",
+      "projectId": "專案 ID",
+      "location": "位置",
+      "address": "地址",
+      "mountPath": "掛載路徑",
+      "secretPathPrefix": "密鑰路徑前綴"
+    },
+    "discovery": {
+      "title": "AWS 探索",
+      "description": "使用目前的草稿路由欄位檢查 AWS Secrets Manager 中繼資料，不讀取實際值。",
+      "findButton": "尋找現有 AWS 值",
+      "enterRegion": "探索前請輸入 AWS 區域。",
+      "searching": "搜尋 AWS Secrets Manager 中繼資料中",
+      "noCandidates": "未找到 AWS 保管庫中繼資料候選項，仍可手動輸入。",
+      "noStableNamespace": "未偵測到穩定的命名空間或前綴",
+      "useValues": "使用這些值"
+    },
+    "optionalSuffix": "（選填）",
+    "details": {
+      "description": "描述",
+      "custody": "保管方",
+      "provider": "供應商",
+      "providerVault": "供應商保管庫",
+      "latestVersion": "最新版本",
+      "created": "建立時間",
+      "updated": "更新時間",
+      "lastRotated": "最後輪替",
+      "lastResolved": "最後解析",
+      "linkedReference": "連結的供應商參照",
+      "managedPath": "供應商受管路徑",
+      "neverRedisplays": "Workcell 不會再次顯示已儲存的值。"
+    },
+    "loading": "載入中…",
+    "usage": {
+      "empty": "無有效綁定。在代理、專案、環境或外掛設定中新增此密鑰即可開始使用。",
+      "required": "·必填",
+      "optional": "·選填"
+    },
+    "events": {
+      "empty": "尚無存取事件記錄，每次執行階段解析都會在此寫入一筆隱藏記錄。"
+    }
+  },
+  "agentDetail": {
+    "breadcrumb": {
+      "agents": "代理",
+      "agentFallback": "代理",
+      "runs": "執行",
+      "run": "執行 {{id}}",
+      "instructions": "指令",
+      "configuration": "設定",
+      "budget": "預算",
+      "dashboard": "儀表板"
+    },
+    "duplicateConfirm": "要將 {{name}} 複製為 {{nextName}}？",
+    "toast": {
+      "duplicated": "代理已複製",
+      "duplicateFailed": "無法複製代理",
+      "saveFailed": "儲存失敗"
+    },
+    "leftNotice": "您已離開此代理，它不再顯示於您的側邊欄。",
+    "dismissMembershipNotice": "關閉代理成員資格通知",
+    "assignTask": "指派任務",
+    "runHeartbeat": "執行心跳",
+    "live": "即時",
+    "overflow": {
+      "more": "更多操作"
+    },
+    "menu": {
+      "duplicate": "複製代理",
+      "copyId": "複製代理 ID",
+      "resetSessions": "重設工作階段",
+      "terminate": "終止"
+    },
+    "tabs": {
+      "dashboard": "儀表板",
+      "instructions": "指令",
+      "skills": "技能",
+      "configuration": "設定",
+      "memory": "記憶體",
+      "runs": "執行",
+      "budget": "預算"
+    },
+    "pendingApproval": "此代理等待審核板核准，目前無法呼叫。",
+    "approveAgent": "核准代理",
+    "cancel": "取消",
+    "save": "儲存",
+    "saving": "儲存中…",
+    "liveRun": "即時執行",
+    "latestRun": "最近執行",
+    "viewDetails": "查看詳情",
+    "charts": {
+      "runActivity": "執行活動",
+      "last14Days": "最近 14 天",
+      "issuesByPriority": "依優先順序的議題",
+      "issuesByStatus": "依狀態的議題",
+      "successRate": "成功率"
+    },
+    "recentIssues": "最近議題",
+    "seeAll": "查看全部",
+    "noRecentIssues": "沒有最近的議題。",
+    "moreIssues": "+{{count}} 個更多議題",
+    "costs": {
+      "inputTokens": "輸入 Token",
+      "outputTokens": "輸出 Token",
+      "cachedTokens": "快取 Token",
+      "totalCost": "總費用",
+      "colDate": "日期",
+      "colRun": "執行",
+      "colInput": "輸入",
+      "colOutput": "輸出",
+      "colCost": "費用"
+    },
+    "apiKeys": "API 金鑰",
+    "configRevisions": "設定版本",
+    "noConfigRevisions": "尚無設定版本。",
+    "restore": "還原",
+    "changedLabel": "已變更：",
+    "noTrackedChanges": "無追蹤的變更",
+    "permissions": "權限",
+    "canCreateAgents": "可建立新代理",
+    "canCreateAgentsHint": "允許此代理建立或僱用代理並隱式指派任務。",
+    "canAssignTasks": "可指派任務",
+    "taskAssign": {
+      "orchestrator": "編排器自動啟用。",
+      "agentCreator": "此代理可建立新代理時自動啟用。",
+      "explicitGrant": "透過明確的團隊權限授予啟用。",
+      "simpleDefault": "透過簡單的全團隊任務指派預設啟用。",
+      "disabled": "除非明確授予，否則停用。"
+    },
+    "prompts": {
+      "localOnly": "指令包僅適用於本地端介接器。",
+      "advanced": "進階",
+      "mode": "模式",
+      "modeTooltip": "受管：Workcell 儲存並提供指令包。外部：您提供指令所在的磁碟路徑。",
+      "managed": "受管",
+      "external": "外部",
+      "rootPath": "根路徑",
+      "rootPathTooltip": "指令包所在磁碟上的絕對目錄，受管模式下由 Workcell 自動設定。",
+      "managedPlaceholder": "（受管）",
+      "entryFile": "入口檔案",
+      "entryFileTooltip": "代理載入指令時最先讀取的主要檔案，預設為 AGENTS.md。",
+      "files": "檔案",
+      "create": "建立",
+      "cancel": "取消",
+      "virtualFile": "虛擬檔案",
+      "virtualFileTooltip": "舊版內嵌提示——此已棄用的虛擬檔案保留了原 promptTemplate 的內容",
+      "entry": "入口",
+      "deprecatedVirtualFile": "已棄用的虛擬檔案",
+      "languageFile": "{{language}} 檔案",
+      "newFile": "在此包中建立新檔案",
+      "newFileAria": "在此包中建立新檔案",
+      "closePanelAria": "關閉檔案面板",
+      "openFilePanelAria": "開啟檔案面板",
+      "copyAsMarkdownAria": "將指令檔案複製為 Markdown",
+      "copyAsMarkdown": "複製為 Markdown",
+      "copied": "已複製",
+      "deleteConfirm": "刪除 {{file}}？",
+      "delete": "刪除",
+      "editorPlaceholder": "# 代理指令",
+      "fileContentsPlaceholder": "檔案內容"
+    },
+    "skills": {
+      "keptInWorkspace": "保留於工作區",
+      "appliedWhenRuns": "代理執行時套用",
+      "trackedOnly": "僅追蹤",
+      "unknown": "未知",
+      "unsupportedOpenclaw": "Workcell 無法在此管理 OpenClaw 技能，請前往您的 OpenClaw 實例管理此代理的技能。",
+      "unsupportedGeneric": "Workcell 目前無法管理此介接器的技能，請直接在介接器中管理。",
+      "savingChanges": "儲存變更中...",
+      "savingSoon": "即將儲存...",
+      "viewLibrary": "檢視團隊技能庫",
+      "view": "檢視",
+      "locationLabel": "位置：{{location}}",
+      "manageInAdapter": "直接在介接器中管理技能。",
+      "emptyState": "請先將技能匯入至團隊庫，再在此處附加。",
+      "requiredByWorkcell": "Workcell 必要",
+      "unmanagedHeader": "（{{count}}）使用者安裝的技能，不由 Workcell 管理",
+      "missingTitle": "團隊庫中缺少已申請的技能",
+      "adapter": "介接器",
+      "skillsApplied": "已套用的技能",
+      "selectedSkills": "已選技能"
+    },
+    "runs": {
+      "noRuns": "尚無執行記錄。",
+      "backToRuns": "返回執行列表"
+    },
+    "runDetail": {
+      "cancelling": "取消中…",
+      "cancel": "取消",
+      "resuming": "恢復中…",
+      "resume": "恢復",
+      "retrying": "重試中…",
+      "retry": "重試",
+      "durationLabel": "持續時間：",
+      "runningClaudeLogin": "執行 claude login 中...",
+      "loginToClaude": "登入 Claude Code",
+      "loginUrl": "登入 URL：",
+      "exitCode": "結束代碼 {{code}}",
+      "signal": "（信號：{{signal}}）",
+      "input": "輸入",
+      "output": "輸出",
+      "cached": "已快取",
+      "cost": "費用",
+      "session": "工作階段",
+      "changed": "（已變更）",
+      "before": "之前",
+      "id": "ID",
+      "after": "之後",
+      "clearingSession": "清除工作階段中...",
+      "clearSessionForIssues": "清除這些議題的工作階段",
+      "issuesTouched": "涉及的議題（{{count}}）",
+      "stderr": "stderr",
+      "stdout": "stdout"
+    },
+    "logViewer": {
+      "loadingLogs": "載入執行日誌中...",
+      "noLogEvents": "無日誌事件。",
+      "transcript": "逐字稿（{{count}}）",
+      "jumpToLive": "跳至即時",
+      "live": "即時",
+      "waitingTranscript": "等待逐字稿...",
+      "noPersistedTranscript": "此執行無持久化逐字稿。",
+      "loading": "載入中...",
+      "loadMoreLog": "載入更多日誌",
+      "showingFirstKb": "顯示前 {{kb}} KB",
+      "ofKb": " 共 {{kb}} KB",
+      "failureDetails": "失敗詳情",
+      "errorLabel": "錯誤：",
+      "stderrExcerpt": "stderr 摘錄",
+      "adapterResultJson": "介接器結果 JSON",
+      "stdoutExcerpt": "stdout 摘錄",
+      "events": "事件（{{count}}）"
+    },
+    "keys": {
+      "created": "API 金鑰已建立——請立即複製，之後不會再次顯示。",
+      "hide": "隱藏",
+      "show": "顯示",
+      "copy": "複製",
+      "copied": "已複製！",
+      "dismiss": "關閉",
+      "createTitle": "建立 API 金鑰",
+      "createDescription": "API 金鑰可讓此代理驗證對 Workcell 伺服器的呼叫。",
+      "namePlaceholder": "金鑰名稱（例如 production）",
+      "create": "建立",
+      "loading": "載入金鑰中...",
+      "noActive": "無使用中的 API 金鑰。",
+      "activeKeys": "使用中的金鑰",
+      "createdAt": "建立於 {{date}}",
+      "revoke": "撤銷",
+      "revokedKeys": "已撤銷的金鑰",
+      "revokedAt": "撤銷於 {{date}}"
+    },
+    "workspaceOp": {
+      "hideFullLog": "隱藏完整日誌",
+      "showFullLog": "顯示完整日誌",
+      "loadingLog": "載入日誌中...",
+      "noPersistedLines": "無持久化日誌行。",
+      "sectionTitle": "工作區（{{count}}）",
+      "createdByRun": "由此執行建立",
+      "reusedWorkspace": "重用現有工作區",
+      "stderrExcerpt": "stderr 摘錄",
+      "stdoutExcerpt": "stdout 摘錄",
+      "command": "命令：",
+      "workingDir": "工作目錄：",
+      "branch": "分支：",
+      "baseRef": "基礎 ref：",
+      "worktree": "Worktree：",
+      "repoRoot": "儲存庫根目錄：",
+      "cleanup": "清理：",
+      "phaseWorktreePrepare": "Worktree 設定",
+      "phaseProvision": "佈建",
+      "phaseTeardown": "拆除",
+      "phaseWorktreeCleanup": "Worktree 清理"
+    },
+    "costsHeading": "費用",
+    "invocationSource": {
+      "timer": "計時器",
+      "assignment": "指派",
+      "on_demand": "隨需",
+      "automation": "自動化"
+    }
+  },
+  "inviteLanding": {
+    "awaiting": {
+      "defaultApprover": "團隊管理員",
+      "title": "申請加入 {{company}}",
+      "pendingApproval": "您的申請仍在等待核准，{{approver}} 必須核准您的加入申請。",
+      "approvalPage": "審核頁面",
+      "membersLink": "團隊設定→成員",
+      "askToVisitPrefix": "請請他們前往",
+      "askToVisitSuffix": "以核准您的申請。",
+      "refreshHint": "核准後請重新整理此頁面——系統將自動跳轉。",
+      "claimSecret": "領取密鑰",
+      "onboardingLabel": "入職引導："
+    },
+    "companyFallback": "此 Workcell 團隊",
+    "sessionFallback": "此帳號",
+    "joinButton": {
+      "continue": "繼續",
+      "openCompany": "開啟團隊",
+      "acceptInvite": "接受邀請",
+      "submitRequest": "提交申請"
+    },
+    "invalidToken": "無效的邀請 Token。",
+    "loadingInvite": "載入邀請中...",
+    "checkingAccess": "確認您的存取權限中...",
+    "openingCompany": "開啟團隊中...",
+    "notAvailable": {
+      "title": "邀請無效",
+      "expiredRevokedUsed": "此邀請可能已過期、已撤銷或已使用。",
+      "rejected": "此加入申請未獲核准。",
+      "alreadyUsed": "此邀請已被使用。"
+    },
+    "bootstrapComplete": {
+      "title": "初始化完成"
+    },
+    "openBoard": "開啟審核板",
+    "joinedCompany": {
+      "title": "您已加入團隊"
+    },
+    "eyebrow": "您已被邀請加入 Workcell",
+    "heading": {
+      "setUp": "設定 Workcell",
+      "join": "加入 {{company}}"
+    },
+    "intro": {
+      "agent": "查看邀請詳情，然後填寫以下代理資訊以提交加入申請。",
+      "createAccount": "請先建立您的 Workcell 帳號。若您已有帳號，請切換至登入並使用相同的電子郵件繼續接受邀請。",
+      "ready": "您的帳號已準備就緒。查看邀請詳情後，接受邀請即可繼續。"
+    },
+    "details": {
+      "company": "團隊",
+      "invitedBy": "邀請者",
+      "invitedByFallback": "Workcell 看板",
+      "requestedAccess": "申請的存取權限",
+      "agentJoinRequest": "代理加入申請",
+      "companyAccess": "團隊存取權限",
+      "inviteExpires": "邀請到期時間"
+    },
+    "messageFromInviter": "邀請者的留言",
+    "signedInAsPrefix": "目前登入身分：",
+    "signedInAsSuffix": "。",
+    "agentForm": {
+      "title": "提交代理詳情",
+      "description": "此邀請將在 {{company}} 中建立一個新代理的審核申請。",
+      "agentName": "代理名稱",
+      "adapterType": "轉接器類型",
+      "comingSoon": "（即將推出）",
+      "capabilities": "功能"
+    },
+    "working": "處理中...",
+    "auth": {
+      "createTitle": "建立您的帳號",
+      "signInTitle": "登入以繼續",
+      "createDescription": "先建立 Workcell 帳號。完成後，您將回到此頁面接受 {{company}} 的邀請。",
+      "signInDescription": "使用與此邀請相符的 Workcell 帳號。若尚未有帳號，請切換回建立帳號。",
+      "modeCreate": "建立帳號",
+      "modeExisting": "我已有帳號",
+      "name": "姓名",
+      "email": "電子郵件",
+      "password": "密碼",
+      "requiredFields": "請填寫所有必填欄位。",
+      "signInContinue": "登入並繼續",
+      "createContinue": "建立帳號並繼續",
+      "helperSignUp": "之前已註冊過？請改用現有帳號選項，以確保邀請連結到正確的 Workcell 使用者。",
+      "helperSignIn": "尚未有帳號？請切換回建立帳號，以便用新帳號接受邀請。"
+    },
+    "accept": {
+      "alreadyMemberTitle": "已在此團隊中",
+      "completingTitle": "正在完成團隊存取設定",
+      "bootstrapTitle": "接受初始化邀請",
+      "companyTitle": "接受團隊邀請",
+      "grantingAccess": "正在授予您存取 {{company}} 的權限。",
+      "alreadyBelongs": "此帳號已屬於 {{company}}。",
+      "willFinishSetup": "這將完成 Workcell 的設定。",
+      "willGrantAccess": "這將授予或補全您對 {{company}} 的存取權限。",
+      "submittingRequest": "正在提交申請...",
+      "finishingSignIn": "正在完成登入..."
+    },
+    "error": {
+      "acceptFailed": "無法接受邀請"
+    }
+  },
+  "companySettings": {
+    "breadcrumbCompany": "團隊",
+    "breadcrumbSettings": "設定",
+    "noCompany": "尚未選擇團隊。請從上方的切換器選擇一個團隊。",
+    "heading": "團隊設定",
+    "section": {
+      "general": "一般",
+      "appearance": "外觀",
+      "hiring": "招募",
+      "packages": "團隊套件",
+      "dangerZone": "危險操作"
+    },
+    "name": {
+      "label": "團隊名稱",
+      "hint": "您的團隊顯示名稱。"
+    },
+    "description": {
+      "label": "說明",
+      "hint": "選填，顯示於團隊個人資料中的說明。",
+      "placeholder": "選填的團隊說明"
+    },
+    "planLanguage": {
+      "label": "計畫報告語言",
+      "hint": "協調器將以此語言撰寫計畫報告與議題草稿。"
+    },
+    "logo": {
+      "label": "標誌",
+      "hint": "請上傳 PNG、JPEG、WEBP、GIF 或 SVG 格式的標誌圖片。",
+      "removing": "移除中...",
+      "remove": "移除標誌",
+      "uploadFailed": "標誌上傳失敗",
+      "uploading": "正在上傳標誌..."
+    },
+    "brandColor": {
+      "label": "品牌顏色",
+      "hint": "設定團隊圖示的色調。留空則自動產生顏色。",
+      "placeholder": "自動",
+      "clear": "清除"
+    },
+    "attachment": {
+      "label": "附件大小限制",
+      "hint": "允許範圍：1–{{max}} MiB。",
+      "invalid": "請輸入 1 到 {{max}} 之間的整數。"
+    },
+    "save": {
+      "saving": "儲存中...",
+      "save": "儲存變更",
+      "saved": "已儲存",
+      "failed": "儲存失敗"
+    },
+    "hiring": {
+      "label": "新招募成員需要看板審核",
+      "hint": "新代理招募將保持待審狀態，直到看板批准為止。"
+    },
+    "toggle": {
+      "saveFailed": "無法儲存，請再試一次。"
+    },
+    "autonomy": {
+      "heading": "自主性",
+      "subtitle": "決定您的 AI 團隊自行運作的程度，以及需要您做決策的時機。",
+      "recommended": "預設 · 推薦",
+      "approvals": {
+        "title": "計畫與確認審核",
+        "on": "自動批准——系統立即接受代理請求，工作無需等待您確認。",
+        "off": "需要您的批准——代理提出請求後，將等待您接受或拒絕。"
+      },
+      "routing": {
+        "title": "自動指派新議題",
+        "on": "您建立的議題將由協調器自動接手執行。",
+        "off": "每個新議題的指派對象由您自行選擇。"
+      },
+      "pair": {
+        "title": "配對自動執行預設值",
+        "on": "新配對自動推進輪次（可在個別配對中關閉）。",
+        "off": "新配對以手動執行模式啟動。"
+      },
+      "designFirst": {
+        "title": "設計優先",
+        "hint": "啟用後，此團隊中的任何議題均須在設計獲批後才能完成。議題可單獨選擇退出。"
+      },
+      "info": {
+        "autoStart": "工作開始時，議題自動移至進行中。",
+        "pairConverge": "配對在收斂（雙方確認）後自動完成。"
+      }
+    },
+    "packages": {
+      "movedPrefix": "匯入與匯出功能已移至",
+      "orgChartLink": "組織架構圖",
+      "movedSuffix": "標題的專屬頁面。",
+      "sendToCloud": "傳送至 Workcell Cloud",
+      "export": "匯出",
+      "import": "匯入"
+    },
+    "danger": {
+      "description": "封存此團隊可將其從側邊欄隱藏。此操作會保留於資料庫中。",
+      "confirm": "封存團隊「{{name}}」？它將從側邊欄中隱藏。",
+      "archiving": "封存中...",
+      "alreadyArchived": "已封存",
+      "archive": "封存團隊",
+      "failed": "操作失敗，請再試一次。",
+      "archivedNote": "此團隊已封存並從側邊欄隱藏。解除封存即可重新啟用。",
+      "unarchive": "解除封存團隊",
+      "unarchiving": "解除封存中...",
+      "delete": "刪除團隊",
+      "deleteDescription": "永久刪除此團隊及其所有代理、議題和資料。此操作無法復原。",
+      "deleteConfirmLabel": "請輸入團隊名稱以確認：",
+      "deleteConfirmButton": "永久刪除",
+      "deleting": "刪除中...",
+      "deleteFailed": "刪除團隊失敗"
+    }
+  },
+  "companyAccess": {
+    "breadcrumb": {
+      "company": "團隊",
+      "settings": "設定",
+      "members": "成員"
+    },
+    "toast": {
+      "memberUpdated": "成員已更新",
+      "memberUpdateFailed": "更新成員失敗",
+      "unknownError": "未知錯誤",
+      "joinRequestApproved": "加入申請已批准",
+      "joinRequestApproveFailed": "批准加入申請失敗",
+      "joinRequestRejected": "加入申請已拒絕",
+      "joinRequestRejectFailed": "拒絕加入申請失敗",
+      "memberRemoved": "成員已移除",
+      "memberRemoveFailed": "移除成員失敗"
+    },
+    "selectCompany": "請選擇一個團隊以管理存取權限。",
+    "loading": "正在載入團隊存取資料…",
+    "error": {
+      "forbidden": "您沒有管理團隊成員的權限。",
+      "loadFailed": "載入團隊成員失敗。"
+    },
+    "title": "團隊成員",
+    "description": "管理可在 {{company}} 中工作的人員。成員預設可跨團隊協作。",
+    "coreNote": "Core 將此頁面專注於成員管理、邀請審核和安全移除成員。",
+    "instanceAdminNotice": "此帳號可透過執行個體管理員權限在此管理存取，但目前並未持有有效的團隊成員資格。",
+    "humans": {
+      "title": "使用者",
+      "description": "在此管理使用者的團隊成員資格與狀態。"
+    },
+    "pendingJoins": {
+      "title": "待審的使用者加入申請",
+      "description": "審核待審的加入申請，通過後方可成為正式團隊成員。",
+      "pending": "待審",
+      "unknownRequester": "未知的使用者申請者",
+      "noEmail": "無可用電子郵件",
+      "inviteMetadataUnavailable": "邀請中繼資料不可用",
+      "submitted": "已提交",
+      "approve": "批准使用者",
+      "reject": "拒絕使用者"
+    },
+    "table": {
+      "userAccount": "使用者帳號",
+      "role": "角色",
+      "status": "狀態",
+      "action": "操作",
+      "empty": "此團隊尚無使用者成員資格。",
+      "roleUnset": "未設定"
+    },
+    "actions": {
+      "edit": "編輯",
+      "remove": "移除"
+    },
+    "editDialog": {
+      "title": "編輯成員",
+      "description": "更新 {{member}} 的團隊角色和成員資格狀態。",
+      "companyRole": "團隊角色",
+      "roleUnset": "未設定",
+      "membershipStatus": "成員資格狀態",
+      "statusActive": "啟用",
+      "statusPending": "待審",
+      "statusSuspended": "已停用",
+      "cancel": "取消",
+      "saving": "儲存中…",
+      "save": "儲存成員"
+    },
+    "removeDialog": {
+      "title": "移除成員",
+      "description": "封存 {{member}} 並在隱藏此使用者於指派欄位前，將進行中的指派移交出去。",
+      "checkingIssues": "正在檢查已指派的議題...",
+      "reassignmentLabel": "議題重新指派",
+      "leaveUnassigned": "留空不指派",
+      "optgroupHumans": "使用者",
+      "optgroupAgents": "代理",
+      "cancel": "取消",
+      "removing": "移除中...",
+      "confirm": "移除成員"
+    },
+    "legacy": {
+      "breadcrumbSettings": "設定",
+      "breadcrumbAccess": "存取",
+      "checking": "正在檢查進階權限擴充功能...",
+      "title": "進階權限",
+      "description": "進階存取、範圍指派及明確授權控制由已安裝的團隊設定擴充功能提供。",
+      "unavailableTitle": "進階權限不可用",
+      "unavailableBody": "Core Workcell 持續強制執行團隊邊界及現有的限制性原則資料，但編輯進階權限需要已安裝的擴充功能。",
+      "extensionsUnavailable": "外掛擴充功能不可用：",
+      "openMembers": "開啟成員頁面",
+      "openInvites": "開啟邀請頁面"
+    }
+  },
+  "companyInvites": {
+    "toast": {
+      "clipboardUnavailable": "剪貼簿不可用",
+      "inviteCreated": "邀請已建立",
+      "inviteReadyCopied": "邀請已就緒並複製到剪貼簿。",
+      "inviteReady": "邀請已就緒，詳見下方。",
+      "inviteCreateFailed": "建立邀請失敗",
+      "unknownError": "未知錯誤",
+      "inviteRevoked": "邀請已撤銷",
+      "inviteRevokeFailed": "撤銷邀請失敗"
+    },
+    "copy": {
+      "selectManually": "邀請 URL 已選取，請從欄位中手動複製。",
+      "manualFallback": "請從下方欄位中手動複製邀請 URL。"
+    },
+    "breadcrumb": {
+      "company": "團隊",
+      "settings": "設定",
+      "invites": "邀請"
+    },
+    "selectCompany": "請選擇一個團隊以管理邀請。",
+    "loading": "正在載入邀請…",
+    "error": {
+      "forbidden": "您沒有管理團隊邀請的權限。",
+      "loadFailed": "載入邀請失敗。"
+    },
+    "title": "團隊邀請",
+    "description": "邀請人員申請加入此團隊。新建的邀請連結在產生時將自動複製到剪貼簿。",
+    "invitePerson": {
+      "title": "邀請人員",
+      "description": "產生使用者邀請連結，並選擇預設申請的存取權限。"
+    },
+    "chooseRole": "選擇角色",
+    "roleOptions": {
+      "viewer": {
+        "label": "檢視者",
+        "description": "可檢視團隊工作並追蹤進度。",
+        "gets": "僅限檢視的團隊成員資格。"
+      },
+      "operator": {
+        "label": "操作員",
+        "description": "適合需要協助執行工作但無需管理存取權限的人員。",
+        "gets": "可指派任務。"
+      },
+      "admin": {
+        "label": "管理員",
+        "description": "適合需要邀請人員、建立代理及審核加入申請的操作員。",
+        "gets": "可建立代理、邀請使用者、指派任務及審核加入申請。"
+      },
+      "owner": {
+        "label": "擁有者",
+        "description": "完整的團隊存取權限，包括成員管理。",
+        "gets": "管理員的所有權限，另加管理成員。"
+      },
+      "defaultBadge": "預設"
+    },
+    "singleUseNote": "每個邀請連結僅限單次使用。使用者受邀者在登入後立即獲得所選角色；代理邀請仍需建立加入申請等待審核。",
+    "creating": "建立中…",
+    "createInvite": "建立邀請",
+    "auditTrailNote": "下方的邀請記錄保留稽核軌跡。",
+    "latestInvite": {
+      "title": "最新邀請連結",
+      "copied": "已複製",
+      "domainNote": "此 URL 包含伺服器回傳的目前 Workcell 網域。",
+      "urlLabel": "最新邀請 URL",
+      "copyLink": "複製連結",
+      "openInvite": "開啟邀請"
+    },
+    "history": {
+      "title": "邀請記錄",
+      "description": "查看邀請狀態、對象、邀請者及關聯的加入申請。",
+      "openQueue": "開啟加入申請佇列",
+      "empty": "此團隊尚未建立任何邀請。",
+      "columnState": "狀態",
+      "columnFor": "對象",
+      "columnInvitedBy": "邀請者",
+      "columnCreated": "建立時間",
+      "columnJoinRequest": "加入申請",
+      "columnAction": "操作",
+      "unknownInviter": "未知邀請者",
+      "reviewRequest": "審核申請",
+      "revoke": "撤銷",
+      "inactive": "已停用",
+      "loadingMore": "載入更多…",
+      "viewMore": "查看更多"
+    }
+  },
+  "companyEnvironments": {
+    "support": {
+      "yes": "是",
+      "no": "否"
+    },
+    "breadcrumb": {
+      "company": "團隊",
+      "settings": "設定",
+      "environments": "環境"
+    },
+    "toast": {
+      "updated": "環境已更新",
+      "created": "環境已建立",
+      "ready": "{{name}} 已就緒。",
+      "saveFailed": "儲存環境失敗",
+      "saveFailedBody": "環境儲存失敗。",
+      "probePassed": "環境探測通過",
+      "probeFailed": "環境探測失敗",
+      "probeFailedBody": "環境探測失敗。",
+      "draftProbePassed": "草稿探測通過",
+      "draftProbeFailed": "草稿探測失敗"
+    },
+    "selectCompany": "請選擇一個團隊以管理環境。",
+    "title": "團隊環境",
+    "disabledNote": "請在執行個體實驗性設定中啟用「環境」，以管理團隊執行目標。",
+    "intro": "為專案、議題工作區和支援遠端的轉接器定義可重複使用的執行目標。",
+    "matrixNote": "環境選項使用與代理預設相同的轉接器支援矩陣。遠端管理的轉接器始終支援 SSH，而沙盒環境僅在安裝了具備執行能力的沙盒提供者外掛時才會顯示。",
+    "installedProvidersLabel": "已安裝的沙盒提供者：",
+    "installedProvidersSuffix": "。這些不是轉接器類型，而是為支援沙盒執行的轉接器提供沙盒驅動程式的後端。",
+    "table": {
+      "caption": "各轉接器的環境支援",
+      "adapter": "轉接器",
+      "local": "本機",
+      "ssh": "SSH",
+      "sandboxViaPlugin": "透過外掛的沙盒"
+    },
+    "list": {
+      "empty": "此團隊尚未儲存任何環境。",
+      "sshHostFallback": "SSH 主機",
+      "sshUserFallback": "使用者",
+      "localHost": "在此 Workcell 主機上執行。",
+      "testing": "測試中...",
+      "testConnection": "測試連線",
+      "testProvider": "測試提供者",
+      "editing": "編輯中",
+      "edit": "編輯"
+    },
+    "form": {
+      "editTitle": "編輯環境",
+      "addTitle": "新增環境",
+      "nameLabel": "名稱",
+      "nameHint": "此執行目標的操作員顯示名稱。",
+      "descriptionLabel": "說明",
+      "descriptionHint": "選填，關於此機器用途的備註。",
+      "driverLabel": "驅動程式",
+      "driverHint": "本機在此主機上執行。SSH 儲存遠端機器目標。沙盒在共享環境接縫上儲存外掛支援的提供者設定。",
+      "driverSsh": "SSH",
+      "driverSandbox": "沙盒",
+      "driverLocal": "本機",
+      "hostLabel": "主機",
+      "hostHint": "遠端機器的 DNS 名稱或 IP 位址。",
+      "portLabel": "連接埠",
+      "portHint": "預設為 22。",
+      "usernameLabel": "使用者名稱",
+      "usernameHint": "SSH 登入使用者。",
+      "remotePathLabel": "遠端工作區路徑",
+      "remotePathHint": "Workcell 在 SSH 連線測試期間將驗證的絕對路徑。",
+      "privateKeyLabel": "私密金鑰",
+      "privateKeyHint": "選填的 PEM 私密金鑰。留空則依賴伺服器的 SSH 代理或預設金鑰鏈。",
+      "noSavedSecret": "無已儲存的密鑰",
+      "knownHostsLabel": "已知主機",
+      "knownHostsHint": "啟用嚴格主機金鑰檢查時使用的選填 known_hosts 區塊。",
+      "strictHostKeyLabel": "嚴格主機金鑰檢查",
+      "strictHostKeyHint": "除非您刻意要在探測時停用主機金鑰接受，否則請保持開啟。",
+      "providerLabel": "提供者",
+      "providerHint": "已安裝的具備執行能力的沙盒提供者外掛將顯示於此。",
+      "noProviderConfig": "此提供者未宣告額外的設定欄位。",
+      "saving": "儲存中...",
+      "creating": "建立中...",
+      "save": "儲存環境",
+      "create": "建立環境",
+      "cancel": "取消",
+      "testingDraft": "測試中...",
+      "testDraft": "測試草稿",
+      "saveErrorFallback": "儲存環境失敗"
+    }
+  },
+  "companySkills": {
+    "newForm": {
+      "namePlaceholder": "技能名稱",
+      "slugPlaceholder": "選填短名稱",
+      "descriptionPlaceholder": "簡短說明",
+      "cancel": "取消",
+      "creating": "建立中...",
+      "create": "建立技能"
+    },
+    "list": {
+      "noMatch": "沒有符合此篩選條件的技能。",
+      "collapse": "收合 {{name}}",
+      "expand": "展開 {{name}}"
+    },
+    "pane": {
+      "selectSkill": "選擇一個技能以檢視其檔案。",
+      "removeBlockedReason": "請先從所有代理中分離此技能，再進行移除。",
+      "removing": "移除中...",
+      "remove": "移除",
+      "stopEditing": "停止編輯",
+      "edit": "編輯",
+      "sourceLabel": "來源",
+      "copiedPath": "已複製路徑",
+      "copySourcePath": "複製來源路徑",
+      "pinLabel": "固定",
+      "untracked": "未追蹤",
+      "tracking": "追蹤 {{ref}}",
+      "checkUpdates": "檢查更新",
+      "installUpdate": "安裝更新",
+      "upToDate": "已是最新版本",
+      "keyLabel": "金鑰",
+      "modeLabel": "模式",
+      "modeEditable": "可編輯",
+      "modeReadOnly": "唯讀",
+      "usedByLabel": "使用者",
+      "noAgents": "無已附加的代理",
+      "viewTab": "檢視",
+      "codeTab": "程式碼",
+      "cancel": "取消",
+      "saving": "儲存中...",
+      "save": "儲存",
+      "selectFile": "選擇一個檔案以檢視。"
+    },
+    "breadcrumb": {
+      "skills": "技能",
+      "detail": "詳情"
+    },
+    "toast": {
+      "imported": "技能已匯入",
+      "importWarnings": "匯入警告",
+      "importFailed": "技能匯入失敗",
+      "importFailedBody": "匯入技能來源失敗。",
+      "created": "技能已建立",
+      "createdBody": "{{name}} 現在可在 Workcell 工作區中編輯。",
+      "createFailed": "建立技能失敗",
+      "createFailedBody": "建立技能失敗。",
+      "scanComplete": "專案技能掃描完成",
+      "conflictsFound": "發現技能衝突",
+      "scanWarnings": "掃描警告",
+      "scanFailed": "專案技能掃描失敗",
+      "scanFailedBody": "掃描專案工作區失敗。",
+      "saved": "技能已儲存",
+      "saveFailed": "儲存失敗",
+      "saveFailedBody": "儲存技能檔案失敗。",
+      "updated": "技能已更新",
+      "pinnedTo": "已固定至 {{ref}}",
+      "updateFailed": "更新失敗",
+      "updateFailedBody": "安裝技能更新失敗。",
+      "removed": "技能已移除",
+      "removedBody": "{{name}} 已從團隊技能庫中移除。",
+      "removeFailed": "移除失敗",
+      "removeFailedBody": "移除技能失敗。"
+    },
+    "scan": {
+      "scanning": "正在掃描專案工作區中的技能...",
+      "refreshing": "正在重新整理技能清單..."
+    },
+    "selectCompany": "請選擇一個團隊以管理技能。",
+    "deleteDialog": {
+      "title": "移除技能",
+      "description": "從團隊庫中移除此技能。若仍有代理在使用，移除將被封鎖直到技能被分離。",
+      "confirmNamed": "您即將移除 {{name}}。",
+      "confirmGeneric": "您即將移除此技能。",
+      "currentlyUsedBy": "目前被 {{agents}} 使用中。",
+      "detachHint": "請先從所有代理中分離此技能以啟用移除功能。",
+      "close": "關閉",
+      "cancel": "取消",
+      "removing": "移除中...",
+      "remove": "移除技能"
+    },
+    "sourceDialog": {
+      "title": "新增技能來源",
+      "description": "請先在欄位中貼上本機路徑、GitHub URL 或 `skills.sh` 指令。",
+      "browseTitle": "瀏覽 skills.sh",
+      "browseDescription": "尋找安裝指令並在此貼上。",
+      "searchTitle": "搜尋 GitHub",
+      "searchDescription": "搜尋含有 `SKILL.md` 的儲存庫，然後在此貼上儲存庫 URL。"
+    },
+    "sidebar": {
+      "title": "技能",
+      "available": "可用",
+      "scanTitle": "掃描專案工作區中的技能",
+      "filterPlaceholder": "篩選技能",
+      "sourcePlaceholder": "貼上路徑、GitHub URL 或 skills.sh 指令",
+      "add": "新增",
+      "newSkill": "新技能"
+    }
+  },
+  "instanceAccess": {
+    "activeMembershipsCount": "{{count}} 個有效團隊成員資格",
+    "breadcrumbAccess": "存取",
+    "breadcrumbInstanceSettings": "執行個體設定",
+    "companyAccessDescription": "切換此使用者的團隊成員資格。新增的存取預設為有效的操作員成員資格。",
+    "companyAccessHeading": "團隊存取",
+    "currentMembershipsHeading": "目前的成員資格",
+    "errorAdminRequired": "需要執行個體管理員存取權限才能管理使用者。",
+    "errorLoadUserAccess": "載入使用者存取資料失敗。",
+    "errorLoadUsers": "載入使用者失敗。",
+    "errorNoUserSelected": "未選擇使用者",
+    "loadingUserAccess": "正在載入使用者存取資料…",
+    "loadingUsers": "正在載入執行個體使用者…",
+    "promoteAdmin": "提升為執行個體管理員",
+    "removeAdmin": "移除執行個體管理員",
+    "roleUnset": "未設定",
+    "saveCompanyAccess": "儲存團隊存取",
+    "saving": "儲存中…",
+    "searchPlaceholder": "依姓名或電子郵件搜尋",
+    "searchUsersLabel": "搜尋使用者",
+    "selectUserPrompt": "選擇一個使用者以檢視執行個體存取資料。",
+    "subtitle": "搜尋使用者、管理執行個體管理員狀態，並控制其可存取的團隊。",
+    "title": "執行個體存取",
+    "toastCompanyAccessUpdated": "團隊存取已更新",
+    "toastInstanceRoleUpdated": "執行個體角色已更新"
+  },
+  "instanceExperimentalSettings": {
+    "autoRecoveryAriaLabel": "切換議題圖表即時自動恢復",
+    "autoRecoveryDescription": "讓心跳排程器在已設定的回溯視窗內，為議題相依鏈建立恢復議題。",
+    "autoRecoveryHeading": "自動建立議題恢復任務",
+    "autoRestartAriaLabel": "切換受保護的開發伺服器自動重啟",
+    "autoRestartDescription": "在 `pnpm dev:once` 中，等待所有已排隊和正在執行的本機代理任務完成，當後端變更或遷移使目前啟動版本過時時，自動重啟伺服器。",
+    "autoRestartHeading": "閒置時自動重啟開發伺服器",
+    "autonomousModeAriaLabel": "切換自主無人值守模式",
+    "autonomousModeDescription": "在無人介入的情況下端對端執行多代理工作流程：使用者審核/批准步驟自動批准，新代理招募跳過看板審核。代理 QA 和複合審核階段仍會執行，預算限制仍然適用。",
+    "autonomousModeHeading": "自主模式",
+    "breadcrumbExperimental": "實驗性",
+    "breadcrumbInstanceSettings": "執行個體設定",
+    "cancel": "取消",
+    "cloudSyncAriaLabel": "切換雲端同步實驗性設定",
+    "cloudSyncDescription": "顯示本機 Workcell Cloud 上游連線、預覽、推送、重試及啟用審核介面。停用此設定時，已儲存的連線和執行記錄將會保留。",
+    "cloudSyncHeading": "雲端同步",
+    "currentWindowMany": "目前視窗：最近 {{count}} 小時。",
+    "currentWindowOne": "目前視窗：最近 {{count}} 小時。",
+    "dialogChecking": "啟用前正在檢查恢復候選項目。",
+    "dialogDescriptionMany": "{{count}} 個恢復任務符合最近 {{hours}} 小時的條件。",
+    "dialogDescriptionOne": "{{count}} 個恢復任務符合最近 {{hours}} 小時的條件。",
+    "dialogNoTasks": "目前不會建立任何恢復任務。自動恢復仍可在此視窗內針對未來的即時性事件執行。",
+    "dialogTitle": "確認自動恢復",
+    "enable": "啟用",
+    "enableAndCreate": "啟用並建立 {{count}} 個",
+    "enableOnly": "僅啟用",
+    "environmentsAriaLabel": "切換環境實驗性設定",
+    "environmentsDescription": "在團隊設定中顯示環境管理，並允許專案和代理的環境指派控制。",
+    "environmentsHeading": "啟用環境",
+    "errorCreate": "建立恢復任務失敗。",
+    "errorLoad": "載入實驗性設定失敗。",
+    "errorLookbackRange": "回溯小時數必須是 1 到 720 之間的整數。",
+    "errorPreview": "預覽恢復任務失敗。",
+    "errorUpdate": "更新實驗性設定失敗。",
+    "isolatedWorkspacesAriaLabel": "切換隔離工作區實驗性設定",
+    "isolatedWorkspacesDescription": "在專案設定中顯示執行工作區控制，並允許新增及現有議題執行的隔離工作區行為。",
+    "isolatedWorkspacesHeading": "啟用隔離工作區",
+    "loading": "正在載入實驗性設定...",
+    "lookbackHoursLabel": "回溯小時數",
+    "preview": "預覽",
+    "recoveryTarget": "恢復目標：",
+    "runNow": "立即執行",
+    "saveHours": "儲存小時數",
+    "skippedMany": "{{count}} 個目前的發現項目超出已設定的回溯範圍，不會被處理。",
+    "skippedOne": "{{count}} 個目前的發現項目超出已設定的回溯範圍，不會被處理。",
+    "subtitle": "在功能正式成為預設行為之前，選擇加入仍在評估中的功能。",
+    "title": "實驗性"
+  },
+  "instanceGeneralSettings": {
+    "authNotReady": "尚未就緒",
+    "authReadinessLabel": "驗證就緒狀態",
+    "authReady": "已就緒",
+    "retestPrompt": {
+      "part1": "若要在本機開發中重新測試首次使用提示，請移除",
+      "part2": "金鑰，該金鑰位於此執行個體的",
+      "part3": "JSON 列中，或將其設回",
+      "part4": "「未設定」和",
+      "part5": "兩者皆表示尚未選擇預設值。"
+    },
+    "backupDaily": "每日",
+    "backupDescription": "設定自動資料庫備份的保留時間。備份大約每小時執行一次並以 gzip 壓縮。在每日視窗內保留所有備份；超出後每週保留一份，每月保留一份。",
+    "backupHeading": "備份保留期限",
+    "backupMonthly": "每月",
+    "backupWeekly": "每週",
+    "bootstrapInviteActive": "有效",
+    "bootstrapInviteLabel": "初始化邀請",
+    "bootstrapInviteNone": "無",
+    "bootstrapReady": "已就緒",
+    "bootstrapSetupRequired": "需要設定",
+    "bootstrapStatusLabel": "初始化狀態",
+    "breadcrumbGeneral": "一般",
+    "breadcrumbInstanceSettings": "執行個體設定",
+    "censorAriaLabel": "切換使用者名稱日誌遮蔽",
+    "censorDescription": "在主目錄路徑及類似的操作員可見日誌輸出中隱藏使用者名稱片段。路徑以外的獨立使用者名稱提及在即時轉錄檢視中尚未遮蔽。預設為關閉。",
+    "censorHeading": "在日誌中遮蔽使用者名稱",
+    "daysCount": "{{count}} 天",
+    "deploymentHeading": "部署與驗證",
+    "deploymentLocalTrusted": "本機信任模式針對本機操作員最佳化。瀏覽器請求以本機看板情境執行，無需登入。",
+    "deploymentPrivate": "已驗證的私有模式需要登入，適用於 LAN、VPN 或其他私有網路部署。",
+    "deploymentPublic": "已驗證的公開模式需要登入才能存取看板，適用於公開 URL。",
+    "errorLoad": "載入一般設定失敗。",
+    "errorSignOut": "登出失敗。",
+    "errorUpdate": "更新一般設定失敗。",
+    "feedbackAllowDescription": "自動分享已投票的 AI 輸出內容。",
+    "feedbackAllowLabel": "始終允許",
+    "feedbackDenyDescription": "僅在本機保留已投票的 AI 輸出內容。",
+    "feedbackDenyLabel": "不允許",
+    "feedbackDescription": "控制按讚和倒讚投票是否可將已投票的 AI 輸出傳送至 Workcell Labs。投票結果始終儲存於本機。",
+    "feedbackHeading": "AI 意見分享",
+    "feedbackPromptNotice": "尚未儲存預設值。下一次按讚或倒讚選擇將詢問一次並在此儲存答案。",
+    "feedbackTermsLink": "閱讀我們的服務條款",
+    "loading": "正在載入一般設定...",
+    "monthOne": "1 個月",
+    "monthsCount": "{{count}} 個月",
+    "shortcutsAriaLabel": "切換鍵盤快捷鍵",
+    "shortcutsDescription": "啟用應用程式鍵盤快捷鍵，包括收件匣導覽和全域快捷鍵，例如建立議題或切換面板。預設為關閉。",
+    "shortcutsHeading": "鍵盤快捷鍵",
+    "signOutButton": "登出",
+    "signOutDescription": "登出此 Workcell 執行個體。您將被重新導向至登入頁面。",
+    "signOutHeading": "登出",
+    "signingOut": "正在登出...",
+    "subtitle": "設定執行個體範圍的偏好設定，包括日誌顯示、鍵盤快捷鍵、備份保留期限和資料分享。",
+    "title": "一般",
+    "weekOne": "1 週",
+    "weeksCount": "{{count}} 週"
+  },
+  "instanceSettings": {
+    "badgeOff": "關閉",
+    "badgeOn": "開啟",
+    "breadcrumbHeartbeats": "心跳",
+    "breadcrumbInstanceSettings": "執行個體設定",
+    "confirmDisableAll": "要停用全部 {{count}} 個已啟用的 {{noun}} 的計時器心跳嗎？",
+    "disableAll": "全部停用",
+    "disableTimerHeartbeat": "停用計時器心跳",
+    "disabling": "停用中...",
+    "emptyState": "沒有符合目前條件的排程器心跳。",
+    "enableTimerHeartbeat": "啟用計時器心跳",
+    "errorDisableAll": "停用所有心跳失敗。",
+    "errorDisableMany": "停用 {{total}} 個計時器心跳中的 {{count}} 個失敗。第一個錯誤：{{detail}}",
+    "errorDisableOne": "停用 1 個計時器心跳失敗：{{detail}}",
+    "errorLoad": "載入排程器心跳失敗。",
+    "errorUpdateHeartbeat": "更新心跳失敗。",
+    "fullAgentConfig": "完整代理設定",
+    "loading": "正在載入排程器心跳...",
+    "never": "從未",
+    "nounAgent": "代理",
+    "nounAgents": "代理",
+    "statActive": "有效",
+    "statCompanies": "團隊",
+    "statCompany": "團隊",
+    "statDisabled": "已停用",
+    "subtitle": "跨所有團隊已啟用計時器心跳的代理。",
+    "title": "排程器心跳",
+    "unknownError": "未知錯誤"
+  },
+  "profileSettings": {
+    "avatarHint": "點擊頭像以上傳新圖片。{{hint}}",
+    "breadcrumbInstanceSettings": "執行個體設定",
+    "breadcrumbProfile": "個人資料",
+    "changePhoto": "變更照片",
+    "displayNameHint": "顯示於側邊欄帳號頁尾和留言作者介面中。",
+    "displayNameLabel": "顯示名稱",
+    "displayNamePlaceholder": "看板",
+    "emailHint": "電子郵件由您的驗證工作階段管理，此處為唯讀。",
+    "emailLabel": "電子郵件",
+    "errorLoad": "載入個人資料失敗。",
+    "errorRemoveAvatar": "移除頭像失敗。",
+    "errorSelectCompany": "請先選擇一個團隊再上傳個人資料頭像。",
+    "errorUpdate": "更新個人資料失敗。",
+    "errorUploadAvatar": "上傳頭像失敗。",
+    "loading": "正在載入個人資料...",
+    "noEmail": "無電子郵件",
+    "removePhoto": "移除",
+    "saveProfile": "儲存個人資料",
+    "saving": "儲存中...",
+    "subtitle": "控制您的帳號在側邊欄和其他看板介面中的顯示方式。",
+    "title": "個人資料",
+    "uploadHintCompany": "儲存於 {{company}} 的 Workcell 檔案儲存空間中。",
+    "uploadHintNoCompany": "選擇一個團隊以將頭像上傳至 Workcell 儲存空間。",
+    "uploadPhoto": "上傳照片"
+  },
+  "userProfile": {
+    "agentAttribution": "代理歸屬",
+    "billedThrough": "透過 {{biller}} 計費",
+    "breadcrumbUsers": "使用者",
+    "completionDone": "{{rate}} 已完成",
+    "completions": "完成次數",
+    "emptyNoCompany": "選擇一個團隊以查看使用者個人資料。",
+    "emptyNotFound": "此團隊找不到使用者個人資料。",
+    "hero7DayActions": "7 天操作次數",
+    "heroAllTimeTokens": "累計 Token 用量",
+    "heroCommentsHint": "{{value}} 則留言",
+    "heroCompleted": "已完成",
+    "heroCreatedHint": "{{value}} 個已建立",
+    "heroOpenAssigned": "已指派未完成",
+    "heroRateHint": "{{rate}} 比率",
+    "heroSpentHint": "已花費 {{amount}}",
+    "issueLinkedUsage": "議題關聯用量",
+    "joinedDate": "加入於 {{date}}",
+    "last14Days": "最近 14 天",
+    "metricActions": "操作次數",
+    "metricComments": "留言數",
+    "metricCompleted": "已完成",
+    "metricTouched": "已觸及",
+    "noActivity": "尚未記錄任何直接使用者操作。",
+    "noAgentUsage": "尚無議題關聯的 Token 用量。",
+    "noProviderUsage": "尚無歸屬的提供者用量。",
+    "noTouchedTasks": "尚無已觸及的任務。",
+    "providerMix": "提供者分佈",
+    "recentActivity": "近期活動",
+    "recentTasks": "近期任務",
+    "roleMember": "成員",
+    "statCreated": "已建立",
+    "statOpen": "未完成",
+    "statSpend": "花費",
+    "statTokens": "Token",
+    "tokensPerDay": "Token / 天",
+    "tokensTotal": "Token 總計"
+  },
+  "issueDetail": {
+    "welcome": {
+      "title": "您的代理接手了",
+      "pairTitle": "您的兩位代理已配對處理此任務",
+      "body": "已指派的代理即將開始規劃。在此關注進度，並隨時在下方訊息框中回覆以引導它。",
+      "pairBody": "開啟下方的配對協作面板，按下「執行輪次」讓兩位代理協作開始。隨時在訊息框中回覆以引導它們。",
+      "dismiss": "知道了"
+    },
+    "actor": {
+      "system": "系統",
+      "board": "看板",
+      "unknown": "未知"
+    },
+    "badge": {
+      "routine": "例行任務",
+      "live": "即時",
+      "productivityReviewTooltip": "此任務是生產力審查。",
+      "productivityReview": "生產力審查",
+      "planningTooltip": "此議題處於規劃模式。",
+      "planning": "規劃中",
+      "parkedBlockerTooltip": "被已停放的工作阻塞——至少有一個已指派的阻塞項目在待辦清單中，不會喚醒其指派者。",
+      "parkedBlocker": "被停放的工作阻塞"
+    },
+    "noProject": "無專案",
+    "toolbar": {
+      "backToInbox": "返回收件匣",
+      "archiveFromInbox": "從收件匣封存",
+      "moreActions": "更多操作"
+    },
+    "action": {
+      "copyAsMarkdown": "複製為 Markdown",
+      "properties": "屬性",
+      "hideThisIssue": "隱藏此議題",
+      "addProofBundle": "新增驗證包",
+      "compactContextTooltip": "從最近一次執行中重新整理延續摘要",
+      "compacting": "壓縮中…",
+      "compactContext": "壓縮上下文",
+      "copyAsMarkdownTooltip": "將議題複製為 Markdown",
+      "showProperties": "顯示屬性",
+      "moreIssueActions": "更多議題操作",
+      "newSubIssue": "新增子議題"
+    },
+    "comments": {
+      "loadingEarlier": "正在載入更早的留言...",
+      "loadEarlier": "載入更早的留言"
+    },
+    "run": {
+      "pauseWork": "暫停工作",
+      "pausing": "暫停中..."
+    },
+    "cost": {
+      "summaryTitle": "費用摘要",
+      "noDataYet": "尚無費用資料。",
+      "thisIssue": "此議題",
+      "noDirectData": "無直接費用資料。"
+    },
+    "toast": {
+      "updateFailed": {
+        "title": "議題更新失敗",
+        "body": "無法儲存議題變更"
+      },
+      "addProofFailed": {
+        "title": "無法新增驗證包",
+        "body": "無法附加驗證包"
+      },
+      "contextCompacted": {
+        "title": "上下文已壓縮",
+        "body": "延續摘要已重新整理。"
+      },
+      "compactFailed": {
+        "title": "無法壓縮上下文",
+        "noRun": "請先在此議題上開始一次執行。"
+      },
+      "recoveryFailed": {
+        "title": "恢復解決失敗",
+        "body": "無法解決恢復操作"
+      },
+      "treeControlFailed": {
+        "title": "無法套用子樹控制",
+        "body": "請再試一次。"
+      },
+      "workPaused": {
+        "title": "工作已暫停",
+        "held": "工作已暫停。此議題將保持擱置直到恢復。"
+      },
+      "pauseWorkFailed": {
+        "title": "無法暫停工作",
+        "body": "請再試一次。"
+      },
+      "subIssueUpdateFailed": {
+        "body": "無法儲存子議題變更"
+      },
+      "monitorQueued": {
+        "title": "監控檢查已排入佇列"
+      },
+      "monitorFailed": {
+        "title": "監控檢查失敗",
+        "body": "目前無法觸發監控"
+      },
+      "approvalApproved": "審核已批准",
+      "approvalRejected": "審核已拒絕",
+      "approvalFailed": "審核失敗",
+      "rejectionFailed": "拒絕失敗",
+      "approvalUpdateFailed": {
+        "body": "無法更新審核"
+      },
+      "commentFailed": {
+        "title": "留言失敗",
+        "body": "無法發布留言"
+      },
+      "cancelFailed": {
+        "title": "取消失敗"
+      },
+      "cancelQueuedFailed": {
+        "body": "無法取消已排隊的留言"
+      },
+      "cancelQuestionFailed": {
+        "body": "無法取消問題"
+      },
+      "requestConfirmed": "請求已確認",
+      "suggestedTasksAccepted": "已接受建議的任務",
+      "acceptFailed": {
+        "title": "接受失敗",
+        "body": "無法接受建議的任務"
+      },
+      "requestDeclined": "請求已拒絕",
+      "suggestionRejected": "建議已拒絕",
+      "rejectFailed": {
+        "title": "拒絕失敗",
+        "body": "無法拒絕建議的任務"
+      },
+      "answersSubmitted": {
+        "title": "答覆已提交"
+      },
+      "submitFailed": {
+        "title": "提交失敗",
+        "body": "無法提交答覆"
+      },
+      "questionCancelled": {
+        "title": "問題已取消"
+      },
+      "interruptRequested": {
+        "title": "已請求中斷",
+        "body": "目前的執行正在停止，佇列中的留言將在下次繼續。"
+      },
+      "interruptFailed": {
+        "title": "中斷失敗",
+        "body": "無法中斷目前的執行"
+      },
+      "queuedCommentCanceled": {
+        "title": "已排隊的留言已取消",
+        "body": "已排隊的訊息已恢復至編輯器。"
+      },
+      "feedbackSavedShare": "意見已儲存。未來的投票將會分享",
+      "feedbackSavedLocal": "意見已儲存。未來的投票將保留於本機",
+      "feedbackSavedSharingEnabled": "意見已儲存並已啟用分享",
+      "feedbackSaved": "意見已儲存",
+      "feedbackFailed": {
+        "title": "儲存意見失敗",
+        "body": "未知錯誤"
+      },
+      "archived": {
+        "title": "議題已從收件匣封存"
+      },
+      "archiveFailed": {
+        "title": "封存失敗",
+        "body": "無法從收件匣封存此議題"
+      },
+      "copiedToClipboard": {
+        "title": "已複製到剪貼簿"
+      }
+    },
+    "breadcrumb": {
+      "issues": "議題"
+    },
+    "reassign": {
+      "me": "我"
+    },
+    "treeControl": {
+      "pauseWork": "暫停工作",
+      "pauseAndStop": "暫停並停止工作",
+      "cancelIssues": "取消 {{count}} 個議題",
+      "restoreIssues": "恢復 {{count}} 個議題",
+      "resumeWork": "恢復工作",
+      "resumeSubtree": "恢復子樹",
+      "cancelSubtreeMenu": "取消子樹..."
+    },
+    "attachments": {
+      "uploading": "上傳中...",
+      "uploadAttachment": "上傳附件",
+      "upload": "上傳",
+      "deleteConfirm": "確認刪除？",
+      "deleteYes": "是",
+      "deleteNo": "否",
+      "deleteTooltip": "刪除附件"
+    },
+    "notice": {
+      "hidden": "此議題已隱藏"
+    },
+    "pauseHold": {
+      "leafTitle": "已被看板暫停。",
+      "subtreeTitle": "子樹暫停已啟用。",
+      "leafDescription": "議題執行已擱置直到恢復。使用者留言仍可喚醒指派者進行分類。",
+      "subtreeDescription": "根節點和後代節點的執行已擱置直到恢復。使用者留言仍可喚醒指派者進行分類。",
+      "oneIssueHeld": "1 個議題已擱置",
+      "viewAffected": "查看受影響的（{{count}}）",
+      "ancestorPausedPrefix": "此議題被祖先",
+      "ancestorPausedSuffix": "暫停。請從根議題恢復以交付延遲的工作。"
+    },
+    "status": {
+      "attachProofFirst": "請先附加驗證包"
+    },
+    "menu": {
+      "pauseWork": "暫停工作...",
+      "resumeWork": "恢復工作",
+      "pauseSubtree": "暫停子樹...",
+      "resumeSubtree": "恢復子樹",
+      "cancelSubtree": "取消子樹...",
+      "restoreSubtree": "恢復子樹...",
+      "hideIssue": "隱藏此議題"
+    },
+    "description": {
+      "placeholder": "新增說明..."
+    },
+    "section": {
+      "subIssues": "子議題",
+      "subIssueLabel": "子議題",
+      "attachments": "附件"
+    },
+    "tab": {
+      "chat": "聊天",
+      "activity": "活動",
+      "relatedWork": "相關工作"
+    },
+    "dialog": {
+      "cancelWarning": "取消子樹是破壞性操作。非終端議題將被標記為已取消，正在執行或排隊中的工作將盡可能被中斷。",
+      "reasonLabel": "原因（選填）",
+      "reasonPlaceholder": "說明套用此子樹控制的原因...",
+      "wakeAgents": "喚醒受影響的代理（{{count}}）",
+      "wakeNone": "此預覽中沒有已指派的代理符合喚醒條件。",
+      "wakeDescription": "此操作完成後喚醒已指派的代理。",
+      "cancelConfirm": "我確認這將取消 {{count}} 個議題。",
+      "retryPreview": "重試預覽",
+      "complete": "完成",
+      "previewUnavailable": "預覽不可用。",
+      "close": "關閉",
+      "applying": "套用中..."
+    }
+  },
+  "cloudUpstream": {
+    "breadcrumbCompanyFallback": "團隊",
+    "breadcrumbSettings": "設定",
+    "breadcrumbCloudUpstream": "雲端上游",
+    "runLabel": "執行 {{id}} · {{status}}",
+    "noticeConnectionApproved": "雲端上游連線已批准。",
+    "errorFinishConnection": "完成連線失敗。",
+    "errorNoPendingConnection": "找不到待處理的雲端上游連線。請重新開始連線。",
+    "errorConnectionNotApproved": "雲端上游連線未獲批准：{{error}}",
+    "errorStartConnection": "開始連線失敗。",
+    "noticePushCompleted": "推送執行已完成。請在取消暫停自動化之前審查啟用設定。",
+    "noticePushFailed": "推送執行失敗。請審查執行事件並在修正問題後重試。",
+    "errorRunPush": "執行推送失敗。",
+    "noticeActivationUpdated": "啟用檢查清單已更新。",
+    "errorActivateEntities": "啟用匯入的實體失敗。",
+    "selectCompany": "請選擇一個團隊以設定雲端上游。",
+    "loadingExperimental": "正在載入實驗性設定...",
+    "title": "雲端上游",
+    "disabledIntro": "雲端同步已停用。請在",
+    "instanceSettingsLink": "執行個體設定",
+    "disabledOutro": "中啟用以顯示上游連線和推送工具。",
+    "intro": "將 {{companyName}} 推送至 Workcell Cloud 堆疊。自動化將保持暫停直到啟用。",
+    "openCloud": "開啟雲端",
+    "connectionLabel": "連線",
+    "previewPush": "預覽推送",
+    "stackUrlAriaLabel": "Workcell Cloud 堆疊 URL",
+    "connect": "連線",
+    "previewLabel": "預覽",
+    "pushToCloud": "推送至雲端",
+    "progressLabel": "進度與完成",
+    "downloadReport": "下載報告",
+    "retry": "重試",
+    "reRun": "重新執行",
+    "inProgress": "進行中",
+    "historyLabel": "記錄",
+    "warningsHeading": "警告",
+    "conflictsHeading": "衝突",
+    "noConflicts": "此預覽未檢測到目標衝突。",
+    "activationChecklistHeading": "啟用檢查清單",
+    "activated": "已啟用",
+    "activate": "啟用",
+    "keepPaused": "保持暫停",
+    "step": {
+      "connect": "連線",
+      "scan": "掃描",
+      "preview": "預覽",
+      "push": "推送",
+      "verify": "驗證",
+      "activate": "啟用"
+    },
+    "activationCategory": {
+      "agents": "代理",
+      "routines": "例行任務",
+      "monitors": "監控"
+    },
+    "activationNoun": {
+      "agents_one": "個代理",
+      "agents_other": "個代理",
+      "routines_one": "個例行任務",
+      "routines_other": "個例行任務",
+      "monitors_one": "個監控",
+      "monitors_other": "個監控"
+    },
+    "activationCategoryDetail": {
+      "agents": "在取消暫停匯入的代理之前，請確認雲端密鑰和轉接器憑證。",
+      "routines": "在啟用匯入的例行任務之前，請審查排程和觸發設定。",
+      "monitors": "在目標堆疊完成冒煙測試後啟用。"
+    },
+    "activationDetail": "{{count}} 個已匯入的 {{noun}} 預設為暫停。{{suffix}}",
+    "activationEmptyDetail": "此次執行中有 0 個已匯入的 {{noun}}。",
+    "activationStatusActivated": "{{count}} 個已啟用",
+    "activationStatusImportedZero": "0 個已匯入",
+    "activationStatusPaused": "{{count}} 個已暫停"
+  },
+  "executionWorkspaceDetail": {
+    "copied": "已複製",
+    "defaultAgentSet": "預設代理人組",
+    "chooseAgentWhenRunning": "執行時選擇代理人",
+    "lastRun": "上次執行",
+    "running": "執行中...",
+    "runNow": "立即執行",
+    "toastRoutineStartedTitle": "例行程序已啟動",
+    "toastRoutineStartedBody": "Workcell 已使用此執行工作區建立一次執行。",
+    "toastRoutineRunFailedTitle": "例行程序執行失敗",
+    "toastRoutineRunFailedBody": "Workcell 無法啟動例行程序執行。",
+    "workspaceRoutinesTitle": "工作區例行程序",
+    "workspaceRoutinesDescription": "使用工作區專用變數的例行程序可在此執行工作區中執行。",
+    "loadingRoutines": "載入例行程序中...",
+    "errorLoadRoutines": "載入例行程序失敗。",
+    "noWorkspaceRoutines": "目前尚無例行程序使用工作區專用變數。",
+    "breadcrumbProjects": "專案",
+    "breadcrumbWorkspaces": "工作區",
+    "errorSaveWorkspace": "儲存執行工作區失敗。",
+    "runtimeJobCompleted": "工作區任務已完成。",
+    "runtimeServiceStopped": "工作區服務已停止。",
+    "runtimeServiceRestarted": "工作區服務已重新啟動。",
+    "runtimeServiceStarted": "工作區服務已啟動。",
+    "errorControlCommands": "控制工作區指令失敗。",
+    "loading": "載入工作區中…",
+    "errorLoad": "載入工作區失敗",
+    "kicker": "執行工作區",
+    "serviceEmptyStarted": "此執行工作區尚未啟動任何服務。",
+    "serviceEmptyNoConfig": "此執行工作區尚未定義任何工作區指令設定。",
+    "jobEmpty": "此執行工作區尚未設定任何一次性任務。",
+    "disabledHint": "執行工作區需要設定工作目錄才能執行本機指令，服務也需要執行時期設定。",
+    "workspaceSettingsTitle": "工作區設定",
+    "workspaceSettingsDescription": "編輯此執行工作區的具體路徑、儲存庫、分支、佈建、卸載及執行時期覆寫設定。",
+    "retryClose": "重試關閉",
+    "closeWorkspace": "關閉工作區",
+    "sectionGeneral": "一般",
+    "fieldWorkspaceName": "工作區名稱",
+    "placeholderWorkspaceName": "執行工作區名稱",
+    "sectionSourceControl": "原始碼控制",
+    "fieldBranchName": "分支名稱",
+    "hintBranchName": "適用於獨立工作樹",
+    "fieldBaseRef": "基礎參照",
+    "fieldRepoUrl": "儲存庫 URL",
+    "sectionPaths": "路徑",
+    "fieldWorkingDirectory": "工作目錄",
+    "fieldProviderRef": "提供者路徑 / 參照",
+    "sectionLifecycleCommands": "生命週期指令",
+    "fieldProvisionCommand": "佈建指令",
+    "hintProvisionCommand": "Workcell 準備此執行工作區時執行",
+    "fieldTeardownCommand": "卸載指令",
+    "hintTeardownCommand": "執行工作區封存或清理時執行",
+    "fieldCleanupCommand": "清理指令",
+    "hintCleanupCommand": "卸載前的工作區專用清理",
+    "sectionRuntimeConfig": "執行時期設定",
+    "runtimeConfigSource": "執行時期設定來源",
+    "runtimeSourceOverride": "此執行工作區目前覆寫了專案工作區的執行時期設定。",
+    "runtimeSourceInherit": "此執行工作區正在繼承專案工作區的執行時期設定。",
+    "runtimeSourceNone": "此執行工作區及其專案工作區目前均未定義執行時期設定。",
+    "resetToInherit": "重設為繼承",
+    "advancedRuntimeJsonSummary": "進階執行時期 JSON",
+    "advancedRuntimeJsonDescription": "僅在此執行工作區確實需要不同的服務或任務行為時，才覆寫繼承的工作區指令模型。",
+    "fieldWorkspaceCommandsJson": "工作區指令 JSON",
+    "hintWorkspaceCommandsJson": "舊版 `services` 陣列仍可使用，但 `commands` 同時支援服務與任務。",
+    "inheritRuntimeConfigLabel": "繼承專案工作區執行時期設定",
+    "saveChanges": "儲存變更",
+    "reset": "重設",
+    "noUnsavedChanges": "無未儲存的變更。",
+    "workspaceContextTitle": "工作區情境",
+    "workspaceContextDescription": "關聯物件與關係",
+    "detailProject": "專案",
+    "detailProjectWorkspace": "專案工作區",
+    "none": "無",
+    "detailSourceIssue": "來源議題",
+    "detailDerivedFrom": "衍生自",
+    "detailWorkspaceId": "工作區 ID",
+    "concreteLocationTitle": "具體位置",
+    "concreteLocationDescription": "路徑與參照",
+    "detailWorkingDir": "工作目錄",
+    "detailProviderRef": "提供者參照",
+    "detailRepoUrl": "儲存庫 URL",
+    "detailBaseRef": "基礎參照",
+    "detailBranch": "分支",
+    "detailOpened": "開啟時間",
+    "detailLastUsed": "上次使用",
+    "detailCleanup": "清理",
+    "notScheduled": "未排程",
+    "runtimeLogsTitle": "執行時期與清理記錄",
+    "runtimeLogsDescription": "近期操作",
+    "loadingOperations": "載入工作區操作中…",
+    "errorLoadOperations": "載入工作區操作失敗。",
+    "noOperations": "尚未記錄任何工作區操作。",
+    "loadingPlugin": "載入工作區外掛程式中...",
+    "backToIssues": "返回議題",
+    "tabs": {
+      "issues": "議題",
+      "services": "服務",
+      "configuration": "設定",
+      "runtime_logs": "執行時期記錄",
+      "routines": "例行程序"
+    }
+  },
+  "pluginManager": {
+    "breadcrumb": {
+      "company": "團隊",
+      "settings": "設定",
+      "plugins": "外掛程式"
+    },
+    "toast": {
+      "installed": "外掛程式安裝成功",
+      "installFailed": "安裝外掛程式失敗",
+      "uninstalled": "外掛程式解除安裝成功",
+      "uninstallFailed": "解除安裝外掛程式失敗",
+      "enabled": "外掛程式已啟用",
+      "enableFailed": "啟用外掛程式失敗",
+      "disabled": "外掛程式已停用",
+      "disableFailed": "停用外掛程式失敗"
+    },
+    "loading": "載入外掛程式中...",
+    "loadError": "載入外掛程式失敗。",
+    "title": "外掛程式管理員",
+    "installButton": "安裝外掛程式",
+    "installDialog": {
+      "title": "安裝外掛程式",
+      "description": "輸入您要安裝的外掛程式的 npm 套件名稱。",
+      "packageNameLabel": "npm 套件名稱",
+      "cancel": "取消",
+      "installing": "安裝中...",
+      "install": "安裝"
+    },
+    "alphaNotice": {
+      "title": "外掛程式為 Alpha 版本。",
+      "body": "外掛程式執行時期與 API 介面仍在變動中。此功能趨於穩定前，請預期可能發生重大變更。"
+    },
+    "available": {
+      "title": "可用的外掛程式",
+      "bundledBadge": "隨附",
+      "loading": "載入隨附外掛程式中...",
+      "loadError": "載入隨附外掛程式失敗。",
+      "empty": "此版本中未找到任何隨附外掛程式。",
+      "firstPartyBadge": "官方",
+      "exampleBadge": "範例",
+      "notInstalledBadge": "未安裝",
+      "enable": "啟用",
+      "openSettings": "開啟設定",
+      "review": "查看",
+      "installing": "安裝中...",
+      "installExample": "安裝範例"
+    },
+    "installed": {
+      "title": "已安裝的外掛程式",
+      "emptyTitle": "未安裝任何外掛程式",
+      "emptyBody": "安裝外掛程式以擴充功能。",
+      "exampleBadge": "範例",
+      "noDescription": "未提供說明。",
+      "pluginError": "外掛程式錯誤",
+      "viewFullError": "查看完整錯誤",
+      "disableTitle": "停用",
+      "enableTitle": "啟用",
+      "uninstallTitle": "解除安裝",
+      "configure": "設定"
+    },
+    "uninstallDialog": {
+      "title": "解除安裝外掛程式",
+      "bodyBefore": "確定要解除安裝",
+      "cannotUndo": "此操作無法復原。",
+      "cancel": "取消",
+      "uninstalling": "解除安裝中...",
+      "uninstall": "解除安裝"
+    },
+    "errorDialog": {
+      "title": "錯誤詳情",
+      "description": "{{name}} 發生錯誤狀態。",
+      "pluginFallback": "外掛程式",
+      "whatErrored": "錯誤原因",
+      "noSummary": "無可用的錯誤摘要。",
+      "fullOutput": "完整錯誤輸出",
+      "noStoredMessage": "無儲存的錯誤訊息。",
+      "close": "關閉"
+    }
+  },
+  "adapterManager": {
+    "row": {
+      "sourceExternal": "外部",
+      "sourceBuiltin": "內建",
+      "installedFromLocalPath": "從本機路徑安裝",
+      "installedFromNpm": "從 npm 安裝",
+      "overridesBuiltin": "覆寫內建",
+      "overriddenBy": "被 {{name}} 覆寫",
+      "hiddenFromMenus": "在選單中隱藏",
+      "modelsCount": "{{count}} 個模型",
+      "reinstallTitle": "重新安裝介面卡（從 npm 拉取最新版本）",
+      "reloadTitle": "重新載入介面卡（熱替換）",
+      "showInMenus": "在代理人選單中顯示",
+      "hideFromMenus": "在代理人選單中隱藏",
+      "removeTitle": "移除介面卡",
+      "pauseOverride": "暫停外部覆寫",
+      "resumeOverride": "恢復外部覆寫",
+      "overridePaused": "覆寫已暫停"
+    },
+    "reinstallDialog": {
+      "title": "重新安裝介面卡",
+      "bodyBefore": "這將從 npm 拉取最新版本的",
+      "bodyAfter": "並熱替換執行中的介面卡模組。現有代理人將在下次執行時使用新版本。",
+      "package": "套件",
+      "current": "目前",
+      "unknown": "未知",
+      "latestOnNpm": "npm 最新版本",
+      "checking": "檢查中...",
+      "unavailable": "無法取得",
+      "alreadyLatest": "已是最新版本。",
+      "cancel": "取消",
+      "reinstalling": "重新安裝中...",
+      "reinstall": "重新安裝"
+    },
+    "breadcrumb": {
+      "company": "團隊",
+      "settings": "設定",
+      "adapters": "介面卡"
+    },
+    "toast": {
+      "installed": {
+        "title": "介面卡已安裝",
+        "body": "類型「{{type}}」已成功註冊。"
+      },
+      "installFailed": {
+        "title": "安裝失敗"
+      },
+      "removed": {
+        "title": "介面卡已移除"
+      },
+      "removalFailed": {
+        "title": "移除失敗"
+      },
+      "toggleFailed": {
+        "title": "切換失敗"
+      },
+      "overrideToggleFailed": {
+        "title": "覆寫切換失敗"
+      },
+      "reloaded": {
+        "title": "介面卡已重新載入",
+        "body": "類型「{{type}}」已重新載入。"
+      },
+      "reloadFailed": {
+        "title": "重新載入失敗"
+      },
+      "reinstalled": {
+        "title": "介面卡已重新安裝",
+        "body": "類型「{{type}}」已從 npm 更新。"
+      },
+      "reinstallFailed": {
+        "title": "重新安裝失敗"
+      }
+    },
+    "loading": "載入介面卡中...",
+    "title": "介面卡",
+    "alphaBadge": "Alpha",
+    "installButton": "安裝介面卡",
+    "installDialog": {
+      "title": "安裝外部介面卡",
+      "bodyBefore": "從 npm 或本機路徑新增介面卡。介面卡套件必須匯出",
+      "npmPackageTab": "npm 套件",
+      "localPathTab": "本機路徑",
+      "localPathLabel": "介面卡套件路徑",
+      "localPathHint": "接受 Linux、WSL 和 Windows 路徑。Windows 路徑會自動轉換。",
+      "packageNameLabel": "套件名稱",
+      "versionLabel": "版本（可選）",
+      "cancel": "取消",
+      "installing": "安裝中...",
+      "install": "安裝"
+    },
+    "alphaNotice": {
+      "title": "外部介面卡為 Alpha 版本。",
+      "body": "介面卡外掛系統仍在積極開發中。API 和儲存格式可能會變更。使用電源圖示可將介面卡從代理人選單中隱藏，而無需移除它們。"
+    },
+    "externalSection": {
+      "title": "外部介面卡",
+      "emptyTitle": "未安裝任何外部介面卡",
+      "emptyBody": "安裝介面卡套件以擴充模型支援。"
+    },
+    "builtinSection": {
+      "title": "內建介面卡",
+      "empty": "未找到任何內建介面卡。"
+    },
+    "removeDialog": {
+      "title": "移除介面卡",
+      "bodyBefore": "確定要移除",
+      "bodyAfter": "介面卡？它將被取消註冊並從介面卡儲存庫中移除。",
+      "npmCleanup": "npm 套件將從磁碟清理。",
+      "cannotUndo": "此操作無法復原。",
+      "cancel": "取消",
+      "removing": "移除中...",
+      "remove": "移除"
+    }
+  },
+  "pluginSettings": {
+    "breadcrumb": {
+      "company": "團隊",
+      "settings": "設定",
+      "plugins": "外掛程式",
+      "pluginDetails": "外掛程式詳情"
+    },
+    "loading": "載入外掛程式詳情中...",
+    "backAria": "返回外掛程式",
+    "noDescription": "未提供說明。",
+    "tabs": {
+      "configuration": "設定",
+      "status": "狀態"
+    },
+    "about": {
+      "title": "關於",
+      "description": "說明",
+      "author": "作者",
+      "categories": "分類",
+      "none": "無"
+    },
+    "settings": {
+      "title": "設定",
+      "noSettingsRequired": "此外掛程式不需要任何設定。"
+    },
+    "environments": {
+      "heading": "從「團隊環境」設定此外掛程式。",
+      "body": "{{driver}} 在其中註冊環境執行時期設定，讓憑證保持在團隊範圍內，而非全域實例。",
+      "thisPlugin": "此外掛程式",
+      "openButton": "開啟團隊環境"
+    },
+    "dashboard": {
+      "title": "執行時期儀表板",
+      "description": "Worker 程序、排程任務及 Webhook 傳遞",
+      "workerProcess": "Worker 程序",
+      "status": "狀態",
+      "pid": "PID",
+      "uptime": "運行時間",
+      "pendingRpcs": "待處理的 RPC",
+      "crashes": "當機次數",
+      "crashCounts": "連續 {{consecutive}} 次 / 總計 {{total}} 次",
+      "lastCrash": "上次當機",
+      "noWorker": "未註冊 Worker 程序。",
+      "recentJobRuns": "近期任務執行",
+      "noJobRuns": "尚未記錄任何任務執行。",
+      "recentWebhookDeliveries": "近期 Webhook 傳遞",
+      "noWebhookDeliveries": "尚未記錄任何 Webhook 傳遞。",
+      "lastChecked": "上次檢查：",
+      "unavailable": "執行時期診斷目前無法使用。"
+    },
+    "logs": {
+      "title": "近期記錄",
+      "description": "最近 {{count}} 筆記錄"
+    },
+    "health": {
+      "title": "健康狀態",
+      "checking": "檢查健康狀態中...",
+      "overall": "整體",
+      "lifecycle": "生命週期",
+      "checksRunWhenReady": "外掛程式就緒後將執行健康檢查。"
+    },
+    "details": {
+      "title": "詳情",
+      "pluginId": "外掛程式 ID",
+      "pluginKey": "外掛程式金鑰",
+      "npmPackage": "NPM 套件",
+      "version": "版本"
+    },
+    "permissions": {
+      "title": "權限",
+      "none": "未要求特殊權限。"
+    },
+    "localFolders": {
+      "selectCompany": "選擇一個團隊以設定此外掛程式的本機資料夾。",
+      "title": "本機資料夾",
+      "loadError": "載入本機資料夾設定失敗。",
+      "loading": "載入本機資料夾中..."
+    },
+    "localFolderRow": {
+      "savedHealthy": "本機資料夾已儲存。",
+      "savedNeedsAttention": "本機資料夾已儲存，但驗證仍需注意。",
+      "saveError": "儲存本機資料夾失敗。",
+      "pathRequired": "本機資料夾路徑為必填。",
+      "pathMustBeAbsolute": "本機資料夾必須是完整的絕對路徑。",
+      "healthy": "健康",
+      "needsAttention": "需要注意",
+      "readWrite": "讀取/寫入",
+      "readOnly": "唯讀",
+      "metricConfigured": "已設定",
+      "metricReadable": "可讀取",
+      "metricWritable": "可寫入",
+      "yes": "是",
+      "no": "否",
+      "notRequested": "未要求",
+      "configuredPath": "已設定的路徑",
+      "pathLabel": "本機資料夾路徑",
+      "save": "儲存",
+      "validationProblems": "驗證問題"
+    },
+    "requirements": {
+      "requiredDirectories": "必要目錄",
+      "missingDirectories": "缺少的目錄",
+      "requiredFiles": "必要檔案",
+      "missingFiles": "缺少的檔案",
+      "notInspected": "未檢查",
+      "missingBadge": "缺少 {{count}} 個",
+      "present": "已存在",
+      "noneDeclared": "未宣告。",
+      "rootNotInspected": "已設定的根目錄未被檢查。"
+    },
+    "configForm": {
+      "saved": "設定已儲存。",
+      "saveError": "儲存設定失敗。",
+      "testPassed": "設定測試通過。",
+      "testFailed": "設定測試失敗。",
+      "loading": "載入設定中...",
+      "saving": "儲存中...",
+      "saveConfiguration": "儲存設定",
+      "testing": "測試中...",
+      "testConfiguration": "測試設定"
+    }
+  },
+  "companyExport": {
+    "preview": {
+      "selectFile": "選擇一個檔案以預覽其內容。",
+      "binaryUnavailable": "此檔案類型無法預覽二進位資產。"
+    },
+    "breadcrumb": {
+      "orgChart": "組織圖",
+      "export": "匯出"
+    },
+    "toast": {
+      "exportFailed": {
+        "title": "匯出失敗",
+        "loadBody": "載入匯出資料失敗。",
+        "buildBody": "建立匯出套件失敗。"
+      },
+      "downloaded": {
+        "title": "匯出已下載",
+        "exportedAs": "匯出為"
+      }
+    },
+    "empty": {
+      "selectCompany": "選擇一個團隊以匯出。",
+      "loading": "載入匯出資料中..."
+    },
+    "bar": {
+      "company": "團隊",
+      "export": "匯出",
+      "selected": "已選取",
+      "building": "建立匯出中...",
+      "exportAction": "匯出"
+    },
+    "packageFiles": "套件檔案",
+    "searchPlaceholder": "搜尋檔案...",
+    "showMoreIssues": "顯示更多議題（{{visible}} / {{total}}）"
+  },
+  "companyImport": {
+    "preview": {
+      "selectFile": "選擇一個檔案以預覽其內容。",
+      "binaryUnavailable": "此檔案類型無法預覽二進位資產。"
+    },
+    "conflicts": {
+      "title": "重新命名",
+      "skipped": "已跳過",
+      "skip": "跳過",
+      "confirmed": "已確認",
+      "confirmRename": "確認重新命名"
+    },
+    "adapters": {
+      "title": "介面卡",
+      "agentBadge": "代理人",
+      "configureAdapter": "設定介面卡"
+    },
+    "localZipHelpText": "請上傳直接從 Workcell 匯出的 .zip 檔案。由 Finder、Explorer 或其他壓縮工具重新壓縮的封存檔可能無法正確匯入。",
+    "breadcrumb": {
+      "orgChart": "組織圖",
+      "import": "匯入"
+    },
+    "toast": {
+      "previewFailed": {
+        "title": "預覽失敗",
+        "body": "預覽匯入失敗。"
+      },
+      "complete": {
+        "title": "匯入完成",
+        "processed": "已處理。"
+      },
+      "importFailed": {
+        "title": "匯入失敗",
+        "body": "套用匯入失敗。"
+      },
+      "packageReadFailed": {
+        "title": "套件讀取失敗",
+        "body": "讀取資料夾失敗。"
+      }
+    },
+    "empty": {
+      "selectCompany": "選擇一個團隊以匯入。"
+    },
+    "source": {
+      "title": "匯入來源",
+      "description": "選擇 GitHub 儲存庫或上傳本機 Workcell zip 套件。",
+      "githubRepo": "GitHub 儲存庫",
+      "localZip": "本機 zip",
+      "chooseZip": "選擇 zip 檔案",
+      "githubUrlLabel": "GitHub URL",
+      "githubUrlHint": "指向 COMPANY.md 的儲存庫樹狀路徑或 blob URL（例如 github.com/owner/repo/tree/main/company）。"
+    },
+    "target": {
+      "label": "目標",
+      "hint": "匯入到此團隊或建立新團隊。",
+      "createNew": "建立新團隊",
+      "existing": "現有團隊：{{name}}"
+    },
+    "newCompanyName": {
+      "label": "新團隊名稱",
+      "hint": "可選的覆寫名稱。留空則使用套件名稱。",
+      "placeholder": "匯入的團隊"
+    },
+    "collision": {
+      "label": "衝突策略",
+      "hint": "看板匯入可對匹配的團隊內容進行重新命名、跳過或取代。",
+      "rename": "衝突時重新命名",
+      "skip": "衝突時跳過",
+      "replace": "取代現有"
+    },
+    "previewButton": {
+      "loading": "預覽中...",
+      "label": "預覽匯入"
+    },
+    "previewBar": {
+      "title": "匯入預覽",
+      "selected": "已選取"
+    },
+    "importButton": {
+      "loading": "匯入中...",
+      "label": "匯入"
+    },
+    "packageFiles": "套件檔案"
+  },
+  "routineRunVariablesDialog": {
+    "title": "執行例行程序",
+    "description": "為此次執行選擇代理人和可選的專案。例行程序預設值已預填，不會被更改。",
+    "agentLabel": "代理人 *",
+    "agentPlaceholder": "代理人",
+    "agentNoneLabel": "選擇代理人",
+    "agentSearchPlaceholder": "搜尋代理人...",
+    "agentEmptyMessage": "未找到代理人。",
+    "projectLabel": "專案",
+    "projectPlaceholder": "專案",
+    "projectNoneLabel": "無專案",
+    "projectSearchPlaceholder": "搜尋專案...",
+    "projectEmptyMessage": "未找到專案。",
+    "noValue": "無值",
+    "booleanTrue": "是",
+    "booleanFalse": "否",
+    "chooseValuePlaceholder": "選擇一個值",
+    "defaultAgentRequired": "此次執行需要預設代理人。",
+    "missingPrefix": "缺少：",
+    "chooseExistingWorkspace": "執行前請選擇現有工作區。",
+    "cancel": "取消",
+    "running": "執行中...",
+    "runRoutine": "執行例行程序"
+  },
+  "importFromVaultDialog": {
+    "statusImported": "已匯入",
+    "statusConflict": "衝突",
+    "statusReady": "就緒",
+    "rowCreated": "已建立",
+    "rowSkipped": "已跳過",
+    "rowFailed": "失敗",
+    "importFailedTitle": "匯入失敗",
+    "noSecretsImported": "未從 {{vaultName}} 匯入任何密鑰。",
+    "importCompletedWithErrors": "匯入完成（含錯誤）",
+    "importComplete": "匯入完成",
+    "importSummaryBody": "{{created}} 已建立 · {{skipped}} 已跳過 · {{failed}} 失敗",
+    "couldNotLoadMore": "無法載入更多結果",
+    "discardConfirm": "捨棄 {{count}} 個待處理的匯入{{plural}}？",
+    "title": "從 AWS Secrets Manager 匯入",
+    "description": "將 AWS 管理的密鑰作為外部參照引入 Workcell。",
+    "closeAriaLabel": "關閉匯入對話方塊",
+    "cancel": "取消",
+    "back": "返回",
+    "continueToReview": "繼續 → 審查",
+    "importing": "匯入中…",
+    "importCount": "匯入 {{count}} 個",
+    "done": "完成",
+    "stepSelect": "選取",
+    "stepReview": "審查",
+    "stepResult": "結果",
+    "noVaultConfigured": "未設定 AWS 提供者保管庫。請新增一個以匯入密鑰。",
+    "manageVaults": "管理保管庫",
+    "vaultLabel": "保管庫",
+    "selectVaultAriaLabel": "選擇 AWS 保管庫",
+    "selectVaultPlaceholder": "選擇一個 AWS 保管庫",
+    "badgeDefault": "預設",
+    "badgeWarning": "警告",
+    "badgeComingSoon": "即將推出",
+    "searchPlaceholder": "依名稱、ARN、標籤搜尋",
+    "searchAriaLabel": "搜尋遠端密鑰",
+    "refreshAriaLabel": "重新整理遠端密鑰",
+    "selectedNotVisible": "{{selected}} 已選取 · {{notVisible}} 個在目前搜尋條件下不可見",
+    "showAll": "顯示全部",
+    "showSelected": "顯示已選取",
+    "selectAllLoadedAriaLabel": "全選已載入（{{count}}）",
+    "columnRemoteName": "遠端名稱",
+    "columnReference": "參照",
+    "columnLastChanged": "上次變更",
+    "columnSuggestedName": "建議名稱",
+    "columnState": "狀態",
+    "selectRowAriaLabel": "選取 {{name}}",
+    "alreadyImported": "已匯入",
+    "loadedCount": "已載入 {{count}} 個",
+    "selectableSuffix": "· {{count}} 個可選取",
+    "loading": "載入中…",
+    "loadMore": "再載入 {{count}} 個",
+    "errorDeniedListAccess": "AWS 拒絕列表存取",
+    "errorThrottledListing": "AWS 限制了列表請求的頻率",
+    "errorCouldNotLoad": "無法載入遠端密鑰",
+    "errorMissingListPermission": "此保管庫使用的 AWS 主體缺少 secretsmanager:ListSecrets 權限。請更新 IAM 後重試。",
+    "retry": "重試",
+    "iamReference": "IAM 參考",
+    "noSecretsMatch": "沒有遠端密鑰符合「{{query}}」。",
+    "noSecretsVisible": "此保管庫沒有可見的密鑰。",
+    "noSecretsSelected": "未選取任何密鑰。請返回選取要匯入的遠端密鑰。",
+    "secretsReadyToImport": "{{count}} 個密鑰準備匯入",
+    "needAttention": "{{count}} 個需要在匯入前處理",
+    "workcellNameLabel": "Workcell 名稱",
+    "keyLabel": "金鑰",
+    "descriptionOptionalLabel": "說明（可選）",
+    "removeRowAriaLabel": "移除 {{name}}",
+    "allSecretsImported": "全部 {{count}} 個密鑰已匯入",
+    "resultCreated": "✓ {{count}} 個已建立",
+    "resultSkipped": "⊘ {{count}} 個已跳過",
+    "resultFailed": "⨯ {{count}} 個失敗",
+    "groupCreated": "已建立",
+    "groupSkipped": "已跳過",
+    "groupFailed": "失敗",
+    "footerSelectPrompt": "選取要匯入的遠端密鑰",
+    "footerSelectedCount": "{{count}} 個已選取",
+    "footerReadyCount": "{{count}} 個就緒",
+    "footerBlockedCount": "· {{count}} 個已封鎖",
+    "footerCreatedCount": "{{count}} 個已建立",
+    "footerSkippedCount": "{{count}} 個已跳過",
+    "footerFailedCount": "{{count}} 個失敗"
+  },
+  "issueRelatedWorkPanel": {
+    "references": {
+      "title": "參照",
+      "description": "此議題目前在其標題、說明、評論或文件中指向的其他任務。",
+      "empty": "此議題尚未參照任何其他任務。"
+    },
+    "referencedBy": {
+      "title": "被參照",
+      "description": "目前指向此議題的其他任務。",
+      "empty": "尚無其他任務參照此議題。"
+    }
+  },
+  "issueDocumentsSection": {
+    "error": {
+      "deleteDocument": "刪除文件失敗",
+      "restoreRevision": "還原文件修訂版本失敗",
+      "processFollowups": "處理後續事項失敗",
+      "requestAutofill": "請求清單自動填入失敗",
+      "updateLock": "更新文件鎖定失敗",
+      "invalidKeyHint": "使用小寫字母、數字、- 或 _，並以字母或數字開頭。",
+      "keyAndBodyRequired": "文件金鑰與內容為必填",
+      "bodyEmpty": "文件內容不可為空",
+      "invalidKey": "文件金鑰必須以字母或數字開頭，並只能使用小寫字母、數字、- 或 _。",
+      "lockedBeforeEditing": "文件已鎖定。請先解鎖再編輯。",
+      "remoteChangedLoadFailed": "文件已被遠端修改，且無法載入最新版本",
+      "saveDocument": "儲存文件失敗",
+      "copyDocument": "無法複製文件",
+      "saveBeforeViewingRevision": "查看舊版本前，請先儲存或取消本機變更。",
+      "saveBeforeLock": "更改文件鎖定前，請先儲存或取消本機變更。"
+    },
+    "followups": {
+      "none": "無需建立新的後續事項——所有項目符號已有子議題。",
+      "createdOne": "已建立 1 個後續議題。",
+      "createdMany": "已建立 {{count}} 個後續議題。"
+    },
+    "autofill": {
+      "alreadyInFlight": "此清單已有一個自動填入請求正在處理中。",
+      "requested": "已要求代理人填入清單——子議題已建立。"
+    },
+    "newDocument": "新文件",
+    "newDocumentShort": "新增",
+    "heading": "文件",
+    "placeholder": {
+      "documentKey": "文件金鑰",
+      "optionalTitle": "可選標題",
+      "markdownBody": "Markdown 內容"
+    },
+    "action": {
+      "cancel": "取消",
+      "saving": "儲存中...",
+      "createDocument": "建立文件"
+    },
+    "planBadge": "計劃",
+    "aria": {
+      "expandDocument": "展開 {{key}} 文件",
+      "collapseDocument": "收合 {{key}} 文件"
+    },
+    "revisionShort": "版本 {{number}}",
+    "revisionHistory": "修訂歷史",
+    "loadingRevisions": "載入修訂版本中...",
+    "currentRevision": "目前",
+    "noRevisions": "尚無修訂版本",
+    "updatedAt": "更新於 {{time}}",
+    "lock": {
+      "unlockTitle": "解鎖文件",
+      "lockTitle": "鎖定文件",
+      "unlockAria": "解鎖 {{key}} 文件",
+      "lockAria": "鎖定 {{key}} 文件",
+      "lockedDocument": "已鎖定的文件"
+    },
+    "copy": {
+      "copied": "已複製",
+      "copyDocument": "複製文件"
+    },
+    "documentActions": "文件操作",
+    "menu": {
+      "editDocument": "編輯文件",
+      "downloadDocument": "下載文件",
+      "viewDiff": "查看差異",
+      "requesting": "請求中...",
+      "askAgentFillChecklist": "要求代理人填入清單",
+      "processing": "處理中...",
+      "processFollowups": "處理後續事項",
+      "deleteDocument": "刪除文件"
+    },
+    "autofillBanner": {
+      "title": "代理人正在審查此清單",
+      "childPrefix": "自動填入子項",
+      "statusLabel": "— 狀態",
+      "childSuffix": "。代理人儲存後，以下內容將自動更新。"
+    },
+    "historical": {
+      "viewingRevision": "正在查看版本 {{number}}",
+      "description": "這是歷史預覽。還原將建立新的最新修訂版本，歷史記錄保持只附加模式。",
+      "returnToLatest": "返回最新版本",
+      "restoring": "還原中...",
+      "restoreThisRevision": "還原此版本"
+    },
+    "conflict": {
+      "outOfDate": "已過期",
+      "description": "您編輯期間此文件已被遠端修改。本機草稿已保留，自動儲存已暫停。",
+      "hideRemote": "隱藏遠端",
+      "reviewRemote": "查看遠端",
+      "keepMyDraft": "保留我的草稿",
+      "reloadRemote": "重新載入遠端",
+      "overwriteRemote": "覆寫遠端",
+      "remoteRevision": "遠端版本 {{number}}"
+    },
+    "status": {
+      "viewingHistorical": "正在查看歷史版本",
+      "autosaving": "自動儲存中...",
+      "saved": "已儲存",
+      "couldNotSave": "無法儲存"
+    },
+    "delete": {
+      "confirm": "刪除此文件？此操作無法復原。",
+      "deleting": "刪除中...",
+      "delete": "刪除"
+    }
+  },
+  "issueProperties": {
+    "none": "無",
+    "user": "使用者",
+    "cheapLane": {
+      "sends": "傳送",
+      "adapterDefault": "· 介面卡預設",
+      "usesProfile": "· 使用代理人設定的低成本設定檔",
+      "fallback": "· 若未設定低成本設定檔，則退回使用主要模型"
+    },
+    "searchIssues": "搜尋議題...",
+    "runReviewNow": "立即執行審查",
+    "runApprovalNow": "立即執行核准",
+    "attempt": "第 {{count}} 次嘗試",
+    "addSubIssue": "新增子議題",
+    "viewWorkspace": "查看工作區",
+    "copyable": {
+      "copied": "已複製！",
+      "clickToCopy": "點擊複製"
+    },
+    "blocker": {
+      "removeAria": "移除 {{label}} 作為封鎖者",
+      "issueAria": "議題 {{label}}：{{title}}",
+      "removeTitle": "移除封鎖者？",
+      "removeDescription": "移除 {{label}} 作為此議題的封鎖者。",
+      "cancel": "取消",
+      "removeConfirm": "移除封鎖者"
+    },
+    "model": {
+      "cheapModel": "低成本模型",
+      "chrome": "Chrome",
+      "custom": "自訂",
+      "customAdapterOptions": " 介面卡選項",
+      "primaryModel": "主要模型",
+      "modelLane": "模型通道",
+      "lanePrimary": "主要",
+      "laneCheap": "低成本",
+      "laneCustom": "自訂",
+      "model": "模型",
+      "defaultModel": "預設模型",
+      "searchModels": "搜尋模型...",
+      "noModelsFound": "未找到模型。",
+      "thinkingEffort": "思考深度",
+      "enableChrome": "啟用 Chrome (--chrome)",
+      "noEditableOverrides": "此受指派人的介面卡不提供可編輯的議題覆寫設定。",
+      "selectCompatibleAgent": "選擇相容的代理人受指派人以編輯這些覆寫設定。",
+      "clearAdapterOptions": "清除介面卡選項"
+    },
+    "execution": {
+      "review": "審查",
+      "approval": "核准",
+      "changesRequestedBy": "{{stage}} 被 {{participant}} 要求修改",
+      "changesRequested": "{{stage}} 要求修改",
+      "pendingWith": "{{stage}} 等待 {{participant}}",
+      "pending": "{{stage}} 待處理"
+    },
+    "monitor": {
+      "nextCheck": "下次檢查 {{when}}",
+      "cleared": "已清除",
+      "lastTriggered": "上次觸發於 {{when}}",
+      "notScheduled": "未排程",
+      "notesPlaceholder": "代理人應重新檢查什麼？",
+      "externalServicePlaceholder": "外部服務",
+      "schedule": "排程",
+      "clear": "清除"
+    },
+    "scheduledRetry": {
+      "pendingSchedule": "待定排程",
+      "actionContinuation": "繼續",
+      "actionRetry": "重試",
+      "actionDueNow": "{{action}} 已到期",
+      "actionRelative": "{{action}} {{relative}}",
+      "scheduledContinuation": "已排程的繼續",
+      "scheduledRetry": "已排程的重試",
+      "reason": "原因",
+      "nextAttempt": "下次嘗試",
+      "replacesRun": "取代執行",
+      "agent": "代理人",
+      "lastError": "上次錯誤",
+      "retrying": "重試中…",
+      "alreadyPromoted": "已提前",
+      "promoted": "已提前",
+      "retryNow": "立即重試",
+      "promotingScheduledRetry": "正在提前排程重試",
+      "alreadyPromotedRunStarting": "已提前——執行即將開始",
+      "promotedRunStarting": "已提前——執行即將開始",
+      "pullsContinuationForward": "立即提前繼續",
+      "pullsRetryForward": "立即提前重試"
+    },
+    "labels": {
+      "noLabels": "無標籤",
+      "addLabel": "新增標籤",
+      "searchLabels": "搜尋標籤...",
+      "newLabel": "新標籤",
+      "creating": "建立中…",
+      "createLabel": "建立標籤"
+    },
+    "assignee": {
+      "unassigned": "未指派",
+      "noAssignee": "無受指派人",
+      "assignToMe": "指派給我",
+      "assignToNamed": "指派給 {{name}}",
+      "assignToRequester": "指派給請求者",
+      "searchPlaceholder": "搜尋受指派人...",
+      "pairOption": "配對（兩個代理人）"
+    },
+    "participants": {
+      "searchReviewers": "搜尋審查者...",
+      "searchApprovers": "搜尋核准者...",
+      "noReviewers": "無審查者",
+      "noApprovers": "無核准者",
+      "requester": "請求者"
+    },
+    "project": {
+      "noProject": "無專案",
+      "searchPlaceholder": "搜尋專案..."
+    },
+    "parent": {
+      "noParent": "無父項"
+    },
+    "blockedBy": {
+      "searchAria": "搜尋議題以新增為封鎖者",
+      "noBlockers": "無封鎖者",
+      "searching": "搜尋議題中...",
+      "noMatching": "無符合的議題。",
+      "addBlocker": "新增封鎖者"
+    },
+    "row": {
+      "status": "狀態",
+      "priority": "優先順序",
+      "labels": "標籤",
+      "assignee": "受指派人",
+      "model": "模型",
+      "project": "專案",
+      "parent": "父項",
+      "blockedBy": "被封鎖者",
+      "blocking": "正在封鎖",
+      "subIssues": "子議題",
+      "relatedTasks": "相關任務",
+      "reviewers": "審查者",
+      "approvers": "核准者",
+      "execution": "執行",
+      "scheduledRetry": "排程重試",
+      "monitor": "監控",
+      "depth": "深度",
+      "service": "服務",
+      "workspace": "工作區",
+      "branch": "分支",
+      "folder": "資料夾",
+      "createdBy": "建立者",
+      "started": "開始時間",
+      "completed": "完成時間",
+      "created": "建立時間",
+      "updated": "更新時間"
+    }
+  },
+  "devRestartBanner": {
+    "relativeTime": {
+      "justNow": "剛剛",
+      "minutesAgo": "{{count}} 分鐘前",
+      "hoursAgo": "{{count}} 小時前",
+      "daysAgo": "{{count}} 天前"
+    },
+    "reason": {
+      "backendChangesAndPendingMigrations": "後端檔案已變更且有待處理的遷移",
+      "pendingMigrations": "待處理的遷移需要重新啟動",
+      "backendChanges": "伺服器啟動後後端檔案已變更"
+    },
+    "confirm": {
+      "withRuns": "立即重新啟動 Workcell？這可能會中斷 {{runs}}。",
+      "simple": "立即重新啟動 Workcell？"
+    },
+    "error": {
+      "requestFailed": "請求重新啟動失敗"
+    },
+    "title": "需要重新啟動",
+    "autoRestartOn": "自動重新啟動已開啟",
+    "updatedSuffix": " · 更新於 {{changedAt}}",
+    "changedLabel": "已變更：",
+    "pendingMigrationsLabel": "待處理的遷移：",
+    "moreSuffix": " +{{count}} 個更多",
+    "waitingForRuns": "等待 {{runs}} 完成",
+    "autoRestartIdle": "實例閒置時將自動重新啟動",
+    "manualRestartPrefix": "重新啟動",
+    "manualRestartSuffix": "等活躍工作可安全中斷後執行",
+    "button": {
+      "requested": "已請求重新啟動",
+      "restartNow": "立即重新啟動"
+    }
+  },
+  "issueBlockedNotice": {
+    "recoveryLabel": {
+      "needed": "需要復原",
+      "in_progress": "復原進行中",
+      "observe_only": "觀察進行中的執行",
+      "escalated": "復原已升級"
+    },
+    "recoveryTitle": "{{label}}——請開啟來源議題以採取行動。",
+    "scheduleDueNow": "現在到期",
+    "scheduleRelative": "排程於 {{relative}}",
+    "scheduled": "已排程",
+    "correctiveWake": "修正喚醒 {{schedule}}。立即重試將立即啟動相同的復原路徑。",
+    "retrying": "重試中...",
+    "alreadyPromoted": "已提前",
+    "promoted": "已提前",
+    "retryNow": "立即重試",
+    "blockerLabelSingular": "關聯的議題",
+    "blockerLabelPlural": "關聯的議題",
+    "needsNextStep": "此議題仍需下一步行動。",
+    "runFinishedPrefix": "一次執行已成功完成，但此議題仍開啟在",
+    "runFinishedSuffix": "中，下一步行動沒有明確的負責人。",
+    "optionMarkDone": "將其標記為完成或已取消。",
+    "optionReview": "提交審查或請求意見。",
+    "optionBlocked": "標記為已封鎖並指定封鎖者負責人。",
+    "optionDelegate": "委派後續工作或排隊繼續。",
+    "correctiveWakeQueued": "已為 {{assignee}} 排隊修正喚醒",
+    "assigneeFallback": "受指派人",
+    "detectedProgress": "偵測到進度：{{summary}}",
+    "blockedStalledPlural": "此議題的工作被 {{blockerLabel}} 封鎖，但流程在審查中停滯，沒有明確的下一步。請解決以下停滯的審查或將其移除為封鎖者。",
+    "blockedStalledSingular": "此議題的工作被 {{blockerLabel}} 封鎖，但流程在審查中停滯，沒有明確的下一步。請解決以下停滯的審查或將其移除為封鎖者。",
+    "blockedUntilComplete": "此議題的工作被 {{blockerLabel}} 封鎖，直到 {{completion}} 完成。評論仍會喚醒受指派人以進行提問或分流。",
+    "completionSingular": "其",
+    "completionPlural": "它們",
+    "blockedMovedBack": "此議題的工作被封鎖，直到移回待辦。評論仍會喚醒受指派人以進行提問或分流。",
+    "stalledInReview": "審查中停滯",
+    "ultimatelyWaitingOn": "最終等待",
+    "blockedByParkedWork": "被暫停的工作封鎖"
+  },
+  "issueRecoveryActionCard": {
+    "outcomeLabel": {
+      "restored": "已還原",
+      "delegated": "委派至後續事項",
+      "false_positive": "誤報",
+      "blocked": "已封鎖",
+      "escalated": "已升級",
+      "cancelled": "已取消"
+    },
+    "headlineResolved": "復原已解決，結果為{{outcome}}。",
+    "kindHeadline": {
+      "missing_disposition": "此議題的執行已完成，但未選擇下一步。",
+      "stranded_assigned_issue": "Workcell 重試了此議題的上次執行，但它仍沒有有效的執行路徑。",
+      "active_run_watchdog": "進行中的執行已靜默。復原正在觀察而不中斷。",
+      "issue_graph_liveness": "Workcell 偵測到此議題失去了有效的行動路徑。復原負責人需要採取行動。"
+    },
+    "ariaState": {
+      "needed": "需要",
+      "inProgress": "進行中",
+      "observeOnly": "觀察進行中的執行",
+      "escalated": "已升級",
+      "resolved": "已解決"
+    },
+    "sectionAriaLabel": "復原行動：{{state}}",
+    "stateLabel": {
+      "needed": "需要復原",
+      "in_progress": "復原進行中",
+      "observe_only": "觀察進行中的執行",
+      "escalated": "復原已升級",
+      "resolved": "復原已解決"
+    },
+    "kindLabel": {
+      "missing_disposition": "缺少處置",
+      "stranded_assigned_issue": "擱淺的議題",
+      "active_run_watchdog": "主動看門狗",
+      "issue_graph_liveness": "圖形活躍度"
+    },
+    "metaOwner": "負責人",
+    "ownerRecovery": "復原：",
+    "ownerBoard": "看板",
+    "ownerUser": "使用者 {{id}}",
+    "ownerSystem": "系統",
+    "ownerUnassigned": "未指派——選擇一位以喚醒他們",
+    "returnsTo": "→ 返回至：",
+    "metaSourceRun": "來源執行",
+    "metaCorrectiveRun": "修正執行",
+    "metaEvidence": "證據",
+    "metaNextAction": "下一步行動",
+    "metaWake": "喚醒",
+    "attemptOf": "第 {{attempt}} 次嘗試，共 {{max}} 次",
+    "timesOut": "逾時於 {{time}}",
+    "timesOutSoon": "即將",
+    "metaResolution": "解決方案",
+    "resolvedAs": "解決結果為 {{outcome}}",
+    "resolveAriaLabel": "解決復原",
+    "resolveTrigger": "解決…",
+    "resolveHeading": "解決復原",
+    "resolveOption": {
+      "todo": {
+        "label": "再試一次",
+        "description": "關閉復原並將來源議題返回待辦。"
+      },
+      "done": {
+        "label": "標記議題完成",
+        "description": "將請求的工作記錄為完成以進行還原。"
+      },
+      "in_review": {
+        "label": "送審",
+        "description": "移交給具有真實審查路徑的審查者。"
+      },
+      "false_positive_done": {
+        "label": "誤報，完成",
+        "description": "關閉復原並將來源議題標記為完成。"
+      },
+      "false_positive_in_review": {
+        "label": "誤報，審查",
+        "description": "關閉復原並將來源議題送審。"
+      }
+    },
+    "observeHint": "復原正在觀察而不中斷進行中的執行。",
+    "stayOpenHint": "此卡片保持開啟，直到記錄明確的決定。"
+  },
+  "issueScheduledRetryCard": {
+    "badgeContinuation": "已排程繼續",
+    "badgeRetry": "已排程重試",
+    "titleActionContinuation": "自動繼續",
+    "titleActionRetry": "自動重試",
+    "suffixDueNow": "現在到期",
+    "suffixPending": "待定排程",
+    "title": "{{action}} {{suffix}}",
+    "helperIdleContinuation": "立即提前繼續",
+    "helperIdleRetry": "立即提前重試",
+    "attempt": "第 {{count}} 次嘗試",
+    "replacesRun": "取代執行",
+    "lastAttemptFailed": "上次嘗試失敗：{{error}}。Workcell 將自動重試。",
+    "retrying": "重試中…",
+    "alreadyPromoted": "已提前",
+    "promoted": "已提前",
+    "retryNow": "立即重試",
+    "helperPromoting": "正在提前排程重試",
+    "helperAlreadyPromoted": "已提前——執行即將開始",
+    "helperPromoted": "已提前——執行即將開始",
+    "errorTitle": "目前無法重試",
+    "tryAgain": "再試一次"
+  },
+  "issueContinuationHandoff": {
+    "titleFallback": "繼續交接",
+    "collapseAriaLabel": "收合繼續交接",
+    "expandAriaLabel": "展開繼續交接",
+    "badge": "交接",
+    "updated": "更新於 {{time}}",
+    "revisionSuffix": " - 版本 {{revision}}",
+    "copied": "已複製",
+    "copy": "複製"
+  },
+  "issueAssignedBacklogNotice": {
+    "assigneeFallback": "受指派人",
+    "parked": "已暫停",
+    "notWokenPrefix": " 在狀態變更為 ",
+    "or": " 或 ",
+    "commentsHint": "留言仍會喚醒受分派者進行提問或分類。僅在工作有意暫停時保持此狀態。",
+    "resuming": "恢復中…",
+    "resumeNow": "立即恢復"
+  },
+  "issueMonitorActivityCard": {
+    "scheduledTitle": "已排程監控",
+    "nextCheck": "下次檢查 {{absolute}}（{{relative}}）",
+    "attempt": "第 {{count}} 次嘗試",
+    "checking": "檢查中...",
+    "checkNow": "立即檢查"
+  },
+  "issueSiblingNavigation": {
+    "navAriaLabel": "子議題導覽",
+    "previousLabel": "上一個",
+    "nextLabel": "下一個",
+    "previousAriaDirection": "上一個子議題",
+    "nextAriaDirection": "下一個子議題",
+    "linkAriaLabel": "{{ariaDirection}}：{{identifier}} - {{title}}"
+  },
+  "activeAgentsPanel": {
+    "title": "代理人",
+    "emptyMessage": "近期無代理人執行記錄。",
+    "recoveryChip": {
+      "title": "{{label}} — 開啟來源議題以採取行動。"
+    },
+    "runCard": {
+      "liveNow": "即時執行中",
+      "finished": "完成於 {{time}}",
+      "started": "開始於 {{time}}"
+    }
+  },
+  "workspaceRuntimeControls": {
+    "action": {
+      "run": "執行",
+      "start": "啟動",
+      "stop": "停止",
+      "restart": "重新啟動"
+    },
+    "servicesEmpty": "此工作區未設定任何服務。",
+    "jobsEmpty": "此工作區未設定任何一次性工作。",
+    "heading": "工作區指令",
+    "servicesRunning": "{{count}} 個服務執行中",
+    "noServicesRunning": "無服務執行中",
+    "commandsIndependent": "每個指令可獨立控制。",
+    "servicesTitle": "服務",
+    "servicesDescription": "Workcell 可為此工作區監管的長期執行指令。",
+    "jobsTitle": "工作",
+    "jobsDescription": "立即執行並在完成後退出的一次性指令。",
+    "untrackedTitle": "未追蹤的服務",
+    "untrackedDescription": "不再符合目前工作區指令設定的執行中服務。",
+    "port": "埠 {{port}}"
+  },
+  "blockedInboxView": {
+    "error": {
+      "title": "無法載入「已封鎖」標籤。",
+      "body": "其他收件匣標籤仍可正常使用。{{message}}",
+      "retrying": "嘗試中…",
+      "retry": "重試"
+    },
+    "empty": {
+      "title": "目前無工作停滯。",
+      "description": "需要決策、復原或外部操作的議題將顯示於此。"
+    },
+    "noSearchResults": "沒有符合搜尋條件的停滯項目。"
+  },
+  "runInvocationCard": {
+    "heading": "呼叫",
+    "adapterLabel": "介面卡：",
+    "workingDirLabel": "工作目錄：",
+    "details": "詳細資訊",
+    "commandLabel": "指令：",
+    "commandNotes": "指令備註",
+    "prompt": "提示",
+    "context": "背景內容",
+    "environment": "環境"
+  },
+  "issueRunLedger": {
+    "sectionLabel": "議題執行記錄",
+    "title": "執行記錄",
+    "forRecoveryContext": "用於復原背景。",
+    "retryOf": "重試自",
+    "olderItemsNotShown": "{{count}} 筆較舊項目未顯示",
+    "waitingFirstRun": "等待第一筆執行記錄。",
+    "noRunsLinked": "尚未連結任何執行。",
+    "latestRun": "最新執行",
+    "childWork": "子工作",
+    "watchdog": {
+      "staleAlert": "過期執行監視警示",
+      "silenceWarning": "輸出靜默監視警告",
+      "extendedPeriod": "一段較長時間",
+      "continue": "繼續監控",
+      "snooze": "延遲 1 小時",
+      "falsePositive": "標記為誤報"
+    },
+    "empty": {
+      "withActivity": "此議題有歷史記錄後，執行與活動將顯示於此。",
+      "runsOnly": "無即時元資料的歷史執行記錄，在連結至此議題後將顯示於此。"
+    },
+    "run": {
+      "label": "執行",
+      "byAgent": "由 {{name}}",
+      "live": "即時",
+      "exhausted": "已耗盡",
+      "elapsed": "已耗時",
+      "unknown": "未知",
+      "lastUsefulAction": "最後有效動作",
+      "stop": "停止",
+      "cheapProfileFallback": "低成本設定檔已回退至主要",
+      "nextAction": "下一步動作："
+    }
+  },
+  "commentThread": {
+    "copyButton": {
+      "copied": "已複製",
+      "failed": "複製失敗",
+      "copy": "複製",
+      "ariaLabel": "以 Markdown 格式複製留言"
+    },
+    "comment": {
+      "you": "您",
+      "queuedBadge": "已排隊",
+      "followUpBadge": "後續追蹤",
+      "queueing": "排隊中...",
+      "sending": "傳送中...",
+      "runLabel": "執行 {{id}}"
+    },
+    "timeline": {
+      "requestedFollowUp": "已要求後續追蹤",
+      "updatedTask": "已更新此任務",
+      "statusLabel": "狀態",
+      "assigneeLabel": "受分派者",
+      "workspaceLabel": "工作區",
+      "empty": "尚無時間軸項目。",
+      "run": "執行",
+      "environment": "環境",
+      "provider": "提供者",
+      "lease": "租用",
+      "failure": "失敗："
+    },
+    "heading": "時間軸（{{count}}）",
+    "queuedComments": "排隊中的留言（{{count}}）",
+    "interrupting": "中斷中...",
+    "interrupt": "中斷",
+    "composer": {
+      "placeholder": "留下留言...",
+      "attachImage": "附加圖片",
+      "assignee": "受分派者",
+      "noAssignee": "無受分派者",
+      "searchAssignees": "搜尋受分派者...",
+      "noAssigneesFound": "找不到受分派者。",
+      "posting": "發布中...",
+      "comment": "留言"
+    }
+  },
+  "issueChatThread": {
+    "assigneePaused": {
+      "budgetDetail": "已因預算硬性停止而暫停。",
+      "systemDetail": "已由系統暫停。",
+      "manualDetail": "已手動暫停。",
+      "message": "已暫停。在代理人恢復前，不會啟動新的執行。"
+    },
+    "fallback": {
+      "errorTitle": "聊天渲染器發生內部狀態錯誤。",
+      "errorDescription": "顯示安全的備用記錄，而非使議題頁面崩潰。",
+      "noContent": "無訊息內容。"
+    },
+    "chainOfThought": {
+      "working": "處理中",
+      "forDuration": "已耗時 {{duration}}",
+      "worked": "已處理"
+    },
+    "copy": "複製",
+    "toolPart": {
+      "input": "輸入",
+      "result": "結果"
+    },
+    "userMessage": {
+      "deferredWake": "⏸ 延遲喚醒",
+      "queued": "已排隊",
+      "followUp": "後續追蹤",
+      "interrupting": "中斷中...",
+      "interrupt": "中斷",
+      "cancel": "取消",
+      "sending": "傳送中..."
+    },
+    "copyMessage": "複製訊息",
+    "assistantMessage": {
+      "stopRun": "停止執行",
+      "stopping": "停止中...",
+      "followUp": "後續追蹤",
+      "running": "執行中"
+    },
+    "moreActions": "更多動作",
+    "viewRun": "檢視執行",
+    "feedback": {
+      "helpful": "有幫助",
+      "needsWork": "需要改進",
+      "whatBetter": "哪些地方可以更好？",
+      "addNote": "新增簡短備註",
+      "dismiss": "關閉",
+      "saving": "儲存中...",
+      "saveNote": "儲存備註"
+    },
+    "sharingDialog": {
+      "title": "儲存您的意見回饋分享偏好",
+      "description": "選擇是否允許將已投票的 AI 輸出分享給 Workcell Labs。此選擇將成為未來按讚和踩踩的預設值。",
+      "savedLocally": "此投票始終儲存於本機。",
+      "chooseBefore": "選擇",
+      "chooseMiddle": "以分享此次及未來的已投票 AI 輸出。選擇",
+      "chooseAfter": "以將此次及未來的投票保留於本機。",
+      "alwaysAllow": "一律允許",
+      "dontAllow": "不允許",
+      "changeLater": "您可以稍後在「執行個體設定 > 一般」中更改此設定。",
+      "readTerms": "閱讀我們的服務條款"
+    },
+    "expiredConfirmation": {
+      "updatedTask": "已更新此任務",
+      "hide": "隱藏確認",
+      "expired": "已過期的確認"
+    },
+    "staleDisposition": {
+      "noDetails": "無其他詳細資訊。",
+      "title": "過期處置警告"
+    },
+    "systemNotice": {
+      "copyLink": "複製連結",
+      "copyLinkAria": "複製系統通知連結",
+      "copyText": "複製通知文字",
+      "copyTextAria": "複製系統通知"
+    },
+    "systemEvent": {
+      "requestedFollowUp": "已要求後續追蹤",
+      "updatedTask": "已更新此任務",
+      "statusLabel": "狀態",
+      "assigneeLabel": "受分派者",
+      "workspaceLabel": "工作區",
+      "run": "執行"
+    },
+    "composer": {
+      "noAssigneeToastTitle": "未選擇受分派者",
+      "noAssigneeToastBody": "選擇受分派者，或再次點擊「傳送」以不指派受分派者發布。",
+      "unsupportedFileType": "此檔案類型無法在此附加",
+      "uploadFailed": "上傳失敗",
+      "dropToUpload": "拖曳以上傳",
+      "dropDescription": "圖片將插入回覆中。其他檔案將附加至此議題。",
+      "replyPlaceholder": "回覆",
+      "replyPlaceholderAgent": "傳訊給 {{agent}} — 傳送後將喚醒代理人處理您的回覆",
+      "attachmentUploading": "上傳至議題",
+      "attachmentInline": "已內嵌插入",
+      "attachmentAttached": "已附加至議題",
+      "attachFile": "附加檔案",
+      "moreOptions": "更多編輯器選項",
+      "switchToStandard": "切換至標準模式",
+      "switchToPlanning": "切換至規劃模式",
+      "planningToggleTitle": "此提交已啟用規劃模式。點擊以切換至標準模式。",
+      "planning": "規劃",
+      "assignee": "受分派者",
+      "noAssignee": "無受分派者",
+      "searchAssignees": "搜尋受分派者...",
+      "noAssigneesFound": "找不到受分派者。",
+      "posting": "發布中...",
+      "send": "傳送"
+    },
+    "emptyEmbedded": "尚無執行輸出。",
+    "emptyFull": "此議題對話為空。在下方輸入訊息開始。",
+    "jumpToLatest": "跳至最新",
+    "liveWorkBar": {
+      "working": "{{agent}} 執行中…",
+      "workingUnknown": "代理人執行中…",
+      "expand": "顯示即時輸出",
+      "collapse": "隱藏即時輸出"
+    },
+    "legacyRecovery": {
+      "label": "舊版復原議題",
+      "body": "舊版復原議題。較新的復原動作位於來源議題上"
+    }
+  },
+  "issueThreadInteractionCard": {
+    "taskTree": {
+      "includeAria": "包含 {{title}}",
+      "childTask": "子任務",
+      "skipped": "已跳過",
+      "assignee": "受分派者",
+      "billing": "帳單",
+      "project": "專案",
+      "label": "標籤",
+      "hiddenOne": "預覽中隱藏了 1 個後續任務",
+      "hiddenMany": "預覽中隱藏了 {{count}} 個後續任務"
+    },
+    "suggestTasks": {
+      "draftOne": "1 個草稿議題",
+      "draftMany": "{{count}} 個草稿議題",
+      "defaultParent": "預設上層",
+      "resolutionSummary": "解決摘要",
+      "createdWithSkipped": "已建立 {{created}} 個草稿{{noun}}，並在審查期間跳過 {{skipped}} 個。",
+      "createdAll": "已建立全部 {{created}} 個草稿{{noun}}。",
+      "rejectionReason": "拒絕原因",
+      "noReason": "未提供原因。",
+      "allSelected": "已選取全部 {{total}} 個草稿{{noun}}",
+      "someSelected": "已選取 {{total}} 個草稿{{noun}}中的 {{selected}} 個",
+      "willBeSkipped": "{{count}} 個將在您接受此互動時跳過。",
+      "accepting": "接受中...",
+      "acceptDrafts": "接受草稿",
+      "acceptSelectedDrafts": "接受已選取的草稿",
+      "reject": "拒絕",
+      "resetSelection": "重設選取",
+      "rejectPlaceholder": "新增拒絕此建議的簡短原因",
+      "saving": "儲存中...",
+      "saveRejection": "儲存拒絕"
+    },
+    "askQuestions": {
+      "badge": "向使用者提問",
+      "questionOne": "1 個問題",
+      "questionMany": "{{count}} 個問題",
+      "questionNumber": "第 {{number}} 題",
+      "pick": "選擇",
+      "pickMany": "多選",
+      "required": "必填",
+      "optional": "選填",
+      "submitHint": "完成整個表單後再提交一次。",
+      "cancelling": "取消中...",
+      "cancelQuestion": "取消問題",
+      "submitting": "提交中...",
+      "submitAnswers": "提交答案",
+      "cancelled": "問題已取消",
+      "noAnswerRecordedLong": "未記錄任何答案。",
+      "answer": "答案",
+      "noAnswerRecorded": "未記錄答案。",
+      "submittedSummary": "已提交摘要"
+    },
+    "confirmation": {
+      "confirmed": "已確認",
+      "declined": "已拒絕",
+      "expiredByComment": "已因留言而過期",
+      "expiredByTargetChange": "已因目標變更而過期",
+      "supersededByComment": "此確認在解決前已被看板留言取代。",
+      "targetChanged": "要求的目標在此確認解決前已變更。",
+      "jumpToComment": "跳至留言",
+      "couldNotResolve": "此請求無法解決。請重試或建立新請求。",
+      "declinePlaceholderPlan": "選填：您希望修改哪些內容？",
+      "declinePlaceholderDefault": "選填：告訴代理人您想變更什麼。",
+      "tryAgain": "重試",
+      "confirming": "確認中...",
+      "confirm": "確認",
+      "decline": "拒絕",
+      "declineReasonRequired": "必須填寫拒絕原因。",
+      "cancelDecline": "取消拒絕",
+      "saving": "儲存中...",
+      "autoApproved": "已在自主模式下自動核准"
+    },
+    "sourceRunActive": "代理人仍在完成此工作 — 完成後您可以做決定。",
+    "resolvedBySystem": "系統（自主模式）",
+    "wakesOnConfirm": "確認後喚醒",
+    "wakesAssignee": "喚醒受分派者",
+    "titleSuggestTasks": "建議的任務樹",
+    "titleAskQuestions": "向操作員提問",
+    "titleConfirmation": "請求確認",
+    "proposedBy": "由 {{name}} 提出",
+    "createdAt": "建立於 {{date}}",
+    "resolvedBy": "由...解決",
+    "resolvedOn": " 於 {{date}}"
+  },
+  "agentInstructionsEditor": {
+    "label": "自訂指示",
+    "save": "儲存",
+    "saving": "儲存中...",
+    "saved": "已儲存",
+    "help": "告訴此代理人如何運作。儲存至其受管理的指示；代理人會優先讀取此內容。",
+    "placeholder": "# 此代理人的運作方式\n\n在此撰寫自訂指示...",
+    "externalNotice": "此代理人使用外部指示檔案。請在磁碟上編輯它，或在「指示」標籤中切換至受管理模式以內嵌編輯。",
+    "saveErrorTitle": "無法儲存指示"
+  },
+  "markdownEditor": {
+    "fallback": {
+      "notice": "此 Markdown 的富文本編輯器不可用。改為顯示原始來源。",
+      "retry": "重試富文本編輯器"
+    },
+    "mention": {
+      "kind": {
+        "project": "專案",
+        "user": "使用者",
+        "skill": "技能",
+        "routine": "例行程序"
+      }
+    },
+    "dropToUpload": "拖曳 {{target}} 以上傳",
+    "dropTarget": {
+      "file": "檔案",
+      "image": "圖片"
+    }
+  },
+  "fileTree": {
+    "ariaLabel": "檔案",
+    "errorBadge": "錯誤",
+    "retry": "重試",
+    "empty": {
+      "title": "無檔案",
+      "description": "檔案可用時將顯示於此。"
+    },
+    "collapse": "收合 {{name}}",
+    "expand": "展開 {{name}}"
+  },
+  "routineHistoryTab": {
+    "toast": {
+      "restored": {
+        "title": "已將修訂版本 {{from}} 還原為修訂版本 {{to}}",
+        "bodyWithSecrets": "觸發器啟用狀態已從快照還原。新的 webhook 密鑰可在上方橫幅中取得。",
+        "body": "觸發器啟用狀態已從快照還原。"
+      },
+      "restoreFailed": {
+        "title": "無法還原修訂版本",
+        "body": "Workcell 無法還原此修訂版本。"
+      }
+    },
+    "loadError": {
+      "title": "無法載入修訂版本",
+      "unknown": "載入修訂版本時發生未知錯誤。",
+      "retry": "重試"
+    },
+    "empty": {
+      "message": "尚無編輯記錄",
+      "description": "修訂版本 1 是此例行程序唯一的歷史記錄。儲存編輯將建立第一個額外的修訂版本。"
+    },
+    "preview": {
+      "viewing": "正在檢視修訂版本 {{number}}（唯讀）",
+      "restoreExplainer": "還原此修訂版本將建立內容相同的新修訂版本 {{number}}。歷史記錄保持僅供追加。",
+      "returnToCurrent": "返回目前版本",
+      "restoreAsNew": "還原為新修訂版本",
+      "restoreThis": "還原此修訂版本",
+      "savedBy": "由 {{actor}} 於 {{time}} 儲存",
+      "compareWithCurrent": "與目前版本比較"
+    },
+    "conflict": {
+      "title": "未儲存的例行程序編輯",
+      "body": "您已變更 {{fields}} 但尚未儲存。請在預覽或還原較舊的修訂版本前儲存或放棄變更。",
+      "discard": "放棄變更",
+      "save": "儲存並繼續"
+    },
+    "revisionList": {
+      "heading": "修訂版本",
+      "total": "共 {{count}} 個",
+      "rev": "修訂版本 {{number}}",
+      "current": "目前",
+      "restored": "已還原",
+      "showOlder": "顯示 {{count}} 個較舊的…"
+    },
+    "field": {
+      "title": "標題",
+      "priority": "優先順序",
+      "status": "狀態",
+      "defaultAgent": "預設代理人",
+      "project": "專案",
+      "concurrency": "並行",
+      "catchUp": "補執行",
+      "env": "環境"
+    },
+    "structuredFields": "結構化欄位",
+    "differsFromCurrent": "與目前版本不同",
+    "description": "說明",
+    "noDescription": "無說明",
+    "triggers": "觸發器（{{count}}）",
+    "noTriggers": "此修訂版本無觸發器。",
+    "trigger": {
+      "enabled": "已啟用",
+      "disabled": "已停用"
+    },
+    "webhookNote": "Webhook 密鑰不儲存於修訂版本中。若還原的 webhook 觸發器需要重新建立，Workcell 將在還原時產生新的密鑰材料。",
+    "variables": "變數（{{count}}）",
+    "variableDefault": "預設值：{{value}}",
+    "confirm": {
+      "title": "還原修訂版本 {{number}}？",
+      "description": "這將建立與修訂版本 {{targetNumber}} 內容相同的新修訂版本 {{newNumber}}。修訂版本 {{targetNumber}}–{{rangeEnd}} 將保留在歷史記錄中且不會被修改。",
+      "revertFields": "例行程序欄位值、變數和排程 cron 將還原。",
+      "revertSecrets": "例行程序密鑰將還原：{{counts}}。",
+      "historyPreserved": "先前的執行歷史記錄已保留。",
+      "webhookRecreated": "Webhook 觸發器 {{label}} 將以新的 URL 和密鑰重新建立。Workcell 將在還原後顯示密鑰一次 — 請在關閉前複製。",
+      "summaryLabel": "變更摘要（選填）",
+      "summaryPlaceholder": "為何還原？將顯示於歷史記錄中。",
+      "cancel": "取消",
+      "restoring": "還原中…",
+      "restoreAsRevision": "還原為修訂版本 {{number}}"
+    },
+    "diff": {
+      "title": "比較例行程序修訂版本",
+      "old": "舊版",
+      "new": "新版",
+      "fieldChanges": "欄位變更",
+      "noFieldChanges": "無結構欄位變更。",
+      "colField": "欄位",
+      "colOldValue": "舊值",
+      "colNewValue": "新值",
+      "descriptionDiff": "說明差異",
+      "close": "關閉",
+      "restoreRev": "將修訂版本 {{number}} 還原為新修訂版本",
+      "noDescriptionEither": "兩個修訂版本均無說明。",
+      "identical": "說明相同。",
+      "colOld": "舊版",
+      "colNew": "新版",
+      "colContent": "內容"
+    },
+    "picker": {
+      "option": "修訂版本 {{number}} — {{time}}"
+    }
+  },
+  "executionWorkspaceClose": {
+    "toast": {
+      "closeRetried": "已重試關閉工作區",
+      "closed": "工作區已關閉",
+      "closeFailed": "關閉工作區失敗",
+      "unknownError": "未知錯誤"
+    },
+    "action": {
+      "retryClose": "重試關閉",
+      "closeWorkspace": "關閉工作區"
+    },
+    "descriptionBefore": "封存",
+    "descriptionAfter": "並清理所有擁有的工作區產出物。Workcell 保留工作區記錄和議題歷史，但從活動工作區視圖中移除它。",
+    "checkingSafe": "檢查此工作區是否可安全關閉...",
+    "inspectFailed": "無法檢查工作區關閉就緒狀態。",
+    "state": {
+      "blocked": "關閉已封鎖",
+      "warnings": "關閉可帶警告進行",
+      "ready": "準備好關閉"
+    },
+    "detail": {
+      "shared": "這是共享工作區工作階段。封存它將移除此工作階段記錄，但保留底層專案工作區。",
+      "ownCheckout": "此執行工作區有其自己的簽出路徑，可獨立封存。",
+      "projectPrimary": "此執行工作區目前指向專案的主要工作區路徑。",
+      "disposable": "此工作區為可棄置，可以封存。"
+    },
+    "section": {
+      "blockingIssues": "封鎖議題",
+      "blockingReasons": "封鎖原因",
+      "warnings": "警告",
+      "gitStatus": "Git 狀態",
+      "otherLinkedIssues": "其他已連結議題",
+      "runtimeServices": "已附加的執行時期服務",
+      "cleanupActions": "清理動作"
+    },
+    "git": {
+      "branch": "分支",
+      "baseRef": "基底參照",
+      "mergedIntoBase": "已合併至基底",
+      "aheadBehind": "超前 / 落後",
+      "dirtyTracked": "已修改的追蹤檔案",
+      "untracked": "未追蹤的檔案",
+      "unknown": "未知",
+      "notSet": "未設定",
+      "yes": "是",
+      "no": "否"
+    },
+    "noAdditionalDetails": "無其他詳細資訊",
+    "cleanupFailedNotice": "此工作區先前清理失敗。重試關閉將重新執行清理流程，若成功則更新工作區狀態。",
+    "alreadyArchived": "此工作區已封存。",
+    "repoRoot": "儲存庫根目錄：",
+    "workspacePath": "工作區路徑：",
+    "lastChecked": "上次檢查於 {{time}}",
+    "cancel": "取消"
+  },
+  "cloudAccessGate": {
+    "bootstrap": {
+      "title": "需要設定執行個體",
+      "body": "尚無執行個體管理員。在您的 Workcell 環境中執行此指令以產生第一個管理員邀請 URL：",
+      "bodyActiveInvite": "尚無執行個體管理員。引導邀請已啟用。請查看您的 Workcell 啟動日誌以取得第一個管理員邀請 URL，或執行此指令以輪換它："
+    },
+    "noAccess": {
+      "title": "無團隊存取權限",
+      "body1": "此帳戶已登入，但在此 Workcell 執行個體上沒有有效的團隊成員資格或執行個體管理員存取權限。",
+      "body2": "使用團隊邀請，或以已屬於此組織的帳戶登入。"
+    },
+    "loading": "載入中...",
+    "loadFailed": "載入應用程式狀態失敗"
+  },
+  "missingPluginTab": {
+    "notAvailable": "工作區插件標籤不可用。"
+  },
+  "issueLinkQuicklook": {
+    "unableToLoad": "無法載入議題預覽。"
+  },
+  "pathInstructionsModal": {
+    "title": "如何取得完整路徑",
+    "descriptionBefore": "將絕對路徑（例如",
+    "descriptionAfter": "）貼入輸入欄位。",
+    "choose": "選擇"
+  },
+  "activityCharts": {
+    "noRuns": "尚無執行記錄",
+    "noIssues": "無議題",
+    "status": {
+      "todo": "待處理",
+      "in_progress": "進行中",
+      "in_review": "審查中",
+      "done": "已完成",
+      "blocked": "已封鎖",
+      "cancelled": "已取消",
+      "backlog": "待辦清單"
+    }
+  },
+  "billerSpendCard": {
+    "in": "輸入",
+    "out": "輸出",
+    "providerCount_one": "{{count}} 個提供者",
+    "providerCount_other": "{{count}} 個提供者",
+    "modelCount_one": "{{count}} 個模型",
+    "modelCount_other": "{{count}} 個模型",
+    "meteredRuns_one": "{{count}} 次計量執行",
+    "meteredRuns_other": "{{count}} 次計量執行",
+    "subscriptionRuns_one": "{{count}} 次訂閱執行",
+    "subscriptionRuns_other": "{{count}} 次訂閱執行",
+    "thisWeek": "本週 {{amount}}",
+    "billingTypes": "帳單類型",
+    "upstreamProviders": "上游提供者",
+    "tok": "{{tokens}} tok"
+  },
+  "financeBillerCard": {
+    "summary": "{{events}} 涵蓋 {{kinds}}",
+    "eventCount_one": "{{count}} 個事件",
+    "eventCount_other": "{{count}} 個事件",
+    "kindCount_one": "{{count}} 種類型",
+    "kindCount_other": "{{count}} 種類型",
+    "net": "淨額",
+    "debits": "借記",
+    "credits": "貸記",
+    "estimated": "預估"
+  },
+  "financeKindCard": {
+    "title": "財務事件組成",
+    "description": "按事件類型分組的帳戶層級費用。",
+    "empty": "此期間無財務事件。",
+    "counts": "{{events}} · {{billers}}",
+    "eventCount_one": "{{count}} 個事件",
+    "eventCount_other": "{{count}} 個事件",
+    "billerCount_one": "{{count}} 個計費方",
+    "billerCount_other": "{{count}} 個計費方",
+    "debits": "{{amount}} 借記"
+  },
+  "financeTimelineCard": {
+    "title": "近期財務事件",
+    "description": "儲值、費用、點數、承諾及其他非請求費用。",
+    "empty": "此期間無財務事件。",
+    "invoice": "發票 {{id}}",
+    "region": "地區 {{region}}",
+    "tier": "級別 {{tier}}",
+    "estimated": "預估"
+  },
+  "claudeSubscriptionPanel": {
+    "heading": "Anthropic 訂閱",
+    "subheading": "即時 Claude 配額視窗。",
+    "resets": "於 {{time}} 重置",
+    "percentUsed": "已使用 {{percent}}%"
+  },
+  "codexSubscriptionPanel": {
+    "heading": "Codex 訂閱",
+    "subheading": "即時 Codex 配額視窗。",
+    "accountWindows": "帳戶視窗",
+    "modelWindows": "模型視窗",
+    "resets": "於 {{time}} 重置",
+    "percentUsed": "已使用 {{percent}}%"
+  },
+  "approvalPayload": {
+    "skills": "技能",
+    "name": "名稱",
+    "capabilities": "能力",
+    "adapter": "介面卡",
+    "limit": "限制 {{limit}}",
+    "observed": "觀察到 {{observed}}",
+    "title": "標題",
+    "summary": "摘要",
+    "recommendedAction": "建議動作",
+    "onApproval": "核准後",
+    "risks": "風險",
+    "proposedComment": "建議留言"
+  },
+  "budgetIncidentCard": {
+    "state": {
+      "resolved": "已解決",
+      "dismissed": "已忽略",
+      "escalated": "已升級",
+      "pending": "待核准",
+      "open": "開放中"
+    },
+    "hardStop": "{{scope}} 硬性停止",
+    "spendingReached": "支出已達到 {{observed}}，超出 {{limit}} 的限制。",
+    "pausedProject": "專案執行已暫停。在您解決預算事件之前，此專案中的新工作將不會啟動。",
+    "pausedScope": "此範圍已暫停。在您解決預算事件之前，新的心跳將不會啟動。",
+    "newBudget": "新預算（美元）",
+    "applying": "套用中...",
+    "raiseAndResume": "提高預算並恢復",
+    "mustExceed": "新預算必須超過目前觀察到的支出。",
+    "keepPaused": "保持暫停"
+  },
+  "budgetPolicyCard": {
+    "lifetimeBudget": "終身預算",
+    "monthlyBudget": "每月 UTC 預算",
+    "observed": "觀察到",
+    "percentOfLimit": "限制的 {{percent}}%",
+    "noCapConfigured": "未設定上限",
+    "budget": "預算",
+    "disabled": "已停用",
+    "softAlertAt": "達 {{percent}}% 時軟性警示",
+    "remaining": "剩餘",
+    "unlimited": "無限制",
+    "pausedProject": "此專案的執行已暫停，直到預算提高或事件被忽略。",
+    "pausedScope": "此範圍的心跳已暫停，直到預算提高或事件被忽略。",
+    "budgetUsd": "預算（美元）",
+    "saving": "儲存中...",
+    "updateBudget": "更新預算",
+    "setBudget": "設定預算",
+    "status": {
+      "paused": "已暫停",
+      "warning": "警告",
+      "hardStop": "硬性停止",
+      "healthy": "健康"
+    },
+    "invalidAmount": "請輸入有效的非負美元金額。"
+  },
+  "agentActionButtons": {
+    "resume": "恢復",
+    "pause": "暫停"
+  },
+  "executionParticipantPicker": {
+    "user": "使用者",
+    "reviewers": "審查者",
+    "approvers": "核准者",
+    "noReviewers": "無審查者",
+    "noApprovers": "無核准者",
+    "assignToMe": "指派給我"
+  },
+  "filterBar": {
+    "clearAll": "清除全部"
+  },
+  "goalProperties": {
+    "none": "無"
+  },
+  "goalTree": {
+    "noGoals": "無目標。"
+  },
+  "worktreeBanner": {
+    "label": "工作樹",
+    "copied": "已複製！"
+  },
+  "propertiesPanel": {
+    "title": "屬性"
+  },
+  "reportsToPicker": {
+    "disabledEmpty": "回報對象：無（協調者）",
+    "choose": "回報對象...",
+    "unknownManager": "未知主管（過期 ID）",
+    "reportsTo": "回報給 {{name}}",
+    "reportsToTerminated": "回報給 {{name}}（已離職）",
+    "noManager": "無主管",
+    "currentTerminated": "目前：{{name}}（已離職）",
+    "savedMissing": "儲存的主管不在此團隊中。請選擇新主管或清除。"
+  },
+  "projectWorkspacesContent": {
+    "empty": "尚無非預設工作區活動。",
+    "cleanupAttention": "需要注意清理"
+  },
+  "projectWorkspaceSummaryCard": {
+    "kind": {
+      "execution": "執行工作區",
+      "project": "專案工作區"
+    },
+    "updated": "更新於 {{time}}",
+    "services": "{{running}}/{{total}} 個服務",
+    "stopServices": "停止服務",
+    "startServices": "啟動服務",
+    "retryClose": "重試關閉",
+    "closeWorkspace": "關閉工作區",
+    "branch": "分支",
+    "path": "路徑",
+    "service": "服務",
+    "linkedIssues": "已連結議題",
+    "moreIssues": "+{{count}} 個"
+  },
+  "managedRoutinesList": {
+    "schedule": "排程 {{cron}}"
+  },
+  "providerQuotaCard": {
+    "percentUsed": "已使用 {{percent}}%",
+    "rollingWindows": "滾動視窗",
+    "subscriptionQuota": "訂閱配額",
+    "in": "輸入",
+    "out": "輸出",
+    "subscription": "訂閱",
+    "runs": "次執行",
+    "total": "總計"
+  },
+  "sourceResolvedFold": {
+    "heading": "來源已解決的折疊",
+    "systemAudit": "系統稽核",
+    "body": "此執行被折疊為來源已解決的誤報。",
+    "at": "於 {{time}}",
+    "silenceStarted": "（靜默始於 {{time}}）",
+    "unknown": "未知"
+  },
+  "productivityReviewBadge": {
+    "productivityReview": "生產力審查",
+    "underReview": "審查中",
+    "open": "生產力審查開放中",
+    "trigger": "觸發器：",
+    "noCommentStreak": "無留言連續：",
+    "runs": "{{count}} 次執行",
+    "review": "審查："
+  },
+  "agentMemory": {
+    "heading": "記憶",
+    "graphLabel": "代理人記憶圖",
+    "loading": "載入記憶中…",
+    "loadError": "無法載入此代理人的記憶。",
+    "empty": "此代理人尚無記憶 — 它會在工作時自行建立。",
+    "selectHint": "選擇一個記憶以查看其詳細資訊。",
+    "content": "內容",
+    "metadata": "元資料",
+    "provenance": "來源執行",
+    "noProvenance": "—",
+    "updated": "已更新",
+    "close": "關閉",
+    "forget": "遺忘",
+    "confirmForget": "確認遺忘",
+    "forgetting": "遺忘中…",
+    "forgetError": "無法遺忘此記憶。",
+    "add": "新增記憶",
+    "kindLabel": "種類",
+    "labelPlaceholder": "標籤",
+    "contentPlaceholder": "要記住的內容…",
+    "cancel": "取消",
+    "save": "記住",
+    "saving": "儲存中…",
+    "saveError": "無法儲存此記憶。",
+    "kind": {
+      "fact": "事實",
+      "preference": "偏好",
+      "entity": "實體",
+      "decision": "決策",
+      "todo": "待辦事項",
+      "other": "其他"
+    }
+  },
+  "knowledgeGraph": {
+    "heading": "知識圖譜",
+    "kind": {
+      "issue": "議題",
+      "code": "程式碼",
+      "plan_section": "計畫",
+      "decision": "決策",
+      "run": "執行",
+      "skill": "技能",
+      "plugin": "插件",
+      "capability": "能力"
+    },
+    "edge": {
+      "implements": "實作",
+      "depends_on": "依賴於",
+      "references": "參照",
+      "spawned_by": "由...產生",
+      "supersedes": "取代",
+      "related": "相關"
+    },
+    "direction": {
+      "out": "至",
+      "in": "來自"
+    }
+  },
+  "pairTimeline": {
+    "dualBrain": {
+      "heading": "雙腦自我審查",
+      "workBrain": "工作腦",
+      "reviewBrain": "審查腦"
+    },
+    "unassigned": "未指派",
+    "heading": "配對協作",
+    "roundSummary": "第 {{current}} / {{max}} 輪 · 已記錄 {{count}} 個回合",
+    "status": {
+      "active": "活動中",
+      "completed": "已完成",
+      "aborted": "已中止"
+    },
+    "running": "執行中…",
+    "roundInFlight": "輪次進行中…",
+    "autoRoundInFlight": "自動執行正在推進此輪次…",
+    "manualRoundInFlight": "輪次進行中…",
+    "runRound": "執行輪次",
+    "runToConvergence": "執行至收斂",
+    "runToConvergenceHint": "執行剩餘輪次，直到配對收斂、中止或達到輪次上限。",
+    "noTurns": "尚無回合。按下「執行輪次」以驅動第一輪。",
+    "round": "第 {{number}} 輪",
+    "loadingState": "載入配對群組狀態中…",
+    "noActiveGroup": "此議題已設定配對模式，但尚無活動配對群組。",
+    "mode": {
+      "live": "即時",
+      "liveHint": "回合針對真實模型執行。",
+      "simulated": "模擬",
+      "simulatedHint": "回合針對確定性存根執行 — 未呼叫任何模型。"
+    },
+    "stoppedBecause": "已停止：{{reason}}",
+    "stopReason": {
+      "max_rounds_reached": "已達輪次上限",
+      "convergence_reached": "已收斂",
+      "aborted": "已中止"
+    },
+    "autoRun": {
+      "label": "自動執行",
+      "onHint": "輪次自動推進。",
+      "offHint": "手動模式 — 使用按鈕推進輪次。"
+    }
+  },
+  "liveRunWidget": {
+    "heading": "即時執行",
+    "subheading": "使用議題活動中共享的聊天式執行介面。",
+    "stopping": "停止中…",
+    "stop": "停止",
+    "openRun": "開啟執行"
+  },
+  "liveRunTail": {
+    "heading": "即時輸出",
+    "waiting": "等待輸出中…"
+  },
+  "outputFeedback": {
+    "helpful": "有幫助",
+    "needsWork": "需要改進",
+    "whatBetter": "哪些地方可以更好？",
+    "dismiss": "關閉",
+    "saving": "儲存中...",
+    "saveNote": "儲存備註",
+    "alwaysAllow": "一律允許",
+    "dontAllow": "不允許",
+    "dialog": {
+      "title": "儲存您的意見回饋分享偏好",
+      "description": "選擇是否允許將已投票的 AI 輸出分享給 Workcell Labs。此選擇將成為未來按讚和踩踩的預設值。",
+      "savedLocally": "此投票始終儲存於本機。",
+      "chooseBefore": "選擇",
+      "chooseMiddle": "以分享此次及未來的已投票 AI 輸出。選擇",
+      "chooseAfter": "以將此次及未來的投票保留於本機。",
+      "changeLater": "您可以稍後在「執行個體設定 > 一般」中更改此設定。",
+      "terms": "閱讀我們的服務條款"
+    }
+  },
+  "routineVariables": {
+    "variables": "變數",
+    "detectedBefore": "從",
+    "detectedAfter": "例行程序標題和指示中的佔位符偵測。",
+    "promptUser": "在每次手動執行前提示使用者輸入此值。",
+    "label": "標籤",
+    "type": "類型",
+    "defaultValue": "預設值",
+    "required": "必填",
+    "noDefault": "無預設值",
+    "true": "真",
+    "false": "假",
+    "options": "選項",
+    "defaultOption": "預設選項",
+    "hintBefore": "使用",
+    "hintAfter": "指示中的佔位符以在例行程序執行時提示輸入。",
+    "dialogTitle": "例行程序變數",
+    "dialogDescription": "如何提示輸入以及 Workcell 自動填入哪些變數。",
+    "customVariables": "自訂變數",
+    "typeBefore": "輸入",
+    "typeMiddle": "標題或指示的任意位置。Workcell 偵測每個佔位符，列於",
+    "typeAfter": "，並在每次執行前提示輸入值。",
+    "ruleNames": "名稱必須以字母開頭，可使用字母、數字和底線。",
+    "rulePick": "選擇類型（文字、文字區域、數字、布林值、選擇），預設值，以及是否必填。",
+    "ruleReuse": "在標題和指示中重複使用的相同名稱視為一個變數。",
+    "builtinVariables": "內建變數",
+    "builtinDescription": "這些會自動填入 — 無需設定，且不會出現在變數清單中。",
+    "colPlaceholder": "佔位符",
+    "colExample": "範例",
+    "colDescription": "說明"
+  },
+  "scheduleEditor": {
+    "fiveFields": "五個欄位：分鐘 小時 日期 月份 星期",
+    "at": "於",
+    "atMinute": "於第幾分鐘",
+    "on": "在",
+    "onDay": "在第幾天"
+  },
+  "secretBindingPicker": {
+    "loading": "載入中…",
+    "missingSecret": "缺少密鑰（{{id}}…）",
+    "latest": "最新",
+    "statusPrefix": "狀態：{{status}}。",
+    "boundTo": "已繫結至 {{version}} · {{key}}",
+    "noLongerAvailable": "先前選取的密鑰已不再可用。請選擇另一個或移除繫結。",
+    "createNew": "建立新密鑰",
+    "name": "名稱",
+    "value": "值",
+    "valueNote": "值儲存一次且永不再顯示。輪換以替換。",
+    "description": "說明",
+    "cancel": "取消",
+    "createAndBind": "建立並繫結"
+  },
+  "runTranscript": {
+    "user": "使用者",
+    "running": "執行中",
+    "errored": "發生錯誤",
+    "completed": "已完成",
+    "input": "輸入",
+    "result": "結果",
+    "commandFailed": "指令失敗"
+  },
+  "pluginPage": {
+    "selectCompany": "選擇一個團隊以檢視此頁面。",
+    "loading": "載入中...",
+    "loadingEllipsis": "載入中…",
+    "extensionsUnavailable": "插件擴充功能不可用：{{message}}",
+    "conflictSettingsBefore": "多個插件宣告了團隊設定路由",
+    "conflictSettingsAfter": "。請停用一個插件或變更其路由。",
+    "conflictRouteBefore": "多個插件宣告了路由",
+    "conflictRouteAfter": "。在衝突解決之前請使用插件 ID 路由。"
+  },
+  "newAgentPage": {
+    "title": "新增代理人",
+    "subtitle": "進階代理人設定",
+    "namePlaceholder": "代理人名稱",
+    "titlePlaceholder": "職稱（例如：工程副總裁）",
+    "createFailed": "建立代理人失敗",
+    "creating": "建立中…",
+    "createAgent": "建立代理人",
+    "companySkills": "團隊技能",
+    "companySkillsHint": "來自團隊函式庫的選填技能。內建的 Workcell 執行時期技能會自動新增。",
+    "noSkills": "尚未安裝任何選填的團隊技能。",
+    "willBeOrchestrator": "這將成為協調者"
+  },
+  "workcellPrinciples": {
+    "heading": "Workcell 的運作方式",
+    "direction": {
+      "title": "由您設定方向",
+      "body": "看板 — 也就是您 — 掌管方向、核准和政策。您的代理人團隊從不決定什麼重要。"
+    },
+    "projects": {
+      "title": "專案，細緻管理",
+      "body": "團隊以專案而非部門運作。每個專案從頭到尾都被規劃、追蹤和細緻管理。"
+    },
+    "designTruth": {
+      "title": "設計是真理的來源",
+      "body": "每個專案的設計系統是計畫的基礎。設計師提案，您核准，程式設計師按照核准的設計構建，QA 對其進行驗證。"
+    },
+    "proof": {
+      "title": "沒有證明就不算完成",
+      "body": "每個議題都經歷計畫 → 工作 → 證明的流程。結果是展示的，而非聲稱的 — 完成的工作將複利成為團隊學習。"
+    }
+  }
+}

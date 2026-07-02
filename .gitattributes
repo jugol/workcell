@@ -1,0 +1,5 @@
+# Shell scripts must stay LF on all platforms so Docker entrypoints remain
+# executable after `git archive`/clone. With core.autocrlf=true on Windows,
+# git would otherwise emit CRLF, breaking `#!/bin/sh` at exec time
+# ("exec: no such file or directory").
+*.sh text eol=lf

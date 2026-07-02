@@ -1,0 +1,1372 @@
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type {
+  DocumentRevision,
+  FeedbackDataSharingPreference,
+  FeedbackVote,
+  FeedbackVoteValue,
+  Issue,
+  IssueDocument,
+} from "@workcell/shared";
+import { isSystemIssueDocumentKey } from "@workcell/shared";
+import { useLocation } from "@/lib/router";
+import { ApiError } from "../api/client";
+import { issuesApi } from "../api/issues";
+import { useAutosaveIndicator } from "../hooks/useAutosaveIndicator";
+import { deriveDocumentRevisionState } from "../lib/document-revisions";
+import { queryKeys } from "../lib/queryKeys";
+import { cn, relativeTime } from "../lib/utils";
+import { useTranslation } from "@/i18n";
+import { FoldCurtain } from "./FoldCurtain";
+import { MarkdownBody } from "./MarkdownBody";
+import { MarkdownEditor, type MentionOption } from "./MarkdownEditor";
+import { OutputFeedbackButtons } from "./OutputFeedbackButtons";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Check, ChevronDown, ChevronRight, Copy, Diff, Download, FilePenLine, FileText, ListPlus, Lock, MoreHorizontal, Plus, Sparkles, Trash2, Unlock, X } from "lucide-react";
+import { DocumentDiffModal } from "./DocumentDiffModal";
+
+type DraftState = {
+  key: string;
+  title: string;
+  body: string;
+  baseRevisionId: string | null;
+  isNew: boolean;
+};
+
+type DocumentConflictState = {
+  key: string;
+  serverDocument: IssueDocument;
+  localDraft: DraftState;
+  showRemote: boolean;
+};
+
+const DOCUMENT_AUTOSAVE_DEBOUNCE_MS = 900;
+const DOCUMENT_KEY_PATTERN = /^[a-z0-9][a-z0-9_-]*$/;
+const getFoldedDocumentsStorageKey = (issueId: string) => `workcell:issue-document-folds:${issueId}`;
+
+function loadFoldedDocumentKeys(issueId: string) {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(getFoldedDocumentsStorageKey(issueId));
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveFoldedDocumentKeys(issueId: string, keys: string[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(getFoldedDocumentsStorageKey(issueId), JSON.stringify(keys));
+}
+
+function renderFoldableBody(body: string, className?: string) {
+  return (
+    <FoldCurtain>
+      <MarkdownBody className={className} softBreaks={false}>{body}</MarkdownBody>
+    </FoldCurtain>
+  );
+}
+
+function isPlanKey(key: string) {
+  return key.trim().toLowerCase() === "plan";
+}
+
+function titlesMatchKey(title: string | null | undefined, key: string) {
+  return (title ?? "").trim().toLowerCase() === key.trim().toLowerCase();
+}
+
+function isDocumentConflictError(error: unknown) {
+  return error instanceof ApiError && error.status === 409;
+}
+
+function isLockedDocumentError(error: unknown) {
+  return error instanceof ApiError && error.status === 409 && error.message === "Document is locked";
+}
+
+function downloadDocumentFile(key: string, body: string) {
+  const blob = new Blob([body], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `${key}.md`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
+function getRevisionActorLabel(revision: DocumentRevision) {
+  if (revision.createdByUserId) return "board";
+  if (revision.createdByAgentId) return "agent";
+  return "system";
+}
+
+function documentHasUnsavedChanges(doc: IssueDocument, draft: DraftState | null) {
+  if (!draft || draft.isNew || draft.key !== doc.key) return false;
+  return draft.body !== doc.body || (doc.title ?? "") !== draft.title;
+}
+
+function toDocumentSummary(document: IssueDocument) {
+  return {
+    id: document.id,
+    companyId: document.companyId,
+    issueId: document.issueId,
+    key: document.key,
+    title: document.title,
+    format: document.format,
+    latestRevisionId: document.latestRevisionId,
+    latestRevisionNumber: document.latestRevisionNumber,
+    createdByAgentId: document.createdByAgentId,
+    createdByUserId: document.createdByUserId,
+    updatedByAgentId: document.updatedByAgentId,
+    updatedByUserId: document.updatedByUserId,
+    lockedAt: document.lockedAt,
+    lockedByAgentId: document.lockedByAgentId,
+    lockedByUserId: document.lockedByUserId,
+    createdAt: document.createdAt,
+    updatedAt: document.updatedAt,
+  };
+}
+
+export function IssueDocumentsSection({
+  issue,
+  canDeleteDocuments,
+  canManageDocumentLocks = false,
+  feedbackVotes = [],
+  feedbackDataSharingPreference = "prompt",
+  feedbackTermsUrl = null,
+  mentions,
+  imageUploadHandler,
+  onVote,
+  extraActions,
+}: {
+  issue: Issue;
+  canDeleteDocuments: boolean;
+  canManageDocumentLocks?: boolean;
+  feedbackVotes?: FeedbackVote[];
+  feedbackDataSharingPreference?: FeedbackDataSharingPreference;
+  feedbackTermsUrl?: string | null;
+  mentions?: MentionOption[];
+  imageUploadHandler?: (file: File) => Promise<string>;
+  onVote?: (
+    revisionId: string,
+    vote: FeedbackVoteValue,
+    options?: { allowSharing?: boolean; reason?: string },
+  ) => Promise<void>;
+  extraActions?: ReactNode;
+}) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const location = useLocation();
+  const [confirmDeleteKey, setConfirmDeleteKey] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [draft, setDraft] = useState<DraftState | null>(null);
+  const [documentConflict, setDocumentConflict] = useState<DocumentConflictState | null>(null);
+  const [foldedDocumentKeys, setFoldedDocumentKeys] = useState<string[]>(() => loadFoldedDocumentKeys(issue.id));
+  const [autosaveDocumentKey, setAutosaveDocumentKey] = useState<string | null>(null);
+  const [copiedDocumentKey, setCopiedDocumentKey] = useState<string | null>(null);
+  const [highlightDocumentKey, setHighlightDocumentKey] = useState<string | null>(null);
+  const [revisionMenuOpenKey, setRevisionMenuOpenKey] = useState<string | null>(null);
+  const [selectedRevisionIds, setSelectedRevisionIds] = useState<Record<string, string | null>>({});
+  const [diffViewKey, setDiffViewKey] = useState<string | null>(null);
+  const autosaveDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copiedDocumentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasScrolledToHashRef = useRef(false);
+  const {
+    state: autosaveState,
+    markDirty,
+    reset,
+    runSave,
+  } = useAutosaveIndicator();
+
+  const { data: documents } = useQuery({
+    queryKey: queryKeys.issues.documents(issue.id),
+    queryFn: () => issuesApi.listDocuments(issue.id),
+  });
+
+  // WC-22: poll the autofill status for this issue. Enabled only when a
+  // compound-checklist exists (the only doc the banner attaches to) — avoids
+  // an extra request on every issue. Polls every 10s so a user watching the
+  // page sees the banner clear when the agent finishes.
+  const hasCompoundChecklist =
+    Array.isArray(documents) && documents.some((doc) => doc.key === "compound-checklist");
+  const { data: autofillStatus } = useQuery({
+    queryKey: ["issues", "compound-checklist-autofill-status", issue.id],
+    queryFn: () => issuesApi.getCompoundChecklistAutofillStatus(issue.id),
+    enabled: hasCompoundChecklist,
+    refetchInterval: 10_000,
+  });
+
+  const { data: activeDocumentRevisions, isFetching: isFetchingDocumentRevisions } = useQuery({
+    queryKey: revisionMenuOpenKey
+      ? queryKeys.issues.documentRevisions(issue.id, revisionMenuOpenKey)
+      : ["issues", "document-revisions", issue.id, "__idle__"],
+    queryFn: async () => {
+      if (!revisionMenuOpenKey) return [];
+      return issuesApi.listDocumentRevisions(issue.id, revisionMenuOpenKey);
+    },
+    enabled: Boolean(revisionMenuOpenKey),
+  });
+
+  const invalidateIssueDocuments = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.issues.detail(issue.id) });
+    queryClient.invalidateQueries({ queryKey: queryKeys.issues.documents(issue.id) });
+    queryClient.invalidateQueries({
+      predicate: (query) =>
+        Array.isArray(query.queryKey)
+        && query.queryKey[0] === "issues"
+        && query.queryKey[1] === "document-revisions"
+        && query.queryKey[2] === issue.id,
+    });
+  }, [issue.id, queryClient]);
+
+  const syncDocumentCaches = useCallback((document: IssueDocument) => {
+    if (isSystemIssueDocumentKey(document.key)) return;
+    queryClient.setQueryData<IssueDocument[] | undefined>(
+      queryKeys.issues.documents(issue.id),
+      (current) => {
+        if (!current) return [document];
+        const existingIndex = current.findIndex((entry) => entry.key === document.key);
+        if (existingIndex === -1) return [...current, document];
+        return current.map((entry, index) => index === existingIndex ? document : entry);
+      },
+    );
+    queryClient.setQueryData<Issue | undefined>(
+      queryKeys.issues.detail(issue.id),
+      (current) => {
+        if (!current) return current;
+        const nextSummaries = (() => {
+          const summary = toDocumentSummary(document);
+          const existingIndex = (current.documentSummaries ?? []).findIndex((entry) => entry.key === document.key);
+          if (existingIndex === -1) return [...(current.documentSummaries ?? []), summary];
+          return (current.documentSummaries ?? []).map((entry, index) => index === existingIndex ? summary : entry);
+        })();
+        return {
+          ...current,
+          planDocument: document.key === "plan" ? document : current.planDocument ?? null,
+          documentSummaries: nextSummaries,
+          legacyPlanDocument: document.key === "plan" ? null : current.legacyPlanDocument ?? null,
+        };
+      },
+    );
+  }, [issue.id, queryClient]);
+
+  const upsertDocument = useMutation({
+    mutationFn: async (nextDraft: DraftState) =>
+      issuesApi.upsertDocument(issue.id, nextDraft.key, {
+        title: isPlanKey(nextDraft.key) ? null : nextDraft.title.trim() || null,
+        format: "markdown",
+        body: nextDraft.body,
+        baseRevisionId: nextDraft.baseRevisionId,
+      }),
+  });
+
+  const deleteDocument = useMutation({
+    mutationFn: (key: string) => issuesApi.deleteDocument(issue.id, key),
+    onSuccess: () => {
+      setError(null);
+      setConfirmDeleteKey(null);
+      invalidateIssueDocuments();
+    },
+    onError: (err) => {
+      setError(err instanceof Error ? err.message : t("issueDocumentsSection.error.deleteDocument", { defaultValue: "Failed to delete document" }));
+    },
+  });
+
+  const restoreDocumentRevision = useMutation({
+    mutationFn: ({ key, revisionId }: { key: string; revisionId: string }) =>
+      issuesApi.restoreDocumentRevision(issue.id, key, revisionId),
+    onSuccess: (document, variables) => {
+      syncDocumentCaches(document);
+      setSelectedRevisionIds((current) => ({ ...current, [variables.key]: null }));
+      setDraft((current) => current?.key === variables.key ? null : current);
+      setDocumentConflict((current) => current?.key === variables.key ? null : current);
+      resetAutosaveState();
+      setError(null);
+      invalidateIssueDocuments();
+    },
+    onError: (err) => {
+      setError(err instanceof Error ? err.message : t("issueDocumentsSection.error.restoreRevision", { defaultValue: "Failed to restore document revision" }));
+    },
+  });
+
+  // WC-14: trigger the WC-13 compound-followups route from the document menu.
+  // Surfaces the created-issue count back to the user via a transient message
+  // line (reusing the existing `error` slot but with a non-destructive tone).
+  const [followupStatus, setFollowupStatus] = useState<string | null>(null);
+  const processCompoundFollowups = useMutation({
+    mutationFn: () => issuesApi.processCompoundFollowups(issue.id),
+    onSuccess: (result) => {
+      setError(null);
+      const count = result.createdIssueIds.length;
+      setFollowupStatus(
+        count === 0
+          ? t("issueDocumentsSection.followups.none", { defaultValue: "No new follow-ups to create — all bullets already have child issues." })
+          : count === 1
+            ? t("issueDocumentsSection.followups.createdOne", { defaultValue: "Created 1 follow-up issue." })
+            : t("issueDocumentsSection.followups.createdMany", { defaultValue: "Created {{count}} follow-up issues.", count }),
+      );
+      // Re-pull the issue tree so the new children show up.
+      queryClient.invalidateQueries({ queryKey: queryKeys.issues.detail(issue.id) });
+      queryClient.invalidateQueries({ queryKey: ["issues", "list"] });
+    },
+    onError: (err) => {
+      setFollowupStatus(null);
+      setError(err instanceof Error ? err.message : t("issueDocumentsSection.error.processFollowups", { defaultValue: "Failed to process follow-ups" }));
+    },
+  });
+
+  // WC-19: spawn a Planner-capable agent child to fill in compound-checklist
+  // sections 1–4. Reuses the same status line as Process follow-ups so the
+  // user gets a consistent feedback surface.
+  const requestChecklistAutofill = useMutation({
+    mutationFn: () => issuesApi.requestCompoundChecklistAutofill(issue.id),
+    onSuccess: (result) => {
+      setError(null);
+      setFollowupStatus(
+        result.reused
+          ? t("issueDocumentsSection.autofill.alreadyInFlight", { defaultValue: "An auto-fill request is already in flight for this checklist." })
+          : t("issueDocumentsSection.autofill.requested", { defaultValue: "Asked agent to fill checklist — child issue created." }),
+      );
+      queryClient.invalidateQueries({ queryKey: queryKeys.issues.detail(issue.id) });
+      queryClient.invalidateQueries({ queryKey: ["issues", "list"] });
+    },
+    onError: (err) => {
+      setFollowupStatus(null);
+      setError(err instanceof Error ? err.message : t("issueDocumentsSection.error.requestAutofill", { defaultValue: "Failed to request checklist auto-fill" }));
+    },
+  });
+
+  const setDocumentLock = useMutation({
+    mutationFn: ({ key, locked }: { key: string; locked: boolean }) =>
+      locked ? issuesApi.lockDocument(issue.id, key) : issuesApi.unlockDocument(issue.id, key),
+    onSuccess: (document) => {
+      syncDocumentCaches(document);
+      setDraft((current) => current?.key === document.key ? null : current);
+      setDocumentConflict((current) => current?.key === document.key ? null : current);
+      resetAutosaveState();
+      setError(null);
+      invalidateIssueDocuments();
+    },
+    onError: (err) => {
+      setError(err instanceof Error ? err.message : t("issueDocumentsSection.error.updateLock", { defaultValue: "Failed to update document lock" }));
+    },
+  });
+
+  const sortedDocuments = useMemo(() => {
+    return (documents ?? []).filter((doc) => !isSystemIssueDocumentKey(doc.key)).sort((a, b) => {
+      if (a.key === "plan" && b.key !== "plan") return -1;
+      if (a.key !== "plan" && b.key === "plan") return 1;
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+  }, [documents]);
+
+  const feedbackVoteByTargetId = useMemo(() => {
+    const map = new Map<string, FeedbackVoteValue>();
+    for (const feedbackVote of feedbackVotes) {
+      if (feedbackVote.targetType !== "issue_document_revision") continue;
+      map.set(feedbackVote.targetId, feedbackVote.vote);
+    }
+    return map;
+  }, [feedbackVotes]);
+
+  const hasRealPlan = sortedDocuments.some((doc) => doc.key === "plan");
+  const isEmpty = sortedDocuments.length === 0 && !issue.legacyPlanDocument;
+  const newDocumentKeyError =
+    draft?.isNew && draft.key.trim().length > 0 && !DOCUMENT_KEY_PATTERN.test(draft.key.trim())
+      ? t("issueDocumentsSection.error.invalidKeyHint", { defaultValue: "Use lowercase letters, numbers, -, or _, and start with a letter or number." })
+      : null;
+
+  const resetAutosaveState = useCallback(() => {
+    setAutosaveDocumentKey(null);
+    reset();
+  }, [reset]);
+
+  const markDocumentDirty = useCallback((key: string) => {
+    setAutosaveDocumentKey(key);
+    markDirty();
+  }, [markDirty]);
+
+  const beginNewDocument = () => {
+    resetAutosaveState();
+    setDocumentConflict(null);
+    setDraft({
+      key: "",
+      title: "",
+      body: "",
+      baseRevisionId: null,
+      isNew: true,
+    });
+    setError(null);
+  };
+
+  const beginEdit = (key: string) => {
+    const doc = sortedDocuments.find((entry) => entry.key === key);
+    if (!doc) return;
+    const conflictedDraft = documentConflict?.key === key ? documentConflict.localDraft : null;
+    setFoldedDocumentKeys((current) => current.filter((entry) => entry !== key));
+    resetAutosaveState();
+    setDocumentConflict((current) => current?.key === key ? current : null);
+    setDraft({
+      key: conflictedDraft?.key ?? doc.key,
+      title: conflictedDraft?.title ?? doc.title ?? "",
+      body: conflictedDraft?.body ?? doc.body,
+      baseRevisionId: conflictedDraft?.baseRevisionId ?? doc.latestRevisionId,
+      isNew: false,
+    });
+    setError(null);
+  };
+
+  const cancelDraft = () => {
+    if (autosaveDebounceRef.current) {
+      clearTimeout(autosaveDebounceRef.current);
+    }
+    resetAutosaveState();
+    setDocumentConflict(null);
+    setDraft(null);
+    setError(null);
+  };
+
+  const commitDraft = useCallback(async (
+    currentDraft: DraftState | null,
+    options?: { clearAfterSave?: boolean; trackAutosave?: boolean; overrideConflict?: boolean },
+  ) => {
+    if (!currentDraft || upsertDocument.isPending) return false;
+    const normalizedKey = currentDraft.key.trim().toLowerCase();
+    const normalizedBody = currentDraft.body.trim();
+    const normalizedTitle = currentDraft.title.trim();
+    const activeConflict = documentConflict?.key === normalizedKey ? documentConflict : null;
+
+    if (activeConflict && !options?.overrideConflict) {
+      if (options?.trackAutosave) {
+        resetAutosaveState();
+      }
+      return false;
+    }
+
+    if (!normalizedKey || !normalizedBody) {
+      if (currentDraft.isNew) {
+        setError(t("issueDocumentsSection.error.keyAndBodyRequired", { defaultValue: "Document key and body are required" }));
+      } else if (!normalizedBody) {
+        setError(t("issueDocumentsSection.error.bodyEmpty", { defaultValue: "Document body cannot be empty" }));
+      }
+      if (options?.trackAutosave) {
+        resetAutosaveState();
+      }
+      return false;
+    }
+
+    if (!DOCUMENT_KEY_PATTERN.test(normalizedKey)) {
+      setError(t("issueDocumentsSection.error.invalidKey", { defaultValue: "Document key must start with a letter or number and use only lowercase letters, numbers, -, or _." }));
+      if (options?.trackAutosave) {
+        resetAutosaveState();
+      }
+      return false;
+    }
+
+    const existing = sortedDocuments.find((doc) => doc.key === normalizedKey);
+    if (
+      !currentDraft.isNew &&
+      existing &&
+      existing.body === currentDraft.body &&
+      (existing.title ?? "") === currentDraft.title
+    ) {
+      if (options?.clearAfterSave) {
+        setDraft((value) => (value?.key === normalizedKey ? null : value));
+      }
+      if (options?.trackAutosave) {
+        resetAutosaveState();
+      }
+      return true;
+    }
+
+    const save = async () => {
+      const saved = await upsertDocument.mutateAsync({
+        ...currentDraft,
+        key: normalizedKey,
+        title: isPlanKey(normalizedKey) ? "" : normalizedTitle,
+        body: currentDraft.body,
+        baseRevisionId: options?.overrideConflict
+          ? activeConflict?.serverDocument.latestRevisionId ?? currentDraft.baseRevisionId
+          : currentDraft.baseRevisionId,
+      });
+      setError(null);
+      setDocumentConflict((current) => current?.key === normalizedKey ? null : current);
+      setDraft((value) => {
+        if (!value || value.key !== normalizedKey) return value;
+        if (options?.clearAfterSave) return null;
+        return {
+          key: saved.key,
+          title: saved.title ?? "",
+          body: saved.body,
+          baseRevisionId: saved.latestRevisionId,
+          isNew: false,
+        };
+      });
+      syncDocumentCaches(saved);
+      invalidateIssueDocuments();
+    };
+
+    try {
+      if (options?.trackAutosave) {
+        setAutosaveDocumentKey(normalizedKey);
+        await runSave(save);
+      } else {
+        await save();
+      }
+      return true;
+    } catch (err) {
+      if (isLockedDocumentError(err)) {
+        setError(t("issueDocumentsSection.error.lockedBeforeEditing", { defaultValue: "Document is locked. Unlock it before editing." }));
+        resetAutosaveState();
+        invalidateIssueDocuments();
+        return false;
+      }
+      if (isDocumentConflictError(err)) {
+        try {
+          const latestDocument = await issuesApi.getDocument(issue.id, normalizedKey);
+          setDocumentConflict({
+            key: normalizedKey,
+            serverDocument: latestDocument,
+            localDraft: {
+              key: normalizedKey,
+              title: isPlanKey(normalizedKey) ? "" : normalizedTitle,
+              body: currentDraft.body,
+              baseRevisionId: currentDraft.baseRevisionId,
+              isNew: false,
+            },
+            showRemote: true,
+          });
+          setFoldedDocumentKeys((current) => current.filter((key) => key !== normalizedKey));
+          setError(null);
+          resetAutosaveState();
+          return false;
+        } catch {
+          setError(t("issueDocumentsSection.error.remoteChangedLoadFailed", { defaultValue: "Document changed remotely and the latest version could not be loaded" }));
+          return false;
+        }
+      }
+      setError(err instanceof Error ? err.message : t("issueDocumentsSection.error.saveDocument", { defaultValue: "Failed to save document" }));
+      return false;
+    }
+  }, [documentConflict, invalidateIssueDocuments, issue.id, resetAutosaveState, runSave, sortedDocuments, syncDocumentCaches, t, upsertDocument]);
+
+  const reloadDocumentFromServer = useCallback((key: string) => {
+    if (documentConflict?.key !== key) return;
+    const serverDocument = documentConflict.serverDocument;
+    setDraft({
+      key: serverDocument.key,
+      title: serverDocument.title ?? "",
+      body: serverDocument.body,
+      baseRevisionId: serverDocument.latestRevisionId,
+      isNew: false,
+    });
+    setDocumentConflict(null);
+    resetAutosaveState();
+    setError(null);
+  }, [documentConflict, resetAutosaveState]);
+
+  const overwriteDocumentFromDraft = useCallback(async (key: string) => {
+    if (documentConflict?.key !== key) return;
+    const sourceDraft =
+      draft && draft.key === key && !draft.isNew
+        ? draft
+        : documentConflict.localDraft;
+    await commitDraft(
+      {
+        ...sourceDraft,
+        baseRevisionId: documentConflict.serverDocument.latestRevisionId,
+      },
+      {
+        clearAfterSave: false,
+        trackAutosave: true,
+        overrideConflict: true,
+      },
+    );
+  }, [commitDraft, documentConflict, draft]);
+
+  const keepConflictedDraft = useCallback((key: string) => {
+    if (documentConflict?.key !== key) return;
+    setDraft(documentConflict.localDraft);
+    setDocumentConflict((current) =>
+      current?.key === key
+        ? { ...current, showRemote: false }
+        : current,
+    );
+    setError(null);
+  }, [documentConflict]);
+
+  const copyDocumentBody = useCallback(async (key: string, body: string) => {
+    try {
+      await navigator.clipboard.writeText(body);
+      setCopiedDocumentKey(key);
+      if (copiedDocumentTimerRef.current) {
+        clearTimeout(copiedDocumentTimerRef.current);
+      }
+      copiedDocumentTimerRef.current = setTimeout(() => {
+        setCopiedDocumentKey((current) => current === key ? null : current);
+      }, 1400);
+    } catch {
+      setError(t("issueDocumentsSection.error.copyDocument", { defaultValue: "Could not copy document" }));
+    }
+  }, [t]);
+
+  const getDocumentRevisions = useCallback((key: string) => {
+    const cached = queryClient.getQueryData<DocumentRevision[]>(queryKeys.issues.documentRevisions(issue.id, key));
+    if (cached) return cached;
+    if (revisionMenuOpenKey === key) return activeDocumentRevisions ?? [];
+    return [];
+  }, [activeDocumentRevisions, issue.id, queryClient, revisionMenuOpenKey]);
+
+  const returnToLatestRevision = useCallback((key: string) => {
+    setSelectedRevisionIds((current) => ({ ...current, [key]: null }));
+    setError(null);
+  }, []);
+
+  const previewRevision = useCallback((doc: IssueDocument, revisionId: string) => {
+    const revisionState = deriveDocumentRevisionState(doc, getDocumentRevisions(doc.key));
+    const selectedRevision = revisionState.revisions.find((revision) => revision.id === revisionId);
+    if (!selectedRevision) return;
+    if (selectedRevision.id === revisionState.currentRevision.id) {
+      returnToLatestRevision(doc.key);
+      return;
+    }
+    if (documentConflict?.key === doc.key || documentHasUnsavedChanges(doc, draft)) {
+      setError(t("issueDocumentsSection.error.saveBeforeViewingRevision", { defaultValue: "Save or cancel your local changes before viewing an older revision." }));
+      return;
+    }
+    resetAutosaveState();
+    setDraft((current) => current?.key === doc.key ? null : current);
+    setDocumentConflict((current) => current?.key === doc.key ? null : current);
+    setFoldedDocumentKeys((current) => current.filter((entry) => entry !== doc.key));
+    setSelectedRevisionIds((current) => ({ ...current, [doc.key]: selectedRevision.id }));
+    setError(null);
+  }, [documentConflict, draft, getDocumentRevisions, resetAutosaveState, returnToLatestRevision, t]);
+
+  const toggleDocumentLock = useCallback((doc: IssueDocument, locked: boolean) => {
+    if (!canManageDocumentLocks || setDocumentLock.isPending) return;
+    if (locked && (documentConflict?.key === doc.key || documentHasUnsavedChanges(doc, draft))) {
+      setError(t("issueDocumentsSection.error.saveBeforeLock", { defaultValue: "Save or cancel local changes before changing the document lock." }));
+      return;
+    }
+    setDocumentLock.mutate({ key: doc.key, locked });
+  }, [canManageDocumentLocks, documentConflict, draft, setDocumentLock, t]);
+
+  const handleDraftBlur = async (event: React.FocusEvent<HTMLDivElement>) => {
+    if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+    if (autosaveDebounceRef.current) {
+      clearTimeout(autosaveDebounceRef.current);
+    }
+    await commitDraft(draft, { clearAfterSave: true, trackAutosave: true });
+  };
+
+  const handleDraftKeyDown = async (event: React.KeyboardEvent) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      cancelDraft();
+      return;
+    }
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      event.preventDefault();
+      if (autosaveDebounceRef.current) {
+        clearTimeout(autosaveDebounceRef.current);
+      }
+      await commitDraft(draft, { clearAfterSave: false, trackAutosave: true });
+    }
+  };
+
+  useEffect(() => {
+    setFoldedDocumentKeys(loadFoldedDocumentKeys(issue.id));
+  }, [issue.id]);
+
+  useEffect(() => {
+    hasScrolledToHashRef.current = false;
+  }, [issue.id, location.hash]);
+
+  useEffect(() => {
+    const validKeys = new Set(sortedDocuments.map((doc) => doc.key));
+    setFoldedDocumentKeys((current) => {
+      const next = current.filter((key) => validKeys.has(key));
+      if (next.length !== current.length) {
+        saveFoldedDocumentKeys(issue.id, next);
+      }
+      return next;
+    });
+  }, [issue.id, sortedDocuments]);
+
+  useEffect(() => {
+    saveFoldedDocumentKeys(issue.id, foldedDocumentKeys);
+  }, [foldedDocumentKeys, issue.id]);
+
+  useEffect(() => {
+    if (!documentConflict) return;
+    const latest = sortedDocuments.find((doc) => doc.key === documentConflict.key);
+    if (!latest || latest.latestRevisionId === documentConflict.serverDocument.latestRevisionId) return;
+    setDocumentConflict((current) =>
+      current?.key === latest.key
+        ? { ...current, serverDocument: latest }
+        : current,
+    );
+  }, [documentConflict, sortedDocuments]);
+
+  useEffect(() => {
+    const hash = location.hash;
+    if (!hash.startsWith("#document-")) return;
+    const documentKey = decodeURIComponent(hash.slice("#document-".length));
+    const targetExists = sortedDocuments.some((doc) => doc.key === documentKey)
+      || (documentKey === "plan" && Boolean(issue.legacyPlanDocument));
+    if (!targetExists || hasScrolledToHashRef.current) return;
+    setFoldedDocumentKeys((current) => current.filter((key) => key !== documentKey));
+    const element = document.getElementById(`document-${documentKey}`);
+    if (!element) return;
+    hasScrolledToHashRef.current = true;
+    setHighlightDocumentKey(documentKey);
+    element.scrollIntoView({ behavior: "smooth", block: "center" });
+    const timer = setTimeout(() => setHighlightDocumentKey((current) => current === documentKey ? null : current), 3000);
+    return () => clearTimeout(timer);
+  }, [issue.legacyPlanDocument, location.hash, sortedDocuments]);
+
+  useEffect(() => {
+    return () => {
+      if (autosaveDebounceRef.current) {
+        clearTimeout(autosaveDebounceRef.current);
+      }
+      if (copiedDocumentTimerRef.current) {
+        clearTimeout(copiedDocumentTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!draft || draft.isNew) return;
+    if (documentConflict?.key === draft.key) return;
+    const existing = sortedDocuments.find((doc) => doc.key === draft.key);
+    if (!existing) return;
+    const hasChanges =
+      existing.body !== draft.body ||
+      (existing.title ?? "") !== draft.title;
+    if (!hasChanges) {
+      if (autosaveState !== "saved") {
+        resetAutosaveState();
+      }
+      return;
+    }
+    markDocumentDirty(draft.key);
+    if (autosaveDebounceRef.current) {
+      clearTimeout(autosaveDebounceRef.current);
+    }
+    autosaveDebounceRef.current = setTimeout(() => {
+      void commitDraft(draft, { clearAfterSave: false, trackAutosave: true });
+    }, DOCUMENT_AUTOSAVE_DEBOUNCE_MS);
+
+    return () => {
+      if (autosaveDebounceRef.current) {
+        clearTimeout(autosaveDebounceRef.current);
+      }
+    };
+  }, [autosaveState, commitDraft, documentConflict, draft, markDocumentDirty, resetAutosaveState, sortedDocuments]);
+
+  const documentBodyShellClassName = "mt-3";
+  const documentBodyContentClassName = "workcell-edit-in-place-content min-h-[220px] text-[15px] leading-7";
+  const toggleFoldedDocument = (key: string) => {
+    setFoldedDocumentKeys((current) =>
+      current.includes(key)
+        ? current.filter((entry) => entry !== key)
+        : [...current, key],
+    );
+  };
+
+  return (
+    <div className="space-y-3">
+      {isEmpty && !draft?.isNew ? (
+        <div className="flex flex-wrap items-center justify-end gap-2 min-w-0">
+          {extraActions}
+          <Button variant="outline" size="sm" onClick={beginNewDocument} className="shrink-0">
+            <Plus className="mr-1.5 h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{t("issueDocumentsSection.newDocument", { defaultValue: "New document" })}</span>
+            <span className="sm:hidden">{t("issueDocumentsSection.newDocumentShort", { defaultValue: "New" })}</span>
+          </Button>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2 min-w-0">
+          <h3 className="w-full text-sm font-medium text-muted-foreground shrink-0 sm:w-auto">{t("issueDocumentsSection.heading", { defaultValue: "Documents" })}</h3>
+          <div className="flex flex-wrap items-center gap-2 min-w-0 sm:ml-auto">
+            {extraActions}
+            <Button variant="outline" size="sm" onClick={beginNewDocument} className="shrink-0">
+              <Plus className="mr-1.5 h-3.5 w-3.5" />
+              <span className="hidden sm:inline">{t("issueDocumentsSection.newDocument", { defaultValue: "New document" })}</span>
+              <span className="sm:hidden">{t("issueDocumentsSection.newDocumentShort", { defaultValue: "New" })}</span>
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {error && <p className="text-xs text-destructive">{error}</p>}
+      {followupStatus && !error && (
+        <p className="text-xs text-muted-foreground">{followupStatus}</p>
+      )}
+
+      {draft?.isNew && (
+        <div
+          className="space-y-3 rounded-lg border border-border bg-accent/10 p-3"
+          onBlurCapture={handleDraftBlur}
+          onKeyDown={handleDraftKeyDown}
+        >
+          <Input
+            autoFocus
+            value={draft.key}
+            onChange={(event) =>
+              setDraft((current) => current ? { ...current, key: event.target.value.toLowerCase() } : current)
+            }
+            placeholder={t("issueDocumentsSection.placeholder.documentKey", { defaultValue: "Document key" })}
+          />
+          {newDocumentKeyError && (
+            <p className="text-xs text-destructive">{newDocumentKeyError}</p>
+          )}
+          {!isPlanKey(draft.key) && (
+            <Input
+              value={draft.title}
+              onChange={(event) =>
+                setDraft((current) => current ? { ...current, title: event.target.value } : current)
+              }
+              placeholder={t("issueDocumentsSection.placeholder.optionalTitle", { defaultValue: "Optional title" })}
+            />
+          )}
+          <MarkdownEditor
+            value={draft.body}
+            onChange={(body) =>
+              setDraft((current) => current ? { ...current, body } : current)
+            }
+            placeholder={t("issueDocumentsSection.placeholder.markdownBody", { defaultValue: "Markdown body" })}
+            bordered={false}
+            className="bg-transparent"
+            contentClassName="min-h-[220px] text-[15px] leading-7"
+            mentions={mentions}
+            imageUploadHandler={imageUploadHandler}
+            onSubmit={() => void commitDraft(draft, { clearAfterSave: false, trackAutosave: false })}
+          />
+          <div className="flex items-center justify-end gap-2">
+            <Button variant="outline" size="sm" onClick={cancelDraft}>
+              <X className="mr-1.5 h-3.5 w-3.5" />
+              {t("issueDocumentsSection.action.cancel", { defaultValue: "Cancel" })}
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => void commitDraft(draft, { clearAfterSave: false, trackAutosave: false })}
+              disabled={upsertDocument.isPending}
+            >
+              {upsertDocument.isPending ? t("issueDocumentsSection.action.saving", { defaultValue: "Saving..." }) : t("issueDocumentsSection.action.createDocument", { defaultValue: "Create document" })}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {!hasRealPlan && issue.legacyPlanDocument ? (
+        <div
+          id="document-plan"
+          className={cn(
+            "rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 transition-colors duration-1000",
+            highlightDocumentKey === "plan" && "border-primary/50 bg-primary/5",
+          )}
+        >
+          <div className="mb-2 flex items-center gap-2">
+            <FileText className="h-4 w-4 text-amber-600" />
+            <span className="rounded-full border border-amber-500/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">
+              {t("issueDocumentsSection.planBadge", { defaultValue: "PLAN" })}
+            </span>
+          </div>
+          {renderFoldableBody(issue.legacyPlanDocument.body, documentBodyContentClassName)}
+        </div>
+      ) : null}
+
+      <div className="space-y-3">
+        {sortedDocuments.map((doc) => {
+          const isLocked = Boolean(doc.lockedAt);
+          const activeDraft = !isLocked && draft?.key === doc.key && !draft.isNew ? draft : null;
+          const activeConflict = !isLocked && documentConflict?.key === doc.key ? documentConflict : null;
+          const isFolded = foldedDocumentKeys.includes(doc.key);
+          const rawRevisionHistory = getDocumentRevisions(doc.key);
+          const revisionState = deriveDocumentRevisionState(doc, rawRevisionHistory);
+          const revisionHistory = revisionState.revisions;
+          const currentRevision = revisionState.currentRevision;
+          const selectedRevisionId = selectedRevisionIds[doc.key] ?? null;
+          const selectedHistoricalRevision = selectedRevisionId
+            ? revisionHistory.find((revision) => revision.id === selectedRevisionId) ?? null
+            : null;
+          const isHistoricalPreview = Boolean(selectedHistoricalRevision);
+          const displayedTitle = selectedHistoricalRevision
+            ? selectedHistoricalRevision.title ?? ""
+            : activeDraft?.title ?? currentRevision.title ?? "";
+          const displayedBody = selectedHistoricalRevision?.body ?? activeDraft?.body ?? currentRevision.body;
+          const displayedRevisionNumber = selectedHistoricalRevision?.revisionNumber ?? currentRevision.revisionNumber;
+          const displayedUpdatedAt = selectedHistoricalRevision?.createdAt ?? currentRevision.createdAt;
+          const showTitle = !isPlanKey(doc.key) && !!displayedTitle.trim() && !titlesMatchKey(displayedTitle, doc.key);
+          const canVoteOnDocument = Boolean(doc.latestRevisionId && doc.updatedByAgentId && !doc.updatedByUserId && onVote);
+          const lockActionPending = setDocumentLock.isPending && setDocumentLock.variables?.key === doc.key;
+
+          return (
+            <div
+              key={doc.id}
+              id={`document-${doc.key}`}
+              className={cn(
+                "rounded-lg border border-border p-3 transition-colors duration-1000",
+                highlightDocumentKey === doc.key && "border-primary/50 bg-primary/5",
+              )}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
+                      onClick={() => toggleFoldedDocument(doc.key)}
+                      aria-label={isFolded ? t("issueDocumentsSection.aria.expandDocument", { defaultValue: "Expand {{key}} document", key: doc.key }) : t("issueDocumentsSection.aria.collapseDocument", { defaultValue: "Collapse {{key}} document", key: doc.key })}
+                      aria-expanded={!isFolded}
+                    >
+                      {isFolded ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                    </button>
+                    <span className="shrink-0 rounded-full border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                      {doc.key}
+                    </span>
+                    <DropdownMenu
+                      open={revisionMenuOpenKey === doc.key}
+                      onOpenChange={(open) => setRevisionMenuOpenKey(open ? doc.key : null)}
+                    >
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={cn(
+                            "h-auto px-1.5 py-0 text-[11px] font-normal text-muted-foreground hover:text-foreground",
+                            isHistoricalPreview && "text-amber-300 hover:text-amber-200",
+                          )}
+                        >
+                          {t("issueDocumentsSection.revisionShort", { defaultValue: "rev {{number}}", number: displayedRevisionNumber })}
+                          <ChevronDown className="h-3 w-3" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="w-72">
+                        <DropdownMenuLabel>{t("issueDocumentsSection.revisionHistory", { defaultValue: "Revision history" })}</DropdownMenuLabel>
+                        {revisionMenuOpenKey === doc.key && isFetchingDocumentRevisions && rawRevisionHistory.length === 0 ? (
+                          <DropdownMenuItem disabled>{t("issueDocumentsSection.loadingRevisions", { defaultValue: "Loading revisions..." })}</DropdownMenuItem>
+                        ) : revisionHistory.length > 0 ? (
+                          <DropdownMenuRadioGroup value={selectedRevisionId ?? currentRevision.id ?? ""}>
+                            {revisionHistory.map((revision) => {
+                              const isCurrentRevision = revision.id === currentRevision.id;
+                              return (
+                                <DropdownMenuRadioItem
+                                  key={revision.id}
+                                  value={revision.id}
+                                  onSelect={() => previewRevision(doc, revision.id)}
+                                  className="items-start"
+                                >
+                                  <div className="flex min-w-0 flex-col">
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-medium">{t("issueDocumentsSection.revisionShort", { defaultValue: "rev {{number}}", number: revision.revisionNumber })}</span>
+                                      {isCurrentRevision ? (
+                                        <span className="rounded-full border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                                          {t("issueDocumentsSection.currentRevision", { defaultValue: "Current" })}
+                                        </span>
+                                      ) : null}
+                                    </div>
+                                    <span className="text-xs text-muted-foreground">
+                                      {relativeTime(revision.createdAt)} • {getRevisionActorLabel(revision)}
+                                    </span>
+                                  </div>
+                                </DropdownMenuRadioItem>
+                              );
+                            })}
+                          </DropdownMenuRadioGroup>
+                        ) : (
+                          <DropdownMenuItem disabled>{t("issueDocumentsSection.noRevisions", { defaultValue: "No revisions yet" })}</DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <a
+                      href={`#document-${encodeURIComponent(doc.key)}`}
+                      className="truncate text-[11px] text-muted-foreground transition-colors hover:text-foreground hover:underline"
+                    >
+                      {t("issueDocumentsSection.updatedAt", { defaultValue: "updated {{time}}", time: relativeTime(displayedUpdatedAt) })}
+                    </a>
+                  </div>
+                  {showTitle && <p className="mt-2 text-sm font-medium">{displayedTitle}</p>}
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  {canManageDocumentLocks ? (
+                    <Button
+                      variant="ghost"
+                      size="icon-xs"
+                      className={cn(
+                        "text-muted-foreground transition-colors",
+                        isLocked && "text-amber-300 hover:text-amber-200",
+                      )}
+                      title={isLocked ? t("issueDocumentsSection.lock.unlockTitle", { defaultValue: "Unlock document" }) : t("issueDocumentsSection.lock.lockTitle", { defaultValue: "Lock document" })}
+                      aria-label={isLocked ? t("issueDocumentsSection.lock.unlockAria", { defaultValue: "Unlock {{key}} document", key: doc.key }) : t("issueDocumentsSection.lock.lockAria", { defaultValue: "Lock {{key}} document", key: doc.key })}
+                      onClick={() => toggleDocumentLock(doc, !isLocked)}
+                      disabled={lockActionPending}
+                    >
+                      {isLocked ? <Lock className="h-3.5 w-3.5" /> : <Unlock className="h-3.5 w-3.5" />}
+                    </Button>
+                  ) : isLocked ? (
+                    <span title={t("issueDocumentsSection.lock.lockedDocument", { defaultValue: "Locked document" })} aria-label={t("issueDocumentsSection.lock.lockedDocument", { defaultValue: "Locked document" })} className="inline-flex h-6 w-6 items-center justify-center text-amber-300">
+                      <Lock className="h-3.5 w-3.5" />
+                    </span>
+                  ) : null}
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    className={cn(
+                      "text-muted-foreground transition-colors",
+                      copiedDocumentKey === doc.key && "text-foreground",
+                    )}
+                    title={copiedDocumentKey === doc.key ? t("issueDocumentsSection.copy.copied", { defaultValue: "Copied" }) : t("issueDocumentsSection.copy.copyDocument", { defaultValue: "Copy document" })}
+                    onClick={() => void copyDocumentBody(doc.key, displayedBody)}
+                  >
+                    {copiedDocumentKey === doc.key ? (
+                      <Check className="h-3.5 w-3.5" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        className="text-muted-foreground"
+                        title={t("issueDocumentsSection.documentActions", { defaultValue: "Document actions" })}
+                      >
+                        <MoreHorizontal className="h-3.5 w-3.5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                      {!isHistoricalPreview && !isLocked ? (
+                        <DropdownMenuItem onClick={() => beginEdit(doc.key)}>
+                          <FilePenLine className="h-3.5 w-3.5" />
+                          {t("issueDocumentsSection.menu.editDocument", { defaultValue: "Edit document" })}
+                        </DropdownMenuItem>
+                      ) : null}
+                      {!isHistoricalPreview && !isLocked ? <DropdownMenuSeparator /> : null}
+                      <DropdownMenuItem
+                        onClick={() => downloadDocumentFile(doc.key, displayedBody)}
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        {t("issueDocumentsSection.menu.downloadDocument", { defaultValue: "Download document" })}
+                      </DropdownMenuItem>
+                      {doc.latestRevisionNumber > 1 ? (
+                        <DropdownMenuItem onClick={() => setDiffViewKey(doc.key)}>
+                          <Diff className="h-3.5 w-3.5" />
+                          {t("issueDocumentsSection.menu.viewDiff", { defaultValue: "View diff" })}
+                        </DropdownMenuItem>
+                      ) : null}
+                      {doc.key === "compound-checklist" ? (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => requestChecklistAutofill.mutate()}
+                            disabled={requestChecklistAutofill.isPending}
+                          >
+                            <Sparkles className="h-3.5 w-3.5" />
+                            {requestChecklistAutofill.isPending ? t("issueDocumentsSection.menu.requesting", { defaultValue: "Requesting..." }) : t("issueDocumentsSection.menu.askAgentFillChecklist", { defaultValue: "Ask agent to fill checklist" })}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => processCompoundFollowups.mutate()}
+                            disabled={processCompoundFollowups.isPending}
+                          >
+                            <ListPlus className="h-3.5 w-3.5" />
+                            {processCompoundFollowups.isPending ? t("issueDocumentsSection.menu.processing", { defaultValue: "Processing..." }) : t("issueDocumentsSection.menu.processFollowups", { defaultValue: "Process follow-ups" })}
+                          </DropdownMenuItem>
+                        </>
+                      ) : null}
+                      {canDeleteDocuments && !isLocked ? <DropdownMenuSeparator /> : null}
+                      {canDeleteDocuments && !isLocked ? (
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onClick={() => setConfirmDeleteKey(doc.key)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          {t("issueDocumentsSection.menu.deleteDocument", { defaultValue: "Delete document" })}
+                        </DropdownMenuItem>
+                      ) : null}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+
+              {!isFolded ? (
+                <div
+                  className="mt-3 space-y-3"
+                  onBlurCapture={!isHistoricalPreview
+                    ? async (event) => {
+                        if (activeDraft) {
+                          await handleDraftBlur(event);
+                        }
+                      }
+                    : undefined}
+                  onKeyDown={!isHistoricalPreview
+                    ? async (event) => {
+                        if (activeDraft) {
+                          await handleDraftKeyDown(event);
+                        }
+                      }
+                    : undefined}
+                >
+                  {/* WC-22: in-flight banner — only on the compound-checklist
+                      document, only when an autofill child is active. The text
+                      tells the user what the child is doing and links to it via
+                      a hash anchor so a future enhancement can navigate. */}
+                  {doc.key === "compound-checklist" && autofillStatus?.inFlight ? (
+                    <div className="rounded-md border border-indigo-500/30 bg-indigo-500/5 px-3 py-3">
+                      <div className="flex items-start gap-3">
+                        <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-indigo-500 dark:text-indigo-300" />
+                        <div className="space-y-0.5">
+                          <p className="text-sm font-medium text-indigo-700 dark:text-indigo-200">
+                            {t("issueDocumentsSection.autofillBanner.title", { defaultValue: "Agent is reviewing this checklist" })}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {t("issueDocumentsSection.autofillBanner.childPrefix", { defaultValue: "Auto-fill child" })} <span className="font-mono">{autofillStatus.inFlight.identifier ?? autofillStatus.inFlight.id.slice(0, 8)}</span> {t("issueDocumentsSection.autofillBanner.statusLabel", { defaultValue: "— status" })} <span className="font-mono">{autofillStatus.inFlight.status}</span>{t("issueDocumentsSection.autofillBanner.childSuffix", { defaultValue: ". The body below updates automatically once the agent saves." })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                  {isHistoricalPreview && selectedHistoricalRevision && (
+                    <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-3">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-amber-200">
+                            {t("issueDocumentsSection.historical.viewingRevision", { defaultValue: "Viewing revision {{number}}", number: selectedHistoricalRevision.revisionNumber })}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {t("issueDocumentsSection.historical.description", { defaultValue: "This is a historical preview. Restoring it creates a new latest revision and keeps history append-only." })}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => returnToLatestRevision(doc.key)}
+                          >
+                            {t("issueDocumentsSection.historical.returnToLatest", { defaultValue: "Return to latest" })}
+                          </Button>
+                          {!isLocked ? (
+                            <Button
+                              size="sm"
+                              onClick={() => restoreDocumentRevision.mutate({
+                                key: doc.key,
+                                revisionId: selectedHistoricalRevision.id,
+                              })}
+                              disabled={restoreDocumentRevision.isPending}
+                            >
+                              {restoreDocumentRevision.isPending && restoreDocumentRevision.variables?.key === doc.key
+                                ? t("issueDocumentsSection.historical.restoring", { defaultValue: "Restoring..." })
+                                : t("issueDocumentsSection.historical.restoreThisRevision", { defaultValue: "Restore this revision" })}
+                            </Button>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {activeConflict && !isHistoricalPreview && (
+                    <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-3">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-amber-200">{t("issueDocumentsSection.conflict.outOfDate", { defaultValue: "Out of date" })}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {t("issueDocumentsSection.conflict.description", { defaultValue: "This document changed while you were editing. Your local draft is preserved and autosave is paused." })}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              setDocumentConflict((current) =>
+                                current?.key === doc.key
+                                  ? { ...current, showRemote: !current.showRemote }
+                                  : current,
+                              )
+                            }
+                          >
+                            {activeConflict.showRemote ? t("issueDocumentsSection.conflict.hideRemote", { defaultValue: "Hide remote" }) : t("issueDocumentsSection.conflict.reviewRemote", { defaultValue: "Review remote" })}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => keepConflictedDraft(doc.key)}
+                          >
+                            {t("issueDocumentsSection.conflict.keepMyDraft", { defaultValue: "Keep my draft" })}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => reloadDocumentFromServer(doc.key)}
+                          >
+                            {t("issueDocumentsSection.conflict.reloadRemote", { defaultValue: "Reload remote" })}
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => void overwriteDocumentFromDraft(doc.key)}
+                            disabled={upsertDocument.isPending}
+                          >
+                            {upsertDocument.isPending ? t("issueDocumentsSection.action.saving", { defaultValue: "Saving..." }) : t("issueDocumentsSection.conflict.overwriteRemote", { defaultValue: "Overwrite remote" })}
+                          </Button>
+                        </div>
+                      </div>
+                      {activeConflict.showRemote && (
+                        <div className="mt-3 rounded-md border border-border/70 bg-background/60 p-3">
+                          <div className="mb-2 flex items-center gap-2 text-[11px] text-muted-foreground">
+                            <span>{t("issueDocumentsSection.conflict.remoteRevision", { defaultValue: "Remote revision {{number}}", number: activeConflict.serverDocument.latestRevisionNumber })}</span>
+                            <span>•</span>
+                            <span>{t("issueDocumentsSection.updatedAt", { defaultValue: "updated {{time}}", time: relativeTime(activeConflict.serverDocument.updatedAt) })}</span>
+                          </div>
+                          {!isPlanKey(doc.key) && activeConflict.serverDocument.title ? (
+                            <p className="mb-2 text-sm font-medium">{activeConflict.serverDocument.title}</p>
+                          ) : null}
+                          {renderFoldableBody(activeConflict.serverDocument.body, "text-[14px] leading-7")}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {activeDraft && !isPlanKey(doc.key) && !isHistoricalPreview && (
+                    <Input
+                      value={activeDraft.title}
+                      onChange={(event) => {
+                        markDocumentDirty(doc.key);
+                        setDraft((current) => current ? { ...current, title: event.target.value } : current);
+                      }}
+                      placeholder={t("issueDocumentsSection.placeholder.optionalTitle", { defaultValue: "Optional title" })}
+                    />
+                  )}
+                  <div
+                    className={`${documentBodyShellClassName} ${
+                      activeDraft || isHistoricalPreview ? "" : "rounded-md hover:bg-accent/10"
+                    }`}
+                  >
+                    {isHistoricalPreview ? (
+                      renderFoldableBody(displayedBody, documentBodyContentClassName)
+                    ) : activeDraft ? (
+                      <MarkdownEditor
+                        value={displayedBody}
+                        onChange={(body) => {
+                          markDocumentDirty(doc.key);
+                          setDraft((current) => {
+                            if (current && current.key === doc.key && !current.isNew) {
+                              return { ...current, body };
+                            }
+                            return current;
+                          });
+                        }}
+                        placeholder={t("issueDocumentsSection.placeholder.markdownBody", { defaultValue: "Markdown body" })}
+                        bordered={false}
+                        className="bg-transparent"
+                        contentClassName={documentBodyContentClassName}
+                        mentions={mentions}
+                        imageUploadHandler={imageUploadHandler}
+                        onSubmit={() => void commitDraft(activeDraft ?? draft, { clearAfterSave: false, trackAutosave: true })}
+                      />
+                    ) : (
+                      renderFoldableBody(displayedBody, documentBodyContentClassName)
+                    )}
+                  </div>
+                  <div className="flex min-h-4 items-center justify-end px-1">
+                    <span
+                      className={`text-[11px] transition-opacity duration-150 ${
+                        isHistoricalPreview
+                          ? "text-amber-300"
+                          : activeConflict
+                          ? "text-amber-300"
+                          : autosaveState === "error"
+                            ? "text-destructive"
+                            : "text-muted-foreground"
+                      } ${activeDraft || isHistoricalPreview ? "opacity-100" : "opacity-0"}`}
+                    >
+                      {isHistoricalPreview
+                        ? t("issueDocumentsSection.status.viewingHistorical", { defaultValue: "Viewing historical revision" })
+                        : activeDraft
+                          ? activeConflict
+                          ? t("issueDocumentsSection.conflict.outOfDate", { defaultValue: "Out of date" })
+                          : autosaveDocumentKey === doc.key
+                            ? autosaveState === "saving"
+                              ? t("issueDocumentsSection.status.autosaving", { defaultValue: "Autosaving..." })
+                              : autosaveState === "saved"
+                                ? t("issueDocumentsSection.status.saved", { defaultValue: "Saved" })
+                                : autosaveState === "error"
+                                  ? t("issueDocumentsSection.status.couldNotSave", { defaultValue: "Could not save" })
+                                  : ""
+                            : ""
+                          : ""}
+                    </span>
+                  </div>
+                  {canVoteOnDocument && doc.latestRevisionId ? (
+                    <OutputFeedbackButtons
+                      activeVote={feedbackVoteByTargetId.get(doc.latestRevisionId) ?? null}
+                      sharingPreference={feedbackDataSharingPreference}
+                      termsUrl={feedbackTermsUrl}
+                      onVote={(vote: FeedbackVoteValue, options?: { allowSharing?: boolean; reason?: string }) =>
+                        onVote?.(doc.latestRevisionId!, vote, options) ?? Promise.resolve()
+                      }
+                    />
+                  ) : null}
+                </div>
+              ) : null}
+
+              {confirmDeleteKey === doc.key && (
+                <div className="mt-3 flex items-center justify-between gap-3 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3">
+                  <p className="text-sm text-destructive font-medium">
+                    {t("issueDocumentsSection.delete.confirm", { defaultValue: "Delete this document? This cannot be undone." })}
+                  </p>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setConfirmDeleteKey(null)}
+                      disabled={deleteDocument.isPending}
+                    >
+                      {t("issueDocumentsSection.action.cancel", { defaultValue: "Cancel" })}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteDocument.mutate(doc.key)}
+                      disabled={deleteDocument.isPending}
+                    >
+                      {deleteDocument.isPending ? t("issueDocumentsSection.delete.deleting", { defaultValue: "Deleting..." }) : t("issueDocumentsSection.delete.delete", { defaultValue: "Delete" })}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {diffViewKey && (() => {
+        const diffDoc = sortedDocuments.find((d) => d.key === diffViewKey);
+        if (!diffDoc) return null;
+        return (
+          <DocumentDiffModal
+            issueId={issue.id}
+            documentKey={diffDoc.key}
+            latestRevisionNumber={diffDoc.latestRevisionNumber}
+            open
+            onOpenChange={(open) => { if (!open) setDiffViewKey(null); }}
+          />
+        );
+      })()}
+    </div>
+  );
+}

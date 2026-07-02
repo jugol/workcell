@@ -1,0 +1,55 @@
+{
+  "name": "@workcell/mcp-server",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/jugol/workcell",
+  "bugs": {
+    "url": "https://github.com/jugol/workcell/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jugol/workcell",
+    "directory": "packages/mcp-server"
+  },
+  "type": "module",
+  "bin": {
+    "workcell-mcp-server": "./dist/stdio.js"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "bin": {
+      "workcell-mcp-server": "./dist/stdio.js"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@workcell/shared": "workspace:*",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}

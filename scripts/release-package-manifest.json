@@ -1,0 +1,87 @@
+[
+  {
+    "dir": "packages/adapter-utils",
+    "name": "@workcell/adapter-utils",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/adapters/claude-local",
+    "name": "@workcell/adapter-claude-local",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/adapters/codex-local",
+    "name": "@workcell/adapter-codex-local",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/shared",
+    "name": "@workcell/shared",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/db",
+    "name": "@workcell/db",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/sdk",
+    "name": "@workcell/plugin-sdk",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/plugin-workspace-diff",
+    "name": "@workcell/plugin-workspace-diff",
+    "publishFromCi": false
+  },
+  {
+    "dir": "server",
+    "name": "@workcell/server",
+    "publishFromCi": true
+  },
+  {
+    "dir": "cli",
+    "name": "workcell",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/mcp-server",
+    "name": "@workcell/mcp-server",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/create-workcell-plugin",
+    "name": "@workcell/create-workcell-plugin",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/sandbox-providers/cloudflare",
+    "name": "@workcell/plugin-cloudflare-sandbox",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/sandbox-providers/daytona",
+    "name": "@workcell/plugin-daytona",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/sandbox-providers/exe-dev",
+    "name": "@workcell/plugin-exe-dev",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/sandbox-providers/e2b",
+    "name": "@workcell/plugin-e2b",
+    "publishFromCi": true
+  },
+  {
+    "dir": "packages/plugins/sandbox-providers/modal",
+    "name": "@workcell/plugin-modal",
+    "publishFromCi": true
+  },
+  {
+    "dir": "ui",
+    "name": "@workcell/ui",
+    "publishFromCi": true
+  }
+]

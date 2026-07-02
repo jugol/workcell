@@ -1,0 +1,72 @@
+{
+  "name": "@workcell/plugin-workspace-diff",
+  "version": "0.1.0",
+  "description": "First-party execution workspace Changes tab powered by plugin-local workspace metadata",
+  "license": "MIT",
+  "homepage": "https://github.com/jugol/workcell",
+  "bugs": {
+    "url": "https://github.com/jugol/workcell/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jugol/workcell",
+    "directory": "packages/plugins/plugin-workspace-diff"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "workcellPlugin": {
+    "manifest": "./dist/manifest.js",
+    "worker": "./dist/worker.js",
+    "ui": "./dist/ui/"
+  },
+  "keywords": [
+    "workcell",
+    "plugin",
+    "workspace",
+    "diff"
+  ],
+  "scripts": {
+    "postinstall": "node ../../../scripts/link-plugin-dev-sdk.mjs",
+    "prebuild": "pnpm --filter @workcell/plugin-sdk ensure-build-deps",
+    "build": "tsc && node ./scripts/build-ui.mjs",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "typecheck": "pnpm --filter @workcell/plugin-sdk ensure-build-deps && tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run",
+    "prepack": "node -e \"var fs=require('fs');fs.rmSync('package.dev.json',{force:true});fs.cpSync('package.json','package.dev.json')\" && node ../../../scripts/generate-plugin-package-json.mjs",
+    "postpack": "if [ -f package.dev.json ]; then mv package.dev.json package.json; fi"
+  },
+  "dependencies": {
+    "@workcell/plugin-sdk": "workspace:*",
+    "@pierre/diffs": "^1.1.22"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "esbuild": "^0.27.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  }
+}

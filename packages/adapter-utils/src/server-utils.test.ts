@@ -1,0 +1,1079 @@
+import { randomUUID } from "node:crypto";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { describe, expect, it } from "vitest";
+import {
+  applyWorkcellWorkspaceEnv,
+  appendWithByteCap,
+  buildInvocationEnvForLogs,
+  DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE,
+  materializeWorkcellSkillCopy,
+  refreshWorkcellWorkspaceEnvForExecution,
+  renderWorkcellWakePrompt,
+  runningProcesses,
+  runChildProcess,
+  sanitizeSshRemoteEnv,
+  shapeWorkcellWorkspaceEnvForExecution,
+  rewriteWorkspaceCwdEnvVarsForExecution,
+  stringifyWorkcellWakePayload,
+} from "./server-utils.js";
+
+function isPidAlive(pid: number) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function waitForPidExit(pid: number, timeoutMs = 2_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (!isPidAlive(pid)) return true;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  return !isPidAlive(pid);
+}
+
+async function waitForTextMatch(read: () => string, pattern: RegExp, timeoutMs = 1_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const value = read();
+    const match = value.match(pattern);
+    if (match) return match;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  return read().match(pattern);
+}
+
+describe("buildInvocationEnvForLogs", () => {
+  it("redacts inline secrets from resolved command metadata", () => {
+    const loggedEnv = buildInvocationEnvForLogs(
+      { SAFE_VALUE: "visible" },
+      {
+        resolvedCommand:
+          "env OPENAI_API_KEY=sk-live-example WORKCELL_API_KEY='workcell-quoted-secret' custom-acp --workcell-api-key=workcell-flag-secret --token ghp_example_secret",
+      },
+    );
+
+    expect(loggedEnv.SAFE_VALUE).toBe("visible");
+    expect(loggedEnv.WORKCELL_RESOLVED_COMMAND).toBe(
+      "env OPENAI_API_KEY=***REDACTED*** WORKCELL_API_KEY='***REDACTED***' custom-acp --workcell-api-key=***REDACTED*** --token ***REDACTED***",
+    );
+  });
+});
+
+describe("sanitizeSshRemoteEnv", () => {
+  it("drops inherited host shell identity variables for SSH remote execution", () => {
+    expect(
+      sanitizeSshRemoteEnv(
+        {
+          PATH: "/host/bin:/usr/bin",
+          HOME: "/Users/local",
+          NVM_DIR: "/Users/local/.nvm",
+          TMPDIR: "/var/folders/local/T",
+          XDG_CONFIG_HOME: "/Users/local/.config",
+          SAFE_VALUE: "visible",
+        },
+        {
+          PATH: "/host/bin:/usr/bin",
+          HOME: "/Users/local",
+          NVM_DIR: "/Users/local/.nvm",
+          TMPDIR: "/var/folders/local/T",
+          XDG_CONFIG_HOME: "/Users/local/.config",
+        },
+      ),
+    ).toEqual({
+      SAFE_VALUE: "visible",
+    });
+  });
+
+  it("preserves explicit remote overrides even for filtered key names", () => {
+    expect(
+      sanitizeSshRemoteEnv(
+        {
+          PATH: "/custom/remote/bin:/usr/bin",
+          HOME: "/home/agent",
+          TMPDIR: "/tmp",
+          SAFE_VALUE: "visible",
+        },
+        {
+          PATH: "/host/bin:/usr/bin",
+          HOME: "/Users/local",
+          TMPDIR: "/var/folders/local/T",
+        },
+      ),
+    ).toEqual({
+      PATH: "/custom/remote/bin:/usr/bin",
+      HOME: "/home/agent",
+      TMPDIR: "/tmp",
+      SAFE_VALUE: "visible",
+    });
+  });
+
+  it("filters identity keys via case-insensitive match against the inherited env", () => {
+    expect(
+      sanitizeSshRemoteEnv(
+        {
+          // Caller passed PATH in upper case while the inherited (Windows-style)
+          // host env exposes it as Path. The lookup must still treat them as
+          // equal so the leaked host PATH gets stripped.
+          PATH: "/host/bin:/usr/bin",
+          HOME: "/host/home",
+        },
+        {
+          Path: "/host/bin:/usr/bin",
+          home: "/host/home",
+        },
+      ),
+    ).toEqual({});
+  });
+
+  it("preserves explicitly-set identity keys when the inherited env disagrees in case but not in value", () => {
+    expect(
+      sanitizeSshRemoteEnv(
+        {
+          PATH: "/explicit/remote/bin",
+        },
+        {
+          Path: "/host/bin:/usr/bin",
+        },
+      ),
+    ).toEqual({ PATH: "/explicit/remote/bin" });
+  });
+});
+
+describe("materializeWorkcellSkillCopy", () => {
+  it("refuses to materialize into an ancestor of the source", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "workcell-skill-copy-"));
+    try {
+      const source = path.join(root, "parent", "skill");
+      await fs.mkdir(source, { recursive: true });
+      await fs.writeFile(path.join(source, "SKILL.md"), "# skill\n", "utf8");
+
+      await expect(materializeWorkcellSkillCopy(source, path.join(root, "parent"))).rejects.toThrow(
+        /ancestor/,
+      );
+      await expect(fs.readFile(path.join(source, "SKILL.md"), "utf8")).resolves.toBe("# skill\n");
+    } finally {
+      await fs.rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("does not delete and recopy an unchanged materialized skill target", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "workcell-skill-copy-"));
+    try {
+      const source = path.join(root, "source");
+      const target = path.join(root, "target");
+      await fs.mkdir(source, { recursive: true });
+      await fs.writeFile(path.join(source, "SKILL.md"), "# skill\n", "utf8");
+
+      const first = await materializeWorkcellSkillCopy(source, target);
+      expect(first.copiedFiles).toBe(1);
+      await fs.writeFile(path.join(target, "local-marker.txt"), "keep\n", "utf8");
+
+      const second = await materializeWorkcellSkillCopy(source, target);
+      expect(second.copiedFiles).toBe(0);
+      await expect(fs.readFile(path.join(target, "local-marker.txt"), "utf8")).resolves.toBe("keep\n");
+    } finally {
+      await fs.rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("breaks stale materialization locks left by dead processes", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "workcell-skill-copy-"));
+    try {
+      const source = path.join(root, "source");
+      const target = path.join(root, "target");
+      const lock = `${target}.lock`;
+      await fs.mkdir(source, { recursive: true });
+      await fs.writeFile(path.join(source, "SKILL.md"), "# skill\n", "utf8");
+      await fs.mkdir(lock, { recursive: true });
+      await fs.writeFile(
+        path.join(lock, "owner.json"),
+        JSON.stringify({ pid: 999_999_999, createdAt: "2000-01-01T00:00:00.000Z" }),
+        "utf8",
+      );
+
+      await expect(materializeWorkcellSkillCopy(source, target)).resolves.toMatchObject({ copiedFiles: 1 });
+      await expect(fs.readFile(path.join(target, "SKILL.md"), "utf8")).resolves.toBe("# skill\n");
+    } finally {
+      await fs.rm(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("runChildProcess", () => {
+  it("does not arm a timeout when timeoutSec is 0", async () => {
+    const result = await runChildProcess(
+      randomUUID(),
+      process.execPath,
+      ["-e", "setTimeout(() => process.stdout.write('done'), 150);"],
+      {
+        cwd: process.cwd(),
+        env: {},
+        timeoutSec: 0,
+        graceSec: 1,
+        onLog: async () => {},
+      },
+    );
+
+    expect(result.exitCode).toBe(0);
+    expect(result.timedOut).toBe(false);
+    expect(result.stdout).toBe("done");
+  });
+
+  it("waits for onSpawn before sending stdin to the child", async () => {
+    const spawnDelayMs = 150;
+    const startedAt = Date.now();
+    let onSpawnCompletedAt = 0;
+
+    const result = await runChildProcess(
+      randomUUID(),
+      process.execPath,
+      [
+        "-e",
+        "let data='';process.stdin.setEncoding('utf8');process.stdin.on('data',chunk=>data+=chunk);process.stdin.on('end',()=>process.stdout.write(data));",
+      ],
+      {
+        cwd: process.cwd(),
+        env: {},
+        stdin: "hello from stdin",
+        timeoutSec: 5,
+        graceSec: 1,
+        onLog: async () => {},
+        onSpawn: async () => {
+          await new Promise((resolve) => setTimeout(resolve, spawnDelayMs));
+          onSpawnCompletedAt = Date.now();
+        },
+      },
+    );
+    const finishedAt = Date.now();
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toBe("hello from stdin");
+    expect(onSpawnCompletedAt).toBeGreaterThanOrEqual(startedAt + spawnDelayMs);
+    expect(finishedAt - startedAt).toBeGreaterThanOrEqual(spawnDelayMs);
+  });
+
+  it.skipIf(process.platform === "win32")("kills descendant processes on timeout via the process group", async () => {
+    let descendantPid: number | null = null;
+
+    const result = await runChildProcess(
+      randomUUID(),
+      process.execPath,
+      [
+        "-e",
+        [
+          "const { spawn } = require('node:child_process');",
+          "const child = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });",
+          "process.stdout.write(String(child.pid));",
+          "setInterval(() => {}, 1000);",
+        ].join(" "),
+      ],
+      {
+        cwd: process.cwd(),
+        env: {},
+        timeoutSec: 1,
+        graceSec: 1,
+        onLog: async () => {},
+        onSpawn: async () => {},
+      },
+    );
+
+    descendantPid = Number.parseInt(result.stdout.trim(), 10);
+    expect(result.timedOut).toBe(true);
+    expect(Number.isInteger(descendantPid) && descendantPid > 0).toBe(true);
+
+    expect(await waitForPidExit(descendantPid!, 2_000)).toBe(true);
+  });
+
+  it.skipIf(process.platform === "win32")("cleans up a lingering process group after terminal output and child exit", async () => {
+    const result = await runChildProcess(
+      randomUUID(),
+      process.execPath,
+      [
+        "-e",
+        [
+          "const { spawn } = require('node:child_process');",
+          "const child = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: ['ignore', 'inherit', 'ignore'] });",
+          "process.stdout.write(`descendant:${child.pid}\\n`);",
+          "process.stdout.write(`${JSON.stringify({ type: 'result', result: 'done' })}\\n`);",
+          "setTimeout(() => process.exit(0), 25);",
+        ].join(" "),
+      ],
+      {
+        cwd: process.cwd(),
+        env: {},
+        timeoutSec: 0,
+        graceSec: 1,
+        onLog: async () => {},
+        terminalResultCleanup: {
+          graceMs: 100,
+          hasTerminalResult: ({ stdout }) => stdout.includes('"type":"result"'),
+        },
+      },
+    );
+
+    const descendantPid = Number.parseInt(result.stdout.match(/descendant:(\d+)/)?.[1] ?? "", 10);
+    expect(result.timedOut).toBe(false);
+    expect(result.exitCode).toBe(0);
+    expect(Number.isInteger(descendantPid) && descendantPid > 0).toBe(true);
+    expect(await waitForPidExit(descendantPid, 2_000)).toBe(true);
+  });
+
+  it.skipIf(process.platform === "win32")("cleans up a still-running child after terminal output", async () => {
+    const result = await runChildProcess(
+      randomUUID(),
+      process.execPath,
+      [
+        "-e",
+        [
+          "process.stdout.write(`${JSON.stringify({ type: 'result', result: 'done' })}\\n`);",
+          "setInterval(() => {}, 1000);",
+        ].join(" "),
+      ],
+      {
+        cwd: process.cwd(),
+        env: {},
+        timeoutSec: 0,
+        graceSec: 1,
+        onLog: async () => {},
+        terminalResultCleanup: {
+          graceMs: 100,
+          hasTerminalResult: ({ stdout }) => stdout.includes('"type":"result"'),
+        },
+      },
+    );
+
+    expect(result.timedOut).toBe(false);
+    expect(result.signal).toBe("SIGTERM");
+    expect(result.stdout).toContain('"type":"result"');
+  });
+
+  it("finalizes after exit when an orphaned descendant silently holds the stdio pipes", async () => {
+    // LOR-53 regression: `close` waits for every inherited stdio pipe to end,
+    // so a grandchild that inherited the stdout handle (e.g. an MCP server the
+    // CLI spawned) kept a finished run hanging "running" forever. This variant
+    // discriminates on POSIX, where fd inheritance genuinely holds the pipe;
+    // Node on win32 restricts handle inheritance to an explicit list, so see
+    // the win32-only CreateProcess test below for the Windows reproduction.
+    const startedAt = Date.now();
+    const result = await runChildProcess(
+      randomUUID(),
+      process.execPath,
+      [
+        "-e",
+        [
+          "const { spawn } = require('node:child_process');",
+          "spawn(process.execPath, ['-e', 'setTimeout(() => {}, 15000)'], { stdio: ['ignore', 'inherit', 'inherit'], windowsHide: true }).unref();",
+          "process.stdout.write('handoff done');",
+          "setTimeout(() => process.exit(0), 25);",
+        ].join(" "),
+      ],
+      {
+        cwd: process.cwd(),
+        env: {},
+        timeoutSec: 0,
+        graceSec: 1,
+        onLog: async () => {},
+        stdioCloseGraceMs: 250,
+      },
+    );
+
+    expect(result.exitCode).toBe(0);
+    expect(result.timedOut).toBe(false);
+    expect(result.stdout).toContain("handoff done");
+    expect(Date.now() - startedAt).toBeLessThan(5_000);
+  });
+
+  it.skipIf(process.platform !== "win32")(
+    "finalizes after exit when an inherit-all grandchild holds the pipe handles (win32)",
+    async () => {
+      // The actual LOR-53 mechanism, reproduced: a CLI (here powershell, in
+      // production the Rust codex binary) launches a helper with raw
+      // CreateProcess(bInheritHandles=TRUE) and NO handle list, so the helper
+      // inherits EVERY inheritable handle — including our stdout/stderr pipe
+      // write ends that were handed to the CLI as std handles. The CLI exits
+      // (`exit` fires), the helper lives on holding the pipes, and `close`
+      // never fires. Without the exit-time stdio grace this await hung forever
+      // and the heartbeat run sat "running" while the watchdog filed paperwork.
+      const dir = await fs.mkdtemp(path.join(os.tmpdir(), "wc-pipe-hold-"));
+      const scriptPath = path.join(dir, "spawn-inherit.ps1");
+      await fs.writeFile(scriptPath, [
+        'Add-Type -TypeDefinition @"',
+        "using System;",
+        "using System.Text;",
+        "using System.Runtime.InteropServices;",
+        "public class K {",
+        "  [StructLayout(LayoutKind.Sequential)] public struct STARTUPINFO { public int cb; public IntPtr r1, r2, r3; public int dwX, dwY, dwXSize, dwYSize, dwXCount, dwYCount, dwFill, dwFlags; public short wShow, cbR2; public IntPtr lpR2, hIn, hOut, hErr; }",
+        "  [StructLayout(LayoutKind.Sequential)] public struct PROCESS_INFORMATION { public IntPtr hProcess, hThread; public int dwProcessId, dwThreadId; }",
+        '  [DllImport("kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]',
+        "  public static extern bool CreateProcess(string app, StringBuilder cmd, IntPtr pa, IntPtr ta, bool inherit, uint flags, IntPtr env, string cwd, ref STARTUPINFO si, out PROCESS_INFORMATION pi);",
+        "}",
+        '"@',
+        "$si = New-Object K+STARTUPINFO",
+        "$si.cb = [Runtime.InteropServices.Marshal]::SizeOf([type][K+STARTUPINFO])",
+        "$pi = New-Object K+PROCESS_INFORMATION",
+        "$node = (Get-Command node).Source",
+        "$line = '\"{0}\" -e \"setTimeout(function(){{}},15000)\"' -f $node",
+        "$cmd = New-Object System.Text.StringBuilder($line)",
+        "$ok = [K]::CreateProcess([NullString]::Value, $cmd, [IntPtr]::Zero, [IntPtr]::Zero, $true, 0x08000000, [IntPtr]::Zero, [NullString]::Value, [ref]$si, [ref]$pi)",
+        'Write-Output ("spawned=$ok pid=$($pi.dwProcessId)")',
+      ].join("\n"), "utf8");
+
+      try {
+        const startedAt = Date.now();
+        const result = await runChildProcess(
+          randomUUID(),
+          "powershell",
+          ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", scriptPath],
+          {
+            cwd: process.cwd(),
+            env: {},
+            timeoutSec: 0,
+            graceSec: 1,
+            onLog: async () => {},
+            stdioCloseGraceMs: 250,
+          },
+        );
+
+        expect(result.stdout).toContain("spawned=True");
+        expect(result.exitCode).toBe(0);
+        expect(result.timedOut).toBe(false);
+        expect(Date.now() - startedAt).toBeLessThan(10_000);
+      } finally {
+        await fs.rm(dir, { recursive: true, force: true });
+      }
+    },
+    20_000,
+  );
+
+  it.skipIf(process.platform === "win32")("does not clean up noisy runs that have no terminal output", async () => {
+    const runId = randomUUID();
+    let observed = "";
+    const resultPromise = runChildProcess(
+      runId,
+      process.execPath,
+      [
+        "-e",
+        [
+          "const { spawn } = require('node:child_process');",
+          "const child = spawn(process.execPath, ['-e', \"setInterval(() => process.stdout.write('noise\\\\n'), 50)\"], { stdio: ['ignore', 'inherit', 'ignore'] });",
+          "process.stdout.write(`descendant:${child.pid}\\n`);",
+          "setTimeout(() => process.exit(0), 25);",
+        ].join(" "),
+      ],
+      {
+        cwd: process.cwd(),
+        env: {},
+        timeoutSec: 0,
+        graceSec: 1,
+        onLog: async (_stream, chunk) => {
+          observed += chunk;
+        },
+        terminalResultCleanup: {
+          graceMs: 50,
+          hasTerminalResult: ({ stdout }) => stdout.includes('"type":"result"'),
+        },
+      },
+    );
+
+    const pidMatch = await waitForTextMatch(() => observed, /descendant:(\d+)/);
+    const descendantPid = Number.parseInt(pidMatch?.[1] ?? "", 10);
+    expect(Number.isInteger(descendantPid) && descendantPid > 0).toBe(true);
+
+    const race = await Promise.race([
+      resultPromise.then(() => "settled" as const),
+      new Promise<"pending">((resolve) => setTimeout(() => resolve("pending"), 300)),
+    ]);
+    expect(race).toBe("pending");
+    expect(isPidAlive(descendantPid)).toBe(true);
+
+    const running = runningProcesses.get(runId) as
+      | { child: { kill(signal: NodeJS.Signals): boolean }; processGroupId: number | null }
+      | undefined;
+    try {
+      if (running?.processGroupId) {
+        process.kill(-running.processGroupId, "SIGKILL");
+      } else {
+        running?.child.kill("SIGKILL");
+      }
+      await resultPromise;
+    } finally {
+      runningProcesses.delete(runId);
+      if (isPidAlive(descendantPid)) {
+        try {
+          process.kill(descendantPid, "SIGKILL");
+        } catch {
+          // Ignore cleanup races.
+        }
+      }
+    }
+  });
+});
+
+describe("renderWorkcellWakePrompt", () => {
+  it("keeps the default local-agent prompt action-oriented", () => {
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("Start actionable work in this heartbeat");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("do not stop at a plan");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("clear final disposition");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("evidence, not valid liveness paths by themselves");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("keep `in_progress` only when a live continuation path exists");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("Prefer the smallest verification that proves the change");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("Use child issues");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("instead of polling agents, sessions, or processes");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("Create child issues directly when you know what needs to be done");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("POST /api/issues/{issueId}/interactions");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("kind suggest_tasks, ask_user_questions, or request_confirmation");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("confirmation:{issueId}:plan:{revisionId}");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain("Wait for acceptance before creating implementation subtasks");
+    expect(DEFAULT_WORKCELL_AGENT_PROMPT_TEMPLATE).toContain(
+      "Respect budget, pause/cancel, approval gates, and company boundaries",
+    );
+  });
+
+  it("adds the execution contract to scoped wake prompts", () => {
+    const prompt = renderWorkcellWakePrompt({
+      reason: "issue_assigned",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-1580",
+        title: "Update prompts",
+        status: "in_progress",
+      },
+      commentWindow: {
+        requestedCount: 0,
+        includedCount: 0,
+        missingCount: 0,
+      },
+      comments: [],
+      fallbackFetchNeeded: false,
+    });
+
+    expect(prompt).toContain("## Workcell Wake Payload");
+    expect(prompt).toContain("Execution contract: take concrete action in this heartbeat");
+    expect(prompt).toContain("clear final disposition");
+    expect(prompt).toContain("evidence, not valid liveness paths by themselves");
+    expect(prompt).toContain("Use child issues for long or parallel delegated work instead of polling");
+    expect(prompt).toContain("named unblock owner/action");
+  });
+
+  it("preserves Chinese, Japanese, and Hindi issue and comment text in scoped wake prompts", () => {
+    const title = "验证中文任务";
+    const commentBody = [
+      "请用中文回复。",
+      "日本語: 次の手順を書いてください。",
+      "हिन्दी: कृपया स्थिति बताएं।",
+    ].join("\n");
+    const payload = {
+      reason: "issue_commented",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-9452",
+        title,
+        status: "in_progress",
+        workMode: "standard",
+      },
+      commentIds: ["comment-1"],
+      latestCommentId: "comment-1",
+      commentWindow: { requestedCount: 1, includedCount: 1, missingCount: 0 },
+      comments: [
+        {
+          id: "comment-1",
+          body: commentBody,
+          author: { type: "user", id: "board-user-1" },
+          createdAt: "2026-05-15T16:30:00.000Z",
+        },
+      ],
+      fallbackFetchNeeded: false,
+    };
+
+    const serialized = stringifyWorkcellWakePayload(payload);
+    expect(serialized).toContain(title);
+    expect(serialized).toContain("日本語");
+    expect(serialized).toContain("हिन्दी");
+    expect(JSON.parse(serialized ?? "{}")).toMatchObject({
+      issue: { title },
+      comments: [{ body: commentBody }],
+    });
+
+    const prompt = renderWorkcellWakePrompt(payload);
+    expect(prompt).toContain(`- issue: PAP-9452 ${title}`);
+    expect(prompt).toContain(commentBody);
+  });
+
+  it("renders planning-mode directives for assignment and comment wakes", () => {
+    const assignmentPrompt = renderWorkcellWakePrompt({
+      reason: "issue_assigned",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-3404",
+        title: "Plan first",
+        status: "in_progress",
+        workMode: "planning",
+      },
+      commentWindow: { requestedCount: 0, includedCount: 0, missingCount: 0 },
+      comments: [],
+      fallbackFetchNeeded: false,
+    });
+
+    expect(assignmentPrompt).toContain("- issue work mode: planning");
+    expect(assignmentPrompt).toContain("Make the plan only. Do not write code or perform implementation work.");
+
+    const commentPrompt = renderWorkcellWakePrompt({
+      reason: "issue_commented",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-3404",
+        title: "Plan first",
+        status: "in_progress",
+        workMode: "planning",
+      },
+      commentIds: ["comment-1"],
+      latestCommentId: "comment-1",
+      commentWindow: { requestedCount: 1, includedCount: 1, missingCount: 0 },
+      comments: [{ id: "comment-1", body: "Revise the plan" }],
+      fallbackFetchNeeded: false,
+    });
+
+    expect(commentPrompt).toContain("Update the plan only. Do not write code or perform implementation work.");
+  });
+
+  it("does not render stale accepted-plan continuation guidance for later planning comment wakes", () => {
+    const prompt = renderWorkcellWakePrompt({
+      reason: "issue_commented",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-3404",
+        title: "Plan first",
+        status: "in_progress",
+        workMode: "planning",
+      },
+      interactionKind: "request_confirmation",
+      interactionStatus: "accepted",
+      commentIds: ["comment-1"],
+      latestCommentId: "comment-1",
+      commentWindow: { requestedCount: 1, includedCount: 1, missingCount: 0 },
+      comments: [{ id: "comment-1", body: "Revise the plan" }],
+      fallbackFetchNeeded: false,
+    });
+
+    expect(prompt).toContain("Update the plan only. Do not write code or perform implementation work.");
+    expect(prompt).not.toContain("accepted-plan continuation");
+    expect(prompt).not.toContain("Create child issues from the approved plan only");
+  });
+
+  it("renders accepted-plan continuation guidance for planning issues", () => {
+    const prompt = renderWorkcellWakePrompt({
+      reason: "issue_commented",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-3404",
+        title: "Plan first",
+        status: "in_progress",
+        workMode: "planning",
+      },
+      interactionKind: "request_confirmation",
+      interactionStatus: "accepted",
+      commentWindow: { requestedCount: 0, includedCount: 0, missingCount: 0 },
+      comments: [],
+      fallbackFetchNeeded: false,
+    });
+
+    expect(prompt).toContain("accepted-plan continuation");
+    expect(prompt).toContain("Create child issues from the approved plan only");
+    expect(prompt).toContain("may create child implementation issues");
+    expect(prompt).toContain("must not start implementation work on the planning issue itself");
+  });
+
+  it("keeps accepted-plan guidance when stale comment ids have no loaded comments", () => {
+    const prompt = renderWorkcellWakePrompt({
+      reason: "issue_commented",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-3404",
+        title: "Plan first",
+        status: "in_progress",
+        workMode: "planning",
+      },
+      interactionKind: "request_confirmation",
+      interactionStatus: "accepted",
+      commentIds: ["stale-comment-1"],
+      latestCommentId: "stale-comment-1",
+      commentWindow: { requestedCount: 1, includedCount: 0, missingCount: 1 },
+      comments: [],
+      fallbackFetchNeeded: true,
+    });
+
+    expect(prompt).toContain("accepted-plan continuation");
+    expect(prompt).toContain("Create child issues from the approved plan only");
+    expect(prompt).not.toContain("Update the plan only");
+  });
+
+  it("renders dependency-blocked interaction guidance", () => {
+    const prompt = renderWorkcellWakePrompt({
+      reason: "issue_commented",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-1703",
+        title: "Blocked parent",
+        status: "todo",
+      },
+      dependencyBlockedInteraction: true,
+      unresolvedBlockerIssueIds: ["blocker-1"],
+      unresolvedBlockerSummaries: [
+        {
+          id: "blocker-1",
+          identifier: "PAP-1723",
+          title: "Finish blocker",
+          status: "todo",
+          priority: "medium",
+        },
+      ],
+      commentWindow: {
+        requestedCount: 1,
+        includedCount: 1,
+        missingCount: 0,
+      },
+      commentIds: ["comment-1"],
+      latestCommentId: "comment-1",
+      comments: [{ id: "comment-1", body: "hello" }],
+      fallbackFetchNeeded: false,
+    });
+
+    expect(prompt).toContain("dependency-blocked interaction: yes");
+    expect(prompt).toContain("respond or triage the human comment");
+    expect(prompt).toContain("PAP-1723 Finish blocker (todo)");
+  });
+
+  it("renders loose review request instructions for execution handoffs", () => {
+    const prompt = renderWorkcellWakePrompt({
+      reason: "execution_review_requested",
+      issue: {
+        id: "issue-1",
+        identifier: "PAP-2011",
+        title: "Review request handoff",
+        status: "in_review",
+      },
+      executionStage: {
+        wakeRole: "reviewer",
+        stageId: "stage-1",
+        stageType: "review",
+        currentParticipant: { type: "agent", agentId: "agent-1" },
+        returnAssignee: { type: "agent", agentId: "agent-2" },
+        reviewRequest: {
+          instructions: "Please focus on edge cases and leave a short risk summary.",
+        },
+        allowedActions: ["approve", "request_changes"],
+      },
+      fallbackFetchNeeded: false,
+    });
+
+    expect(prompt).toContain("Review request instructions:");
+    expect(prompt).toContain("Please focus on edge cases and leave a short risk summary.");
+    expect(prompt).toContain("You are waking as the active reviewer for this issue.");
+  });
+
+  it("includes continuation and child issue summaries in structured wake context", () => {
+    const payload = {
+      reason: "issue_children_completed",
+      issue: {
+        id: "parent-1",
+        identifier: "PAP-100",
+        title: "Integrate child work",
+        status: "in_progress",
+        priority: "medium",
+      },
+      continuationSummary: {
+        key: "continuation-summary",
+        title: "Continuation Summary",
+        body: "# Continuation Summary\n\n## Next Action\n\n- Integrate child outputs.",
+        updatedAt: "2026-04-18T12:00:00.000Z",
+      },
+      livenessContinuation: {
+        attempt: 2,
+        maxAttempts: 2,
+        sourceRunId: "run-1",
+        state: "plan_only",
+        reason: "Run described future work without concrete action evidence",
+        instruction: "Take the first concrete action now.",
+      },
+      childIssueSummaries: [
+        {
+          id: "child-1",
+          identifier: "PAP-101",
+          title: "Implement helper",
+          status: "done",
+          priority: "medium",
+          summary: "Added the helper route and tests.",
+        },
+      ],
+    };
+
+    expect(JSON.parse(stringifyWorkcellWakePayload(payload) ?? "{}")).toMatchObject({
+      continuationSummary: {
+        body: expect.stringContaining("Continuation Summary"),
+      },
+      livenessContinuation: {
+        attempt: 2,
+        maxAttempts: 2,
+        sourceRunId: "run-1",
+        state: "plan_only",
+        instruction: "Take the first concrete action now.",
+      },
+      childIssueSummaries: [
+        {
+          identifier: "PAP-101",
+          summary: "Added the helper route and tests.",
+        },
+      ],
+    });
+
+    const prompt = renderWorkcellWakePrompt(payload);
+    expect(prompt).toContain("Issue continuation summary:");
+    expect(prompt).toContain("Integrate child outputs.");
+    expect(prompt).toContain("Run liveness continuation:");
+    expect(prompt).toContain("- attempt: 2/2");
+    expect(prompt).toContain("- source run: run-1");
+    expect(prompt).toContain("- liveness state: plan_only");
+    expect(prompt).toContain("- reason: Run described future work without concrete action evidence");
+    expect(prompt).toContain("- instruction: Take the first concrete action now.");
+    expect(prompt).toContain("Direct child issue summaries:");
+    expect(prompt).toContain("PAP-101 Implement helper (done)");
+    expect(prompt).toContain("Added the helper route and tests.");
+  });
+});
+
+describe("applyWorkcellWorkspaceEnv", () => {
+  it("adds shared workspace env vars including AGENT_HOME", () => {
+    const env = applyWorkcellWorkspaceEnv(
+      {},
+      {
+        workspaceCwd: "/tmp/workspace",
+        workspaceSource: "project_primary",
+        workspaceStrategy: "git_worktree",
+        workspaceId: "workspace-1",
+        workspaceRepoUrl: "https://github.com/jugol/workcell.git",
+        workspaceRepoRef: "main",
+        workspaceBranch: "feature/test",
+        workspaceWorktreePath: "/tmp/worktree",
+        agentHome: "/tmp/agent-home",
+      },
+    );
+
+    expect(env).toEqual({
+      WORKCELL_WORKSPACE_CWD: "/tmp/workspace",
+      WORKCELL_WORKSPACE_SOURCE: "project_primary",
+      WORKCELL_WORKSPACE_STRATEGY: "git_worktree",
+      WORKCELL_WORKSPACE_ID: "workspace-1",
+      WORKCELL_WORKSPACE_REPO_URL: "https://github.com/jugol/workcell.git",
+      WORKCELL_WORKSPACE_REPO_REF: "main",
+      WORKCELL_WORKSPACE_BRANCH: "feature/test",
+      WORKCELL_WORKSPACE_WORKTREE_PATH: "/tmp/worktree",
+      AGENT_HOME: "/tmp/agent-home",
+    });
+  });
+
+  it("skips empty workspace env values", () => {
+    const env = applyWorkcellWorkspaceEnv(
+      {},
+      {
+        workspaceCwd: "",
+        workspaceSource: null,
+        agentHome: "",
+      },
+    );
+
+    expect(env).toEqual({});
+  });
+});
+
+describe("shapeWorkcellWorkspaceEnvForExecution", () => {
+  it("rewrites workspace env paths for remote execution", () => {
+    const shaped = shapeWorkcellWorkspaceEnvForExecution({
+      workspaceCwd: "/tmp/workspace",
+      workspaceWorktreePath: "/tmp/worktree",
+      workspaceHints: [
+        {
+          workspaceId: "workspace-1",
+          cwd: "/tmp/workspace",
+          repoUrl: "https://github.com/jugol/workcell.git",
+        },
+        {
+          workspaceId: "workspace-2",
+          cwd: "/tmp/other-workspace",
+          repoUrl: "https://github.com/jugol/workcell.git",
+        },
+        {
+          workspaceId: "workspace-3",
+          repoUrl: "https://github.com/jugol/workcell.git",
+        },
+      ],
+      executionTargetIsRemote: true,
+      executionCwd: "/remote/workspace",
+    });
+
+    expect(shaped).toEqual({
+      workspaceCwd: "/remote/workspace",
+      workspaceWorktreePath: null,
+      workspaceHints: [
+        {
+          workspaceId: "workspace-1",
+          cwd: "/remote/workspace",
+          repoUrl: "https://github.com/jugol/workcell.git",
+        },
+        {
+          workspaceId: "workspace-2",
+          repoUrl: "https://github.com/jugol/workcell.git",
+        },
+        {
+          workspaceId: "workspace-3",
+          repoUrl: "https://github.com/jugol/workcell.git",
+        },
+      ],
+    });
+  });
+
+  it("leaves local execution workspace paths unchanged", () => {
+    const workspaceHints = [{ workspaceId: "workspace-1", cwd: "/tmp/workspace" }];
+    const shaped = shapeWorkcellWorkspaceEnvForExecution({
+      workspaceCwd: "/tmp/workspace",
+      workspaceWorktreePath: "/tmp/worktree",
+      workspaceHints,
+      executionTargetIsRemote: false,
+      executionCwd: "/remote/workspace",
+    });
+
+    expect(shaped).toEqual({
+      workspaceCwd: "/tmp/workspace",
+      workspaceWorktreePath: "/tmp/worktree",
+      workspaceHints,
+    });
+  });
+});
+
+describe("rewriteWorkspaceCwdEnvVarsForExecution", () => {
+  it("rewrites custom *_WORKSPACE_CWD env vars for remote execution", () => {
+    const env = rewriteWorkspaceCwdEnvVarsForExecution({
+      workspaceCwd: "/host/workspace",
+      executionCwd: "/remote/workspace",
+      executionTargetIsRemote: true,
+      env: {
+        QA_PROJECT_WORKSPACE_CWD: "/host/workspace",
+        RANDOM_WORKSPACE_CWD: "/host/workspace",
+        OTHER_ENV: "/host/workspace",
+      },
+    });
+
+    expect(env).toEqual({
+      QA_PROJECT_WORKSPACE_CWD: "/remote/workspace",
+      RANDOM_WORKSPACE_CWD: "/remote/workspace",
+      OTHER_ENV: "/host/workspace",
+    });
+  });
+
+  it("does not rewrite matching values for local execution", () => {
+    const env = rewriteWorkspaceCwdEnvVarsForExecution({
+      workspaceCwd: "/host/workspace",
+      executionCwd: "/remote/workspace",
+      executionTargetIsRemote: false,
+      env: {
+        QA_PROJECT_WORKSPACE_CWD: "/host/workspace",
+        RANDOM_WORKSPACE_CWD_TOKEN: "/host/workspace",
+      },
+    });
+
+    expect(env).toEqual({
+      QA_PROJECT_WORKSPACE_CWD: "/host/workspace",
+      RANDOM_WORKSPACE_CWD_TOKEN: "/host/workspace",
+    });
+  });
+
+  it("only rewrites matching *_WORKSPACE_CWD string values", () => {
+    const env = rewriteWorkspaceCwdEnvVarsForExecution({
+      workspaceCwd: "/host/workspace",
+      executionCwd: "/remote/workspace",
+      executionTargetIsRemote: true,
+      env: {
+        MATCHING_WORKSPACE_CWD: "/host/workspace/.",
+        DIFFERENT_WORKSPACE_CWD: "/host/other-workspace",
+        BLANK_WORKSPACE_CWD: "   ",
+        NON_STRING_WORKSPACE_CWD: 42,
+      },
+    });
+
+    expect(env).toEqual({
+      MATCHING_WORKSPACE_CWD: "/remote/workspace",
+      DIFFERENT_WORKSPACE_CWD: "/host/other-workspace",
+      BLANK_WORKSPACE_CWD: "   ",
+    });
+  });
+});
+
+describe("refreshWorkcellWorkspaceEnvForExecution", () => {
+  it("rewrites Workcell workspace env to the prepared remote runtime cwd", () => {
+    const env: Record<string, string> = {
+      WORKCELL_WORKSPACE_CWD: "/remote/workspace",
+      WORKCELL_WORKSPACE_WORKTREE_PATH: "/host/worktree",
+      WORKCELL_WORKSPACES_JSON: JSON.stringify([
+        { workspaceId: "workspace-1", cwd: "/remote/workspace" },
+        { workspaceId: "workspace-2", cwd: "/tmp/other" },
+      ]),
+      QA_PROJECT_WORKSPACE_CWD: "/remote/workspace",
+    };
+
+    const shaped = refreshWorkcellWorkspaceEnvForExecution({
+      env,
+      envConfig: {
+        QA_PROJECT_WORKSPACE_CWD: "/host/workspace",
+      },
+      workspaceCwd: "/host/workspace",
+      workspaceWorktreePath: "/host/worktree",
+      workspaceHints: [
+        { workspaceId: "workspace-1", cwd: "/host/workspace" },
+        { workspaceId: "workspace-2", cwd: "/tmp/other" },
+      ],
+      executionTargetIsRemote: true,
+      executionCwd: "/remote/workspace/.workcell-runtime/runs/run-1/workspace",
+    });
+
+    expect(shaped).toEqual({
+      workspaceCwd: "/remote/workspace/.workcell-runtime/runs/run-1/workspace",
+      workspaceWorktreePath: null,
+      workspaceHints: [
+        {
+          workspaceId: "workspace-1",
+          cwd: "/remote/workspace/.workcell-runtime/runs/run-1/workspace",
+        },
+        {
+          workspaceId: "workspace-2",
+        },
+      ],
+    });
+    expect(env.WORKCELL_WORKSPACE_CWD).toBe("/remote/workspace/.workcell-runtime/runs/run-1/workspace");
+    expect(env.WORKCELL_WORKSPACE_WORKTREE_PATH).toBeUndefined();
+    expect(env.QA_PROJECT_WORKSPACE_CWD).toBe("/remote/workspace/.workcell-runtime/runs/run-1/workspace");
+    expect(JSON.parse(env.WORKCELL_WORKSPACES_JSON ?? "[]")).toEqual([
+      {
+        workspaceId: "workspace-1",
+        cwd: "/remote/workspace/.workcell-runtime/runs/run-1/workspace",
+      },
+      {
+        workspaceId: "workspace-2",
+      },
+    ]);
+  });
+});
+
+describe("appendWithByteCap", () => {
+  it("keeps valid UTF-8 when trimming through multibyte text", () => {
+    const output = appendWithByteCap("prefix ", "hello — world", 7);
+
+    expect(output).not.toContain("\uFFFD");
+    expect(Buffer.from(output, "utf8").toString("utf8")).toBe(output);
+    expect(Buffer.byteLength(output, "utf8")).toBeLessThanOrEqual(7);
+  });
+});

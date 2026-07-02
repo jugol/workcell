@@ -1,0 +1,45 @@
+{
+  "name": "@workcell/plugin-authoring-smoke-example",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "A Workcell plugin",
+  "scripts": {
+    "prebuild": "pnpm --filter @workcell/plugin-sdk ensure-build-deps",
+    "build": "node ./esbuild.config.mjs",
+    "build:rollup": "rollup -c",
+    "dev": "node ./esbuild.config.mjs --watch",
+    "dev:ui": "workcell-plugin-dev-server --root . --ui-dir dist/ui --port 4177",
+    "test": "vitest run --config ./vitest.config.ts",
+    "typecheck": "pnpm --filter @workcell/plugin-sdk ensure-build-deps && tsc --noEmit"
+  },
+  "workcellPlugin": {
+    "manifest": "./dist/manifest.js",
+    "worker": "./dist/worker.js",
+    "ui": "./dist/ui/"
+  },
+  "keywords": [
+    "workcell",
+    "plugin",
+    "connector"
+  ],
+  "author": "Plugin Author",
+  "license": "MIT",
+  "dependencies": {
+    "@workcell/plugin-sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/node": "^24.6.0",
+    "@types/react": "^19.0.8",
+    "esbuild": "^0.27.3",
+    "rollup": "^4.59.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}

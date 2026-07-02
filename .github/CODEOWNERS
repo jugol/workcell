@@ -1,0 +1,17 @@
+# Replace @jugol if a different maintainer or team should own release infrastructure.
+
+.github/** @jugol
+scripts/release*.sh @jugol
+scripts/release-*.mjs @jugol
+scripts/create-github-release.sh @jugol
+scripts/rollback-latest.sh @jugol
+doc/RELEASING.md @jugol
+doc/PUBLISHING.md @jugol
+doc/RELEASE-AUTOMATION-SETUP.md @jugol
+
+# Package files — dependency changes require review
+# package.json matches recursively at all depths (covers root + all workspaces)
+package.json @jugol
+pnpm-lock.yaml @jugol
+pnpm-workspace.yaml @jugol
+.npmrc @jugol

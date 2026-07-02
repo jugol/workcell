@@ -1,0 +1,6049 @@
+{
+  "app": {
+    "noCompanies": {
+      "title": "创建您的第一家公司",
+      "description": "通过创建公司开始。",
+      "newCompany": "新公司"
+    }
+  },
+  "agentConfigForm": {
+    "deliberation": {
+      "heading": "双脑（自我审查）",
+      "enabledLabel": "启用双脑",
+      "hint": "启用后，该智能体的议题工作将以自我审查轮次运行：工作脑（A）完成工作，审查脑（B，可选用不同模型）对结果进行批判性审查与修订，直至审查通过后结束。同一脑设置也用于临时审议（审议面板）。",
+      "brainALabel": "工作脑（A）",
+      "brainAIsAgent": "即该智能体本身——直接沿用上方的适配器与模型设置工作。",
+      "reviewModeLabel": "审查模式",
+      "reviewModeHint": "单一 = 一个审查脑。小组 = 多个审查脑独立审查，再以共识（多数表决）决定——更稳健但成本更高。",
+      "reviewModeSingle": "单一（一个审查脑）",
+      "reviewModePanel": "小组（独立多数表决）",
+      "brainBLabel": "审查脑（B）",
+      "inheritDefault": "默认（智能体的默认模型）",
+      "differentModelNote": "提示：审查脑应使用与工作脑不同的模型/厂商——相同模型会继承自身的盲点（生成者—验证者鸿沟）。",
+      "trackLabel": "审查重点（Track）",
+      "trackHint": "自动 = 依据工作产物进行推理。产物 = 直接运行并验证，以行为为准判断。研究 = 将主张与证据交叉核对。",
+      "trackAuto": "自动",
+      "trackA": "产物（运行并验证）",
+      "trackB": "研究（交叉核对证据）",
+      "maxRoundsLabel": "最大轮数（maxRounds）",
+      "maxRoundsHint": "A↔B 在未达成接受前可往返的最大次数（1–8）。",
+      "pairNote": "注意：此双脑是单个智能体的内部共识，与现有的两个智能体协作的结对（Pair）设置是相互独立的。",
+      "panelLabel": "审查小组（独立成员）",
+      "panelEmpty": "请至少添加一名成员（留空时等同于单一审查）。",
+      "panelRemove": "移除成员",
+      "panelAdd": "+ 添加成员",
+      "panelMinAgreeLabel": "共识阈值（minAgree）",
+      "panelMinAgreeHint": "达到该数量的审查者接受后即通过。留空则采用多数表决。",
+      "inheritAdapter": "智能体默认（继承适配器）"
+    },
+    "unsavedChanges": "未保存的更改",
+    "saving": "保存中...",
+    "save": "保存",
+    "identityHeading": "身份",
+    "nameLabel": "名称",
+    "namePlaceholder": "代理名称",
+    "titleLabel": "职位",
+    "titlePlaceholder": "例如：工程副总裁",
+    "reportsToLabel": "汇报对象",
+    "chooseManagerLabel": "选择管理者…",
+    "capabilitiesLabel": "能力",
+    "capabilitiesPlaceholder": "描述此代理的功能...",
+    "promptTemplateLabel": "提示词模板",
+    "promptTemplateHint": "提示词模板在每次心跳时重放。请保持简洁和动态，以避免重复的 token 消耗和缓存波动。",
+    "executionHeading": "执行",
+    "defaultEnvironmentLabel": "默认环境",
+    "defaultEnvironmentHint": "代理级别的默认执行目标。项目和议题设置仍可覆盖此项。",
+    "companyDefaultOption": "团队默认（本地）",
+    "adapterHeading": "适配器",
+    "testing": "测试中...",
+    "test": "测试",
+    "adapterTypeLabel": "适配器类型",
+    "environmentTestFailed": "环境测试失败",
+    "workingDirectoryLabel": "工作目录（已废弃）",
+    "workingDirectoryPlaceholder": "/path/to/project",
+    "permissionsHeading": "权限与配置",
+    "commandLabel": "命令",
+    "bootstrapPromptLabel": "引导提示词（旧版）",
+    "bootstrapPromptPlaceholder": "首次运行时的可选初始化提示词",
+    "bootstrapPromptHint": "引导提示词为旧版功能，将在未来版本中移除。请考虑将此内容迁移至代理的提示词模板或指令文件中。",
+    "extraArgsLabel": "额外参数（逗号分隔）",
+    "extraArgsPlaceholder": "例如 --verbose, --foo=bar",
+    "envVarsLabel": "环境变量",
+    "timeoutLabel": "超时（秒）",
+    "graceLabel": "中断宽限期（秒）",
+    "runPolicyHeading": "运行策略",
+    "heartbeatOnIntervalLabel": "按间隔心跳",
+    "secLabel": "秒",
+    "runHeartbeatEveryPrefix": "每隔以下时间运行心跳",
+    "advancedRunPolicyTitle": "高级运行策略",
+    "wakeOnDemandLabel": "按需唤醒",
+    "cooldownLabel": "冷却时间（秒）",
+    "maxConcurrentRunsLabel": "最大并发运行数",
+    "continueAfterMaxTurnStopLabel": "达到最大轮次停止后继续",
+    "continuationAttemptsLabel": "续行尝试次数",
+    "continuationDelayLabel": "续行延迟（秒）",
+    "resultStatusPassed": "通过",
+    "resultStatusWarnings": "警告",
+    "resultStatusFailed": "失败",
+    "resultHintPrefix": "提示：",
+    "comingSoon": "即将推出",
+    "experimentalBadge": "实验性",
+    "model": {
+      "primaryModel": "主模型",
+      "loadFailed": "加载适配器模型失败。",
+      "openCodeDiscovery": "实时 OpenCode 模型发现仅在本地环境中运行。对于 {{name}}，将使用精选列表和手动输入。",
+      "default": "默认",
+      "usesLocalCli": "使用本地 CLI 自身的模型",
+      "useManual": "手动指定模型",
+      "noModelDetected": "尚未检测到模型。请手动输入提供商/模型。",
+      "noModelsFound": "未找到模型。"
+    },
+    "cheapModel": {
+      "adapterDefault": "适配器默认 · {{model}}",
+      "noAdapterDefault": "无适配器默认 — 请选择更廉价的模型",
+      "heading": "廉价模型",
+      "description": "当运行请求廉价配置时使用（例如例行摘要）。主模型保持不变。",
+      "fallbackBefore": "未选择明确的廉价模型 — 运行时将回退至",
+      "noDefaultWarning": "未选择廉价模型且适配器无默认值。廉价通道的运行将继续使用主模型，并附带回退提示。"
+    }
+  },
+  "agents": {
+    "title": "智能体",
+    "selectCompany": "选择一个团队以查看智能体。",
+    "tabs": {
+      "all": "全部",
+      "active": "活跃",
+      "paused": "已暂停",
+      "error": "错误"
+    },
+    "filters": "筛选",
+    "showTerminated": "显示已终止",
+    "newAgent": "新建智能体",
+    "countUnit": "个智能体",
+    "countUnitPlural": "个智能体",
+    "recommendedTeamHint": "Workcell 开发团队最佳配置为 编排者 + 工程师 + 设计师 + QA。仍缺少的角色：",
+    "emptyMessage": "创建您的第一个智能体即可开始。",
+    "noMatch": "没有智能体符合所选筛选条件。",
+    "noOrgHierarchy": "尚未定义组织架构。",
+    "live": "实时"
+  },
+  "deliberation": {
+    "brain": {
+      "a": "脑 A",
+      "b": "脑 B",
+      "unknown": "脑"
+    },
+    "action": {
+      "accept": "审查并接受",
+      "revise": "修订",
+      "propose": "提议"
+    },
+    "status": {
+      "completed": "已完成",
+      "failed": "失败",
+      "running": "运行中"
+    },
+    "feedbackLabel": "反馈",
+    "acceptedBy": "由 {{brain}} 接受",
+    "roundsSummary": "{{rounds}} 轮",
+    "taskLabel": "任务",
+    "awaitingTurns": "两个脑正在开始审议……",
+    "noTurns": "暂无记录的回合。",
+    "finalOutputLabel": "最终达成一致的结果",
+    "heading": "内部审议运行（双脑）",
+    "subheading": "两个脑反复进行 提议 → 审查 → 修订，直至就同一结论达成一致。",
+    "liveDisabled": "实时 LLM 已禁用（WORKCELL_PAIR_LIVE_LLM）。审议运行仅在开启实时 LLM 时才有效。",
+    "taskPlaceholder": "输入需要两个脑达成一致的任务……",
+    "maxRoundsLabel": "最大轮数（可选）",
+    "maxRoundsPlaceholder": "默认",
+    "starting": "正在启动……",
+    "run": "运行审议",
+    "detailError": "加载审议运行失败。",
+    "loadingRun": "正在加载审议运行……",
+    "pastRuns": "近期审议运行",
+    "untitledRun": "（无任务）"
+  },
+  "inbox": {
+    "designReview": {
+      "pendingCount": "{{count}} 份设计稿待看板审查",
+      "pendingOne": "设计稿待看板审查",
+      "label": "设计评审"
+    },
+    "tabs": {
+      "todo": "待办",
+      "mine": "我的",
+      "recent": "最近",
+      "unread": "未读",
+      "blocked": "受阻",
+      "all": "全部"
+    },
+    "emptyState": {
+      "todoZero": "当前没有需要处理的事项——需要您处理的审批和审查将显示在此处。",
+      "noSearchMatch": "没有与你的搜索匹配的收件箱项。",
+      "inboxZero": "收件箱已清空。",
+      "noNew": "没有新的收件箱项。",
+      "noRecent": "没有最近的收件箱项。",
+      "noFilterMatch": "没有与这些筛选条件匹配的收件箱项。"
+    },
+    "breadcrumb": "收件箱",
+    "selectCompany": "选择一个团队以查看收件箱。",
+    "searchPlaceholder": "搜索收件箱…",
+    "toolbar": {
+      "group": "分组",
+      "groupAria": "对议题分组",
+      "sort": "排序",
+      "sortAria": "对议题排序",
+      "columnsTitle": "选择哪些收件箱列保持可见",
+      "disableNesting": "禁用父子嵌套",
+      "enableNesting": "启用父子嵌套"
+    },
+    "groupBy": {
+      "none": "无",
+      "type": "类型",
+      "assignee": "负责人",
+      "project": "项目",
+      "workspace": "工作区"
+    },
+    "markAllRead": {
+      "pending": "标记中…",
+      "button": "全部标记为已读",
+      "confirmTitle": "全部标记为已读？",
+      "cancel": "取消"
+    },
+    "categoryFilter": {
+      "placeholder": "类别",
+      "all": "所有类别",
+      "myRecentIssues": "我最近的议题",
+      "joinRequests": "加入请求",
+      "approvals": "审批",
+      "failedRuns": "失败的运行",
+      "alerts": "警报"
+    },
+    "approvalFilter": {
+      "placeholder": "审批状态",
+      "all": "所有审批状态",
+      "actionable": "需要处理",
+      "resolved": "已解决"
+    },
+    "searchSection": {
+      "archived": "已归档",
+      "other": "其他结果"
+    },
+    "newIssueInGroup": "{{group}} 中的新议题",
+    "earlierDivider": "更早",
+    "alerts": {
+      "heading": "警报",
+      "agentHas": "个智能体有",
+      "agentsHave": "个智能体有",
+      "errorsSuffix": "个错误",
+      "budgetAt": "预算已达",
+      "utilizationThisMonth": "本月使用率"
+    },
+    "markAsRead": "标记为已读",
+    "dismissFromInbox": "从收件箱中移除",
+    "dismiss": "移除",
+    "approve": "批准",
+    "reject": "拒绝",
+    "failedRun": {
+      "title": "失败的运行",
+      "retrying": "重试中…",
+      "retry": "重试"
+    },
+    "approval": {
+      "requestedBy": "由 {{name}} 请求",
+      "updated": "更新于 {{time}}"
+    },
+    "joinRequest": {
+      "requestedFromIp": "于 {{time}} 从 IP {{ip}} 请求",
+      "adapter": "适配器：{{type}}"
+    },
+    "errors": {
+      "approveFailed": "批准失败",
+      "rejectFailed": "拒绝失败",
+      "approveJoinFailed": "批准加入请求失败",
+      "rejectJoinFailed": "拒绝加入请求失败",
+      "retrySkipped": "重试已跳过。",
+      "archiveFailed": "归档议题失败",
+      "undoArchiveFailed": "撤销收件箱归档失败",
+      "loadFailed": "加载收件箱项失败。请重试。"
+    }
+  },
+  "issueDesignCompare": {
+    "previewTitle": "设计预览：{{title}}",
+    "noPreview": "此设计暂无可用预览。",
+    "title": "复现——设计系统检查",
+    "subtitle": "将提取出的设计系统（原始基准）与复现的屏幕原型并排对比。",
+    "tokenSummary": "{{colors}} 种颜色 · {{fontSizes}} 种字号",
+    "systemLabel": "提取出的设计系统（基准）",
+    "reproducedLabel": "复现的屏幕原型",
+    "reproducedEmpty": "尚无复现的原型——一旦设计师依据此设计系统复现某个屏幕，便会在此处显示。"
+  },
+  "issueDesignReview": {
+    "expandPreview": "展开",
+    "openPreviewNewTab": "在新标签页中打开",
+    "designRequest": {
+      "heading": "设计任务——制作设计稿",
+      "body": "此议题是设计稿制作任务，因此本身无需设计。请为父级屏幕创建设计并附加到父议题，然后请求看板审查——审查通过后，父议题的实现便会继续。",
+      "attachTo": "将设计稿附加到 {{parent}} →",
+      "attachToParent": "将设计稿附加到父议题 →",
+      "reviewHeading": "设计任务——设计稿正在等待看板审查",
+      "reviewBody": "此设计任务附带自己的设计稿，正在等待看板审查。请在此批准或要求修改——批准后，父议题的设计门槛即会解除。",
+      "openParent": "打开父议题 {{parent}} →",
+      "openParentGeneric": "打开父议题 →"
+    },
+    "requirement": {
+      "setByAi": "· 由 AI 设定",
+      "exempt": "无需设计——此 issue 豁免设计关卡",
+      "required": "等待设计——此 issue 按照已获批的设计来实现",
+      "met": "设计优先——下方已获批的设计即为实现目标",
+      "makeRequired": "要求设计",
+      "makeExempt": "标记为豁免"
+    },
+    "screens": {
+      "count": "此议题中有 {{count}} 个屏幕",
+      "approvedCount": "已批准 {{approved}}/{{total}}",
+      "canStartDev": " · 可开始开发"
+    },
+    "approvedImplementing": "设计已批准。这表示“按此原型实现”，并不代表议题已完成——受指派者需依据此原型实现、附上证据，此后才标记议题完成。（议题完成的审批是另行进行的。）",
+    "title": "设计（事实来源）",
+    "subtitle": "此设计是本项工作的事实来源——开发和 QA 均依据它进行。",
+    "loading": "正在加载设计…",
+    "empty": "暂无设计——设计师附加后，你可以在此处审核。",
+    "noPreview": "此设计暂无预览。",
+    "previewTitle": "设计预览：{{title}}",
+    "hold": "设计审查中——一旦获批，此设计将成为实现目标。",
+    "candidatesNote": "目前尚无设计作为唯一可信来源。请选择一个使其成为权威设计并请求审查。",
+    "designSystemNote": "设计遵循项目的设计系统。",
+    "projectDesignSystem": "项目设计系统 →",
+    "target": {
+      "title": "实现目标",
+      "view": "查看设计",
+      "note": "请严格按照此设计实现——QA 会据此核验结果。"
+    },
+    "reasonPlaceholder": "应当修改什么？（可选）",
+    "submitting": "请求中…",
+    "approving": "批准中…",
+    "requesting": "发送中…",
+    "action": {
+      "submit": "请求审查",
+      "approve": "批准",
+      "requestChanges": "请求修改",
+      "sendChanges": "发送修改请求",
+      "reopen": "请求修改",
+      "resubmit": "重新提交审查",
+      "designate": "设为唯一可信来源并请求审查"
+    },
+    "attach": {
+      "button": "附加设计",
+      "titlePlaceholder": "设计标题",
+      "urlPlaceholder": "https://… 或留空",
+      "submit": "附加",
+      "submitting": "附加中…"
+    },
+    "toast": {
+      "failed": {
+        "title": "设计审查操作失败",
+        "body": "Workcell 无法更新此设计审查。"
+      }
+    },
+    "pick": {
+      "button": "从设计系统中选择",
+      "loading": "正在加载设计系统…",
+      "empty": "项目设计系统中暂无屏幕设计。",
+      "use": "用作唯一可信来源",
+      "close": "取消"
+    }
+  },
+  "issuePlanRevision": {
+    "title": "计划（规划）",
+    "subtitle": "对此计划提供反馈，规划器会据此进行修订。",
+    "feedbackPlaceholder": "规划器应对此计划做哪些修改？",
+    "sending": "发送中…",
+    "action": {
+      "requestRevision": "请求修订计划",
+      "send": "发送给规划器",
+      "cancel": "取消"
+    },
+    "toast": {
+      "success": {
+        "title": "已请求计划修订",
+        "body": "已将你的反馈发送给规划器以修订计划。"
+      },
+      "failed": {
+        "title": "无法请求计划修订",
+        "body": "Workcell 无法请求计划修订。"
+      }
+    }
+  },
+  "pairBadge": {
+    "labelShort": "⇄ 结对",
+    "label": "⇄ 结对：{{name}}",
+    "title": "与 {{name}} 配对于 {{ref}}",
+    "unknownCounterpart": "未分配"
+  },
+  "projectWorkspaceDetail": {
+    "relocateDone": "已移动文件夹并更新路径：{{path}}",
+    "relocateTitle": "移动代码库位置",
+    "relocateHint": "将此工作区的代码文件夹移动到新路径，并一步更新 cwd。如果存在活跃会话或正在运行的开发服务器，请先将其清理（被锁定的文件夹会被拒绝）。",
+    "relocateCurrent": "当前位置",
+    "relocateAbsolute": "新路径必须是绝对路径。",
+    "relocatePlaceholder": "新的绝对路径（例如 C:\\Project\\loing\\MyApp）",
+    "relocateAction": "移动位置",
+    "breadcrumbProjects": "项目",
+    "breadcrumbWorkspaces": "工作区",
+    "errorSaveWorkspace": "保存工作区失败。",
+    "errorUpdateWorkspace": "更新工作区失败。",
+    "runtimeJobCompleted": "工作区任务已完成。",
+    "runtimeServiceStopped": "工作区服务已停止。议题执行未暂停。",
+    "runtimeServiceRestarted": "工作区服务已重启。议题执行未暂停。",
+    "runtimeServiceStarted": "工作区服务已启动。",
+    "errorControlCommands": "控制工作区命令失败。",
+    "loading": "加载工作区中…",
+    "errorLoad": "加载工作区失败",
+    "notFound": "此项目未找到工作区。",
+    "backToWorkspaces": "返回工作区列表",
+    "kicker": "项目工作区",
+    "makePrimary": "设为主工作区",
+    "primaryBadge": "这是项目的主代码工作区。",
+    "configIntro": "配置 Workcell 附加到该项目的具体工作区。这些值控制各工作区的检出行为、子执行工作区的默认运行时服务，并允许在某个工作区需要特殊处理时覆盖设置或清理命令。",
+    "fieldWorkspaceName": "工作区名称",
+    "fieldVisibility": "可见性",
+    "fieldSourceType": "来源类型",
+    "fieldLocalPath": "本地路径",
+    "fieldRepoUrl": "仓库 URL",
+    "fieldRepoRef": "仓库引用",
+    "fieldDefaultRef": "默认引用",
+    "fieldSharedWorkspaceKey": "共享工作区密钥",
+    "fieldRemoteProvider": "远程提供商",
+    "fieldRemoteWorkspaceRef": "远程工作区引用",
+    "fieldSetupCommand": "设置命令",
+    "hintSetupCommand": "当此工作区需要自定义初始化时运行",
+    "fieldCleanupCommand": "清理命令",
+    "hintCleanupCommand": "在项目级执行工作区销毁前运行",
+    "advancedRuntimeJsonSummary": "高级运行时 JSON",
+    "advancedRuntimeJsonDescription": "Workcell 从此 JSON 派生服务和任务。建议优先编辑命名命令；仅在需要高级生命周期、端口、就绪性或环境设置时使用原始 JSON。",
+    "fieldWorkspaceCommandsJson": "工作区命令 JSON",
+    "hintWorkspaceCommandsJson": "执行工作区继承此配置，除非进行覆盖。旧版 `services` 数组仍然有效，但 `commands` 同时支持服务和任务。",
+    "saveChanges": "保存更改",
+    "reset": "重置",
+    "noUnsavedChanges": "没有未保存的更改。",
+    "workspaceFacts": "工作区信息",
+    "currentState": "当前状态",
+    "detailProject": "项目",
+    "detailWorkspaceId": "工作区 ID",
+    "detailRepo": "仓库",
+    "detailUpdated": "更新时间",
+    "none": "无",
+    "workspaceCommands": "工作区命令",
+    "servicesAndJobs": "服务与任务",
+    "servicesAndJobsDescription": "长期运行的服务在此受到监管，而一次性任务则按需针对此工作区运行。执行工作区继承此配置，除非进行覆盖。",
+    "serviceEmptyStarted": "此工作区尚未启动任何服务。",
+    "serviceEmptyNoConfig": "此工作区尚未定义工作区命令配置。",
+    "jobEmpty": "此工作区尚未配置任何一次性任务。",
+    "disabledHint": "项目工作区需要工作目录才能运行本地命令，服务还需要运行时配置。",
+    "loadingPlugin": "正在加载工作区插件...",
+    "backToConfiguration": "返回配置",
+    "tabs": {
+      "configuration": "配置"
+    },
+    "visibility": {
+      "default": "默认",
+      "advanced": "高级"
+    },
+    "sourceType": {
+      "local_path": {
+        "label": "本地 Git 检出",
+        "description": "Workcell 可直接使用的本地路径。"
+      },
+      "non_git_path": {
+        "label": "本地非 Git 路径",
+        "description": "不含 Git 语义的本地文件夹。"
+      },
+      "git_repo": {
+        "label": "远程 Git 仓库",
+        "description": "带可选引用和本地检出的仓库 URL。"
+      },
+      "remote_managed": {
+        "label": "远程托管工作区",
+        "description": "由外部引用跟踪的托管工作区。"
+      }
+    }
+  },
+  "wireframeFlow": {
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "fit": "适应",
+    "nodeTooltip": "{{screenName}} —— 拖动以移动，点击以打开屏幕计划",
+    "noPreview": "无预览",
+    "entryScreen": "代表 / 入口屏幕"
+  },
+  "flowDashboard": {
+    "loadingFlow": "正在加载流程……",
+    "emptyState": "尚无屏幕。将屏幕原型附加到某个议题，它就会作为线框流程显示在此处。",
+    "statusApproved": "已批准",
+    "statusInReview": "审查中",
+    "preview": "预览",
+    "screenNavLinksHeading": "屏幕导航链接",
+    "fromScreenLabel": "起始屏幕",
+    "searchScreenPlaceholder": "搜索屏幕……",
+    "toScreenLabel": "目标屏幕",
+    "labelOptional": "标签（可选）",
+    "labelExamplePlaceholder": "登录按钮",
+    "addLink": "添加",
+    "deleteLink": "删除链接",
+    "noLinks": "尚无链接。输入 screenKey 以勾勒导航流程。"
+  },
+  "screenPlan": {
+    "reviseIssueTitle": "[{{screenName}}] 屏幕修订",
+    "reviseIssueDescription": "修订 App Blueprint 中的 {{screenName}} 屏幕（`screenKey: {{screenKey}}`）。\n\n## 修订请求\n{{request}}\n\n## 指南\n- 这是对现有屏幕的编辑，因此请在**同一 screenKey（`{{screenKey}}`）**下重绘并替换原型（不要将版本/议题 ID 写入 screenKey）。\n- 原型 HTML 是纯粹的屏幕；请将规格、状态与交互写入屏幕计划（planMarkdown）。\n- 一旦看板批准，此屏幕的上一版本会被自动清理。",
+    "reviseIssueRequestPlaceholder": "（请描述需要修复的内容）",
+    "backToFlow": "返回流程",
+    "statusApproved": "已批准",
+    "statusInReview": "审查中",
+    "reviseIssueCreated": "修订议题已创建（待办列表）。",
+    "openIssueWithId": "打开 {{identifier}}",
+    "openIssue": "打开议题",
+    "createAnother": "再创建一个",
+    "reviseSectionTitle": "此屏幕的修订议题",
+    "reviseSectionHint": "即使是已定稿的屏幕，只要有需要修复之处，都可在此创建议题。",
+    "reviseNotePlaceholder": "需要修复什么？（可选——留空则仅以标题创建）",
+    "creating": "正在创建……",
+    "createReviseIssue": "创建修订议题",
+    "createFailed": "创建失败——请重试。",
+    "navigationHeading": "导航",
+    "linksOutgoing": "由此前往 · {{count}}",
+    "linksIncoming": "来到此处 · {{count}}",
+    "linksNone": "无",
+    "mockupHeading": "屏幕（原型）",
+    "noPreview": "无预览",
+    "openInNewTab": "在新标签页中打开",
+    "planHeading": "屏幕计划",
+    "loading": "正在加载……",
+    "planEmpty": "此屏幕尚无计划。一旦设计师智能体随原型一并撰写屏幕计划，便会在此处显示。"
+  },
+  "designGuide": {
+    "philosophyTemplate": "## 设计理念\n用一两句话描述这款应用希望带给用户的体验。（例如：降低学习者的认知负担，让他们更常体验到小小的成就感。）\n\n## 核心原则\n1. 一屏一任务——每次只询问一件事。\n2. 即时反馈——对每个操作都给出清晰回应。\n3. 峰终定律——以积极的感受收尾。\n\n## 语气与口吻\n温暖、鼓励的语气。用平实的措辞代替术语。\n\n## 该做 / 不该做\n- 该做：始终显示进度。\n- 不该做：不要在一屏上放超过 5 个选项。",
+    "loading": "正在加载指南……",
+    "philosophyHeading": "设计理念与原则",
+    "save": "保存",
+    "philosophyHelp": "请自行撰写这款应用的设计理念、原则与口吻（下方自动提取的令牌仅供参考）。支持 Markdown。",
+    "startFromTemplate": "从模板开始",
+    "principlesHeading": "原型中检测到的设计原则",
+    "principlesHelp": "从已批准屏幕原型的注释中发现的 UX 原则——请检查它们是否与上方理念一致。",
+    "tokensHelp": "自动提取的令牌 · 供参考——从 {{count}} 个已批准屏幕中机械抽取的颜色、排版、间距与组件。",
+    "tokenColors": "颜色",
+    "tokenTypography": "排版",
+    "tokenSpacing": "间距",
+    "tokenComponents": "组件",
+    "empty": "未从已批准屏幕中提取到任何项。"
+  },
+  "designSystem": {
+    "title": "App Blueprint",
+    "breadcrumb": "App Blueprint",
+    "description": "一览整个应用的屏幕构成与计划。查看各屏幕在流程中如何连接（拖动以排列，滚动以缩放），然后点击某个屏幕以打开其计划（详细内容）。“屏幕”是纯粹的原型；“屏幕计划”是描述它的文档——二者成对联动。",
+    "tab": {
+      "flow": "流程",
+      "screens": "屏幕",
+      "guide": "指南"
+    },
+    "badge": {
+      "approved": "已批准",
+      "review": "审查中",
+      "changes": "已请求变更"
+    },
+    "openIssue": "来源议题",
+    "catalogNote": "{{n}} 个屏幕。批准同一屏幕的新版本会自动清理该屏幕的旧版本；一个议题可包含多个屏幕。",
+    "empty": "尚无屏幕原型——为某个议题指派设计智能体或附加原型，它便会显示在此处。",
+    "confirmDelete": "永久删除“{{title}}”设计？此操作无法撤销。是否继续？",
+    "confirmDeleteMultiNote": "此屏幕还有 {{count}} 个其他版本，因此删除后卡片不会消失——它会改为显示下一个版本。",
+    "versionCount": "{{count}} 个版本",
+    "delete": "删除"
+  },
+  "nav": {
+    "home": "首页",
+    "issues": "议题",
+    "create": "创建",
+    "agents": "智能体",
+    "inbox": "收件箱",
+    "mobileNavigation": "移动端导航"
+  },
+  "accountMenu": {
+    "openMenu": "打开账户菜单",
+    "viewProfile": {
+      "label": "查看个人资料",
+      "description": "打开你的活动、任务与用量记录。"
+    },
+    "editProfile": {
+      "label": "编辑个人资料",
+      "description": "更新你的显示名称与头像。"
+    },
+    "instanceSettings": {
+      "label": "实例设置",
+      "description": "返回你上次打开的设置页面。"
+    },
+    "documentation": {
+      "label": "文档",
+      "description": "在新标签页中打开 Workcell 文档。"
+    },
+    "language": {
+      "label": "语言",
+      "description": "选择你的界面语言。"
+    },
+    "theme": {
+      "toDark": "切换到深色模式",
+      "toLight": "切换到浅色模式",
+      "description": "切换应用外观。"
+    },
+    "signOut": {
+      "label": "退出登录",
+      "pending": "正在退出登录……",
+      "description": "结束此浏览器会话。"
+    },
+    "version": "Workcell v{{version}}"
+  },
+  "sidebar": {
+    "newIssue": "新建议题",
+    "openSearch": "打开搜索",
+    "newProject": "新建项目",
+    "newAgent": "新建智能体",
+    "nav": {
+      "dashboard": "仪表盘",
+      "inbox": "收件箱",
+      "issues": "议题",
+      "routines": "例程",
+      "goals": "目标",
+      "workspaces": "工作区",
+      "org": "组织",
+      "skills": "技能",
+      "costs": "成本",
+      "activity": "活动",
+      "settings": "设置",
+      "approvals": "审批"
+    },
+    "section": {
+      "work": "工作",
+      "company": "团队",
+      "projects": "项目",
+      "agents": "智能体"
+    }
+  },
+  "dashboard": {
+    "welcome": {
+      "message": "欢迎使用 Workcell。先建立你的第一个团队和智能体即可开始。",
+      "action": "开始使用",
+      "selectCompany": "创建或选择一个团队以查看仪表盘。"
+    },
+    "openBudgets": "打开预算",
+    "last14Days": "最近 14 天",
+    "recentActivity": "近期活动",
+    "recentTasks": "近期任务",
+    "noTasks": "暂无任务。",
+    "noAgents": {
+      "message": "你还没有智能体。",
+      "action": "在此创建一个"
+    },
+    "metrics": {
+      "agentsEnabled": "已启用智能体",
+      "agentsDesc": "{{running}} 个运行中，{{paused}} 个已暂停，{{errors}} 个错误",
+      "tasksInProgress": "进行中的任务",
+      "tasksDesc": "{{open}} 个待处理，{{blocked}} 个受阻",
+      "monthSpend": "本月支出",
+      "costsDesc": "已用预算的 {{percent}}%（共 {{budget}}）",
+      "costsUnlimited": "无限额预算",
+      "pendingApprovals": "待审批",
+      "approvalsDesc": "{{count}} 项预算覆盖等待看板审查",
+      "approvalsAwaiting": "等待看板审查"
+    },
+    "charts": {
+      "runActivity": "运行活动",
+      "issuesByPriority": "按优先级划分的议题",
+      "issuesByStatus": "按状态划分的议题",
+      "successRate": "成功率"
+    },
+    "budgetIncidents_one": "{{count}} 个活跃预算事件",
+    "budgetIncidents_other": "{{count}} 个活跃预算事件",
+    "budgetPausedSummary": "{{agents}} 个智能体已暂停 · {{projects}} 个项目已暂停 · {{approvals}} 项待审批预算",
+    "breadcrumb": "仪表盘"
+  },
+  "issueStatus": {
+    "backlog": "待规划",
+    "todo": "待办",
+    "in_progress": "进行中",
+    "in_review": "审查中",
+    "done": "已完成",
+    "cancelled": "已取消",
+    "blocked": "受阻",
+    "none": "未提交",
+    "needs_board_review": "需看板审查",
+    "approved": "已批准",
+    "changes_requested": "已请求变更"
+  },
+  "issuePriority": {
+    "critical": "紧急",
+    "high": "高",
+    "medium": "中",
+    "low": "低"
+  },
+  "issues": {
+    "selectCompany": "选择一个团队以查看议题。",
+    "draftPlaceholder": "描述一个想法——规划者会起草一份结构化议题……",
+    "draftAriaLabel": "用规划者起草议题",
+    "draftDisabledHint": "添加一个具备规划者、PM 或编排者角色的活跃智能体即可启用起草功能。",
+    "draftButton": "用规划者起草",
+    "draftButtonPending": "正在起草……",
+    "draftHelper": "描述你想完成的事情，规划者会起草一份结构化议题——包含验收标准和证据界面——交由智能体接手。",
+    "searchPlaceholder": "搜索议题……",
+    "searchAriaLabel": "搜索议题",
+    "emptyState": "没有议题符合当前筛选条件或搜索。",
+    "searchAssigneesPlaceholder": "搜索受指派者……",
+    "listViewTooltip": "列表视图",
+    "boardViewTooltip": "看板视图",
+    "nestingDisableTooltip": "禁用父子嵌套",
+    "nestingEnableTooltip": "启用父子嵌套",
+    "boardUseComfortableCards": "使用宽松卡片",
+    "boardUseCompactCards": "使用紧凑卡片",
+    "boardExpandColdLanes": "展开冷门列",
+    "boardCollapseColdLanes": "折叠冷门列",
+    "cardsPerColumnTooltip": "每列卡片数",
+    "resetBoardDensityTooltip": "重置看板密度",
+    "columnsPickerTooltip": "选择保持可见的议题列",
+    "needsNextStepTooltip": "此议题需要下一步操作",
+    "needsNextStepAria": "需要下一步",
+    "needsNextStepLabel": "需要下一步",
+    "pausedBadge": "已暂停",
+    "proofBadgeTooltip": "已附上证据包——可供签核",
+    "proofBadgeAria": "已附证据",
+    "proofBadgeLabel": "证据",
+    "compoundBadgeTooltip": "由复合清单的后续项派生而来",
+    "compoundBadgeAria": "来自复合清单",
+    "compoundBadgeLabel": "复合",
+    "pairBadgeTooltip": "结对协作模式（多智能体轮次）",
+    "pairBadgeAria": "结对模式",
+    "pairBadgeLabel": "结对",
+    "assigneeNone": "无受指派者",
+    "assigneeMe": "我",
+    "assigneePlaceholder": "受指派者",
+    "firstRun": {
+      "title": "这里是工作诞生的地方",
+      "body": "在上方的框中输入你想完成的事情——规划者会将其转化为带有验收标准和证据界面的结构化议题。你也可以自行创建。",
+      "createAction": "新建议题"
+    },
+    "perColumn": "每列 {{count}} 个",
+    "searchLimit": "最多显示 {{count}} 条匹配。优化搜索以进一步缩小范围。",
+    "loadError": "无法刷新议题列表——你看到的内容可能已过时或不完整。",
+    "retry": "重试",
+    "boardColumnLimit": "部分看板列最多显示 {{count}} 个议题。优化筛选或搜索以显示其余项。",
+    "subIssueStrip": {
+      "done": "已完成 {{done}}/{{total}}",
+      "inProgress": "{{count}} 个进行中",
+      "blocked": "{{count}} 个受阻",
+      "tokens": "{{tokens}} 个令牌",
+      "runtime": "运行时长 {{duration}}",
+      "progressAria": "子议题完成进度",
+      "nextUp": "下一项",
+      "waitingOnBlockers": "等待阻塞项解除",
+      "noActive": "没有活跃的子议题",
+      "allDone": "所有子议题已完成",
+      "noActionable": "没有可执行的子议题"
+    }
+  },
+  "issueRow": {
+    "parkedBlockerTooltip": "被搁置的工作阻塞——至少有一个指派的阻塞项仍在待规划中，不会唤醒其受指派者。",
+    "parkedBlockerLabel": "被搁置的工作阻塞",
+    "plannerDraftTooltip": "规划者草稿——由自然语言提示生成。",
+    "plannerDraftLabel": "草稿",
+    "productivityReviewAria": "生产力审查已打开",
+    "markAsReadAria": "标记为已读",
+    "dismissFromInboxAria": "从收件箱中移除"
+  },
+  "onboarding": {
+    "tabs": {
+      "step1": "团队",
+      "step2": "智能体",
+      "step3": "任务",
+      "step4": "启动"
+    },
+    "step1": {
+      "title": "为你的团队命名",
+      "description": "这是你的智能体将逐个项目为之工作的团队。"
+    },
+    "step2": {
+      "title": "创建你的第一个智能体",
+      "description": "选择此智能体运行任务的方式。",
+      "recommendedTeamHint": "这第一个智能体就是你的编排者。启动后，再聘请工程师、设计师和 QA——这是 Workcell 推荐的开发团队。"
+    },
+    "step3": {
+      "title": "给它分派一些工作",
+      "description": "先给你的智能体一个小任务作为开始——修复一个缺陷、研究一个问题、编写一个脚本。"
+    },
+    "step4": {
+      "title": "准备启动",
+      "description": "一切已就绪。现在启动将创建初始任务、唤醒智能体并打开议题。"
+    },
+    "back": "返回",
+    "next": "下一步",
+    "creating": "正在创建……",
+    "launch": "创建并打开议题",
+    "closeLabel": "关闭",
+    "companyNameLabel": "团队名称",
+    "companyNamePlaceholder": "Acme Corp",
+    "missionGoalLabel": "使命 / 目标（可选）",
+    "missionGoalPlaceholder": "这个团队想要实现什么？",
+    "planReportLanguageLabel": "计划报告语言",
+    "planReportLanguageHint": "你的编排者将以此语言撰写计划报告和议题草稿。",
+    "designFirstLabel": "设计优先（推荐）",
+    "designFirstHint": "设计系统是项目的唯一事实来源：屏幕工作需在看板批准设计后才能进入实现阶段。非视觉类议题可按议题选择退出。",
+    "agentNameLabel": "智能体名称",
+    "agentNamePlaceholder": "编排者",
+    "adapterTypeLabel": "适配器类型",
+    "recommendedBadge": "推荐",
+    "moreAdapterTypes": "更多智能体适配器类型",
+    "comingSoon": "即将推出",
+    "modelLabel": "模型",
+    "thinkingEffortLabel": "思考强度",
+    "adapterEnvCheckTitle": "适配器环境检查",
+    "adapterEnvCheckDescription": "运行一次实时探测，请求适配器 CLI 回应 hello。",
+    "adapterEnvTesting": "正在测试……",
+    "adapterEnvTestNow": "立即测试",
+    "adapterEnvPassed": "已通过",
+    "anthropicKeyNoticePrefix": "Claude 失败，当",
+    "anthropicKeyNoticeSuffix": "已设置时。你可以在此智能体的适配器配置中清除它，然后重试探测。",
+    "anthropicKeyRetrying": "正在重试……",
+    "anthropicKeyUnset": "取消设置 ANTHROPIC_API_KEY",
+    "manualDebug": "手动调试",
+    "promptLabel": "提示：",
+    "authFailsSet": "若鉴权失败，请设置",
+    "authFailsInEnvOrRun": "于环境变量或运行",
+    "loginRequiredRun": "若需要登录，请运行",
+    "loginRequiredAndRetry": "然后重试。",
+    "gatewayUrlLabel": "网关 URL",
+    "webhookUrlLabel": "Webhook URL",
+    "projectNameLabel": "项目名称",
+    "projectNamePlaceholder": "第一个项目",
+    "projectNameHint": "你的第一个真实项目——设计系统和议题都将归属于此。",
+    "taskTitleLabel": "任务标题",
+    "taskTitlePlaceholder": "例如：研究竞品定价",
+    "descriptionLabel": "描述（可选）",
+    "descriptionPlaceholder": "补充更多关于智能体应做什么的细节……",
+    "taskTitleDefault": "规划第一个里程碑",
+    "taskDescriptionDefault": "这是大方向——请将它转化为一份我们可以执行的计划。\n\n- 将目标拆解为带有清晰验收标准和证据界面的议题\n- 将每个议题分派给合适的角色（工程、设计、QA、研究）\n- 在开始执行前，将计划提交看板审批",
+    "summaryCompany": "团队",
+    "summaryTask": "任务",
+    "adapterEnvWarnings": "警告",
+    "adapterEnvFailed": "失败",
+    "hintPrefix": "提示：",
+    "useThisModel": "使用此模型",
+    "noModelsDiscovered": "未发现任何模型。",
+    "agentModeSolo": "单独",
+    "agentModePair": "结对",
+    "pairModeHint": "两个智能体轮流协作以产出结果。",
+    "ownerAgentNameLabel": "智能体 1 · 编排者名称",
+    "counterpartTitle": "搭档智能体",
+    "counterpartNameLabel": "搭档名称",
+    "counterpartNamePlaceholder": "审查者",
+    "counterpartNameRequired": "请为搭档智能体输入名称。",
+    "counterpartModelLabel": "模型（可选）",
+    "counterpartModelPlaceholder": "默认（适配器自身的模型）",
+    "counterpartModelHint": "留空则使用适配器的默认模型。"
+  },
+  "myIssues": {
+    "breadcrumb": "我的议题",
+    "selectCompany": "选择一个团队以查看你的议题。",
+    "emptyState": "没有指派给你的议题。"
+  },
+  "approvals": {
+    "breadcrumb": "审批",
+    "errors": {
+      "approveFailed": "批准失败",
+      "rejectFailed": "拒绝失败"
+    },
+    "selectCompany": "请先选择一个团队。",
+    "tabs": {
+      "pending": "待处理",
+      "all": "全部"
+    },
+    "empty": {
+      "pending": "没有待处理的审批。",
+      "all": "暂无审批。"
+    }
+  },
+  "goals": {
+    "title": "目标",
+    "selectCompany": "选择一个团队以查看目标。",
+    "emptyMessage": "暂无目标。",
+    "addGoal": "添加目标",
+    "newGoal": "新建目标",
+    "levels": {
+      "company": "团队",
+      "team": "团队",
+      "agent": "智能体",
+      "task": "任务"
+    }
+  },
+  "goalDetail": {
+    "showProperties": "显示属性",
+    "goals": "目标",
+    "goalFallback": "目标",
+    "descriptionPlaceholder": "添加描述……",
+    "subGoalsTab": "子目标（{{count}}）",
+    "projectsTab": "项目（{{count}}）",
+    "subGoal": "子目标",
+    "noSubGoals": "暂无子目标。",
+    "noLinkedProjects": "暂无关联项目。",
+    "updateFailed": "无法保存更改——请重试。",
+    "uploadFailed": "无法上传图片——请重试。"
+  },
+  "projects": {
+    "breadcrumb": "项目",
+    "empty": {
+      "noCompany": "选择一个团队以查看项目。",
+      "noProjects": "暂无项目。"
+    },
+    "sort": {
+      "title": "排序",
+      "label": "排序：{{label}}",
+      "asc": "升序",
+      "desc": "降序",
+      "options": {
+        "name": "名称",
+        "updated": "更新时间",
+        "created": "创建时间",
+        "targetDate": "目标日期"
+      }
+    },
+    "actions": {
+      "add": "添加项目"
+    },
+    "groups": {
+      "mine": "我的项目",
+      "other": "其他项目"
+    },
+    "count": "{{count}} 个项目"
+  },
+  "projectDetail": {
+    "overview": {
+      "descriptionPlaceholder": "添加描述……",
+      "status": "状态",
+      "targetDate": "目标日期"
+    },
+    "colorPicker": {
+      "change": "更改项目颜色",
+      "select": "选择颜色 {{color}}"
+    },
+    "fallbackName": "项目",
+    "toast": {
+      "archived": "“{{name}}”已归档",
+      "unarchived": "“{{name}}”已取消归档",
+      "archiveFailed": "归档项目失败",
+      "unarchiveFailed": "取消归档项目失败"
+    },
+    "breadcrumb": {
+      "projects": "项目"
+    },
+    "leftNotice": {
+      "message": "你已离开此项目。它不再显示在你的侧边栏中。",
+      "dismiss": "关闭项目成员资格提示"
+    },
+    "pausedByBudget": "因预算硬性停止而暂停",
+    "managedByPlugin": "由 {{name}} 管理",
+    "tabs": {
+      "issues": "议题",
+      "overview": "概览",
+      "pluginOperations": "插件操作",
+      "workspaces": "工作区",
+      "configuration": "配置",
+      "budget": "预算",
+      "design": "App Blueprint"
+    },
+    "workspaces": {
+      "loading": "正在加载工作区……"
+    }
+  },
+  "notFound": {
+    "breadcrumb": "未找到",
+    "companyTitle": "未找到团队",
+    "title": "未找到页面",
+    "companyDescription": "没有团队匹配前缀“{{prefix}}”。",
+    "description": "此路由不存在。",
+    "requestedPath": "请求的路径：",
+    "openDashboard": "打开仪表盘",
+    "goHome": "返回首页"
+  },
+  "capabilities": {
+    "breadcrumb": "能力",
+    "title": "能力",
+    "description": "团队已安装的能力及其分配给智能体的方式的注册表。审批流程将在后续阶段加入；此页面允许管理员查看并转换现有的分配。",
+    "manifestHeading": "清单（{{count}}）",
+    "manifestEmpty": "此团队尚未注册任何能力。后续阶段会在此处加入注册表单。",
+    "assignmentsHeading": "分配（{{count}}）",
+    "assignmentsEmpty": "暂无活跃分配。一旦将能力分配到某个范围（团队级或单个智能体），它们便会显示在此处。",
+    "scopeLabel": "范围：",
+    "scopeCompanyWide": "团队级",
+    "approving": "正在批准……",
+    "approve": "批准",
+    "statusLabel": "状态",
+    "visibilityLabel": "可见性",
+    "loadError": "加载能力失败。请重试。"
+  },
+  "search": {
+    "breadcrumb": "搜索",
+    "scope": {
+      "all": "全部",
+      "issues": "议题",
+      "comments": "评论",
+      "documents": "文档",
+      "agents": "智能体",
+      "projects": "项目"
+    },
+    "title": "搜索",
+    "inputPlaceholder": "搜索议题、评论、文档、智能体、项目……",
+    "inputAriaLabel": "搜索查询",
+    "clearAriaLabel": "清除搜索",
+    "initial": {
+      "heading": "输入以搜索团队记忆。",
+      "subheading": "议题、评论、计划文档、智能体、项目——同一界面，按相关性排序。",
+      "identifierLabel": "标识符查找：",
+      "identifierBefore": "输入",
+      "identifierAfter": "即可直接跳转到某个议题。",
+      "quotedLabel": "引号短语：",
+      "quotedText": "用引号包裹短语以精确匹配该序列。",
+      "commandKeyLabel": "⌘K：",
+      "commandKeyText": "重新打开命令面板，并预填你当前的查询。"
+    },
+    "recentSearches": "近期搜索",
+    "error": {
+      "heading": "无法执行该搜索",
+      "serverReturned": "服务器返回 {{status}}。",
+      "requestFailed": "请求失败。",
+      "body": "你的输入和筛选条件仍在此处，因此你可以重试或退回到议题筛选。",
+      "retry": "重试"
+    },
+    "openIssuesFilter": "打开议题筛选视图",
+    "loading": "正在搜索“{{query}}”……",
+    "empty": {
+      "heading": "没有“{{query}}”的结果",
+      "body": "我们在 {{scope}} 中找不到匹配项。试试扩大范围或重新表述你的查询。",
+      "searchAllScopes": "搜索所有范围",
+      "createIssue": "根据此查询创建议题",
+      "tipTokens": "尝试更少的词或单个有辨识度的词。",
+      "tipIdentifierBefore": "使用标识符快捷方式，如",
+      "tipQuotes": "用引号包裹多词短语。"
+    },
+    "results": {
+      "countSingular": "1 条结果",
+      "countPlural": "{{total}} 条结果",
+      "sortedByRelevance": "· 按相关性排序",
+      "updating": "正在更新……"
+    },
+    "subgroup": {
+      "issues": "议题",
+      "comments": "评论",
+      "documents": "文档",
+      "agents": "智能体",
+      "projects": "项目"
+    }
+  },
+  "auth": {
+    "loading": "正在加载……",
+    "error": {
+      "authenticationFailed": "鉴权失败",
+      "requiredFields": "请填写所有必填字段。"
+    },
+    "heading": {
+      "signIn": "登录 Workcell",
+      "signUp": "创建你的 Workcell 账户"
+    },
+    "subheading": {
+      "signIn": "使用你的邮箱和密码访问此实例。",
+      "signUp": "为此实例创建一个账户。v1 版本无需邮箱确认。"
+    },
+    "field": {
+      "name": "名称",
+      "email": "邮箱",
+      "password": "密码"
+    },
+    "button": {
+      "working": "处理中……",
+      "signIn": "登录",
+      "createAccount": "创建账户"
+    },
+    "toggle": {
+      "needAccount": "需要账户？",
+      "haveAccount": "已有账户？",
+      "createOne": "创建一个",
+      "signIn": "登录"
+    }
+  },
+  "cliAuth": {
+    "invalidUrl": "无效的 CLI 鉴权 URL。",
+    "loading": "正在加载 CLI 鉴权挑战……",
+    "unavailable": {
+      "title": "CLI 鉴权挑战不可用",
+      "invalidOrExpired": "挑战无效或已过期。",
+      "short": "CLI 鉴权挑战不可用。"
+    },
+    "approved": {
+      "title": "CLI 访问已批准",
+      "description": "Workcell CLI 现在可以在发起请求的机器上完成鉴权。",
+      "commandLabel": "命令："
+    },
+    "expired": {
+      "title": "CLI 鉴权挑战已过期"
+    },
+    "cancelled": {
+      "title": "CLI 鉴权挑战已取消"
+    },
+    "expiredCancelled": {
+      "description": "请在你的终端中重新启动 CLI 鉴权流程以生成新的批准请求。"
+    },
+    "signInRequired": {
+      "title": "需要登录",
+      "description": "请登录或创建账户，然后返回此页面以批准 CLI 访问请求。",
+      "cta": "登录 / 创建账户"
+    },
+    "approve": {
+      "title": "批准 Workcell CLI 访问",
+      "description": "本地 Workcell CLI 进程正在请求对此实例的看板访问权限。",
+      "command": "命令",
+      "client": "客户端",
+      "clientFallback": "workcell cli",
+      "requestedAccess": "请求的访问权限",
+      "accessInstanceAdmin": "实例管理员",
+      "accessBoard": "看板",
+      "requestedCompany": "请求的团队",
+      "updateFailed": "更新 CLI 鉴权挑战失败",
+      "requiresInstanceAdmin": "此挑战需要实例管理员权限。请用实例管理员账户登录以批准。",
+      "approving": "正在批准……",
+      "approveButton": "批准 CLI 访问",
+      "cancelling": "正在取消……",
+      "cancelButton": "取消"
+    }
+  },
+  "boardClaim": {
+    "invalidUrl": "无效的看板认领 URL。",
+    "loading": "正在加载认领挑战……",
+    "unavailable": {
+      "title": "认领挑战不可用",
+      "invalidOrExpired": "挑战无效或已过期。",
+      "short": "认领挑战不可用。"
+    },
+    "claimed": {
+      "title": "已认领看板所有权",
+      "description": "此实例现已关联到你的已鉴权用户。"
+    },
+    "openBoard": "打开看板",
+    "signInRequired": {
+      "title": "需要登录",
+      "description": "请登录或创建账户，然后返回此页面以认领看板所有权。",
+      "cta": "登录 / 创建账户"
+    },
+    "claim": {
+      "title": "认领看板所有权",
+      "description": "此操作会将你的用户提升为实例管理员，并将团队所有权访问从本地受信任模式迁移过来。",
+      "failed": "认领看板所有权失败",
+      "claiming": "正在认领……",
+      "claimButton": "认领所有权"
+    }
+  },
+  "companies": {
+    "breadcrumb": "团队",
+    "newCompany": "新建团队",
+    "loading": "正在加载团队……",
+    "editName": {
+      "save": "保存名称",
+      "cancel": "取消编辑",
+      "rename": "重命名团队"
+    },
+    "menu": {
+      "rename": "重命名",
+      "deleteCompany": "删除团队",
+      "openMenu": "团队操作"
+    },
+    "stats": {
+      "agent": "个智能体",
+      "agents": "个智能体",
+      "issue": "个议题",
+      "issues": "个议题",
+      "unlimitedBudget": "无限额预算",
+      "created": "已创建"
+    },
+    "rename": {
+      "failed": "无法重命名团队——请重试。"
+    },
+    "delete": {
+      "confirm": "删除此团队及其所有数据？此操作无法撤销。",
+      "cancel": "取消",
+      "delete": "删除",
+      "deleting": "正在删除……",
+      "failed": "无法删除团队——请重试。"
+    }
+  },
+  "joinRequestQueue": {
+    "breadcrumb": {
+      "company": "团队",
+      "inbox": "收件箱",
+      "joinRequests": "加入请求"
+    },
+    "toast": {
+      "approved": "加入请求已批准",
+      "rejected": "加入请求已拒绝"
+    },
+    "selectCompany": "选择一个团队以审查加入请求。",
+    "loading": "正在加载加入请求……",
+    "error": {
+      "forbidden": "你没有权限审查此团队的加入请求。",
+      "loadFailed": "加载加入请求失败。"
+    },
+    "title": "加入请求队列",
+    "description": "在混合收件箱信息流之外审查人类与智能体的加入请求。此队列使用与内联收件箱卡片相同的审批操作。",
+    "filters": {
+      "statusLabel": "状态",
+      "statusPending": "待审批",
+      "statusApproved": "已批准",
+      "statusRejected": "已拒绝",
+      "requestTypeLabel": "请求类型",
+      "typeAll": "全部",
+      "typeHuman": "人类",
+      "typeAgent": "智能体"
+    },
+    "empty": "没有加入请求符合当前筛选条件。",
+    "card": {
+      "unknownHuman": "未知的人类请求者",
+      "unknownAgent": "未知的智能体请求者",
+      "reject": "拒绝",
+      "approve": "批准",
+      "inviteContext": "邀请上下文",
+      "inviteMetadataUnavailable": "邀请元数据不可用",
+      "requestDetails": "请求详情",
+      "submitted": "已提交",
+      "sourceIp": "来源 IP"
+    }
+  },
+  "activity": {
+    "breadcrumb": "活动",
+    "selectCompany": "选择一个团队以查看活动。",
+    "filterByType": "按类型筛选",
+    "allTypes": "所有类型",
+    "empty": "暂无活动。"
+  },
+  "newIssueDialog": {
+    "titlePlaceholder": "议题标题",
+    "descriptionPlaceholder": "添加描述……",
+    "uploadWarningsTitle": "已创建 {{issueRef}}，但存在上传警告",
+    "uploadWarningsBody": "{{count}} 个暂存的{{noun}}无法添加。",
+    "openIssueAction": "打开 {{issueRef}}",
+    "claudeOptions": "Claude 选项",
+    "codexOptions": "Codex 选项",
+    "opencodeOptions": "OpenCode 选项",
+    "agentOptions": "智能体选项",
+    "createErrorFallback": "创建议题失败。请重试。",
+    "newSubIssue": "新建子议题",
+    "newIssue": "新建议题",
+    "forLabel": "指派给",
+    "assigneePlaceholder": "受指派者",
+    "assigneeNoneLabel": "无受指派者",
+    "assigneeSearchPlaceholder": "搜索受指派者……",
+    "assigneeEmptyMessage": "未找到受指派者。",
+    "inLabel": "在",
+    "projectPlaceholder": "项目",
+    "projectNoneLabel": "无项目",
+    "projectSearchPlaceholder": "搜索项目……",
+    "projectEmptyMessage": "未找到项目。",
+    "addReviewerOrApprover": "添加审查者或审批者",
+    "reviewer": "审查者",
+    "approver": "审批者",
+    "reviewerPlaceholder": "审查者",
+    "reviewerNoneLabel": "无审查者",
+    "reviewerSearchPlaceholder": "搜索审查者……",
+    "reviewerEmptyMessage": "未找到审查者。",
+    "approverPlaceholder": "审批者",
+    "approverNoneLabel": "无审批者",
+    "approverSearchPlaceholder": "搜索审批者……",
+    "approverEmptyMessage": "未找到审批者。",
+    "subIssueOf": "子议题归属于",
+    "executionWorkspace": "执行工作区",
+    "executionWorkspaceDescription": "控制此议题在共享工作区、新的隔离工作区还是已有工作区中运行。",
+    "chooseExistingWorkspace": "选择一个已有工作区",
+    "reusingWorkspace": "正在复用来自 {{source}} 的 {{name}}。",
+    "existingExecutionWorkspaceFallback": "已有执行工作区",
+    "parentWorkspaceWarning": "警告：此子议题将不再使用父议题工作区{{suffix}}。",
+    "modelLane": "模型通道",
+    "lanePrimary": "主要",
+    "laneCheap": "经济",
+    "laneCustom": "自定义",
+    "lanePrimaryHint": "在智能体的主模型上运行。",
+    "laneCustomHint": "仅为此议题覆盖模型与强度设置。",
+    "cheapLane": {
+      "sends": "发送",
+      "adapterDefault": "· 适配器默认",
+      "usesProfile": "· 使用智能体配置的经济档位",
+      "fallback": "· 若未配置经济档位，则回退到主模型"
+    },
+    "backlogNote": {
+      "before": "指派即意味着可执行意图——将状态保留为",
+      "middle": "仅用于刻意搁置此项。在状态变为下列值之前，受指派者不会被唤醒：",
+      "or": "或"
+    },
+    "modelLabel": "模型",
+    "defaultModelPlaceholder": "默认模型",
+    "modelSearchPlaceholder": "搜索模型……",
+    "modelEmptyMessage": "未找到模型。",
+    "thinkingEffort": "思考强度",
+    "enableChrome": "启用 Chrome（--chrome）",
+    "documents": "文档",
+    "removeDocument": "移除文档",
+    "attachments": "附件",
+    "removeAttachment": "移除附件",
+    "priority": "优先级",
+    "upload": "上传",
+    "startDate": "开始日期",
+    "dueDate": "截止日期",
+    "discardDraft": "丢弃草稿",
+    "creatingIssue": "正在创建议题……",
+    "creating": "正在创建……",
+    "createSubIssue": "创建子议题",
+    "createIssue": "创建议题"
+  },
+  "issueWorkspaceCard": {
+    "copyable": {
+      "copied": "已复制！",
+      "copy": "复制"
+    },
+    "mode": {
+      "isolatedWorkspace": "隔离工作区",
+      "operatorBranch": "操作员分支",
+      "cloudSandbox": "云沙箱",
+      "adapterManaged": "适配器托管",
+      "workspace": "工作区"
+    },
+    "configured": {
+      "isolated": "新的隔离工作区",
+      "existingIsolated": "已有隔离工作区",
+      "reuseExisting": "复用已有工作区",
+      "projectDefault": "项目默认"
+    },
+    "actions": {
+      "cancel": "取消",
+      "save": "保存",
+      "edit": "编辑"
+    },
+    "readonly": {
+      "repo": "仓库：",
+      "environmentLabel": "环境：",
+      "environmentReused": " · 已复用工作区",
+      "environmentProjectDefault": " · 项目默认",
+      "willCreateIsolated": "此议题运行时将创建一个全新的隔离工作区。",
+      "willReuse": "此议题运行时将复用一个已有工作区。",
+      "willUseProjectDefault": "此议题运行时将使用项目默认的工作区配置。",
+      "reusing": "正在复用：",
+      "viewDetails": "查看工作区详情 →",
+      "current": "当前："
+    },
+    "option": {
+      "shared": "项目默认",
+      "isolated": "新的隔离工作区",
+      "reuseExisting": "复用已有工作区",
+      "existingIsolated": "已有隔离工作区",
+      "chooseExisting": "选择一个已有工作区"
+    },
+    "environment": {
+      "noneOnReused": "已复用工作区上无环境",
+      "selectToInspect": "选择一个已有工作区以查看其环境",
+      "projectDefault": "项目默认环境",
+      "none": "无环境",
+      "lockedReused": "复用已有工作区时环境选择被锁定。下次运行将使用该工作区持久化的环境配置。",
+      "lockedChooseFirst": "请先选择一个已有工作区。其持久化的环境配置将决定下次运行。"
+    }
+  },
+  "commandPalette": {
+    "searchPlaceholder": "搜索议题、智能体、项目……",
+    "empty": {
+      "noQuickMatchesPress": "没有快速匹配的议题。按",
+      "to": "以",
+      "searchAll": "搜索全部",
+      "orKeepTyping": "或继续输入以优化。",
+      "noResults": "未找到结果。"
+    },
+    "group": {
+      "search": "搜索",
+      "actions": "操作",
+      "pages": "页面",
+      "issues": "议题",
+      "agents": "智能体",
+      "projects": "项目"
+    },
+    "searchAllFor": "搜索全部",
+    "openFullSearch": "打开完整搜索",
+    "actions": {
+      "createIssue": "创建新议题",
+      "createAgent": "创建新智能体",
+      "createProject": "创建新项目"
+    },
+    "pages": {
+      "dashboard": "仪表盘",
+      "inbox": "收件箱",
+      "issues": "议题",
+      "projects": "项目",
+      "goals": "目标",
+      "agents": "智能体",
+      "costs": "成本",
+      "activity": "活动"
+    }
+  },
+  "sidebarCompanyMenu": {
+    "reorder": "重新排序 {{name}}",
+    "trigger": {
+      "withCompany": "打开 {{name}} 工作区切换器",
+      "default": "打开工作区切换器"
+    },
+    "selectWorkspace": "选择工作区",
+    "switchWorkspace": "切换工作区",
+    "editOrder": {
+      "done": "完成",
+      "edit": "编辑"
+    },
+    "noWorkspaces": "无工作区",
+    "addCompany": "添加团队……",
+    "invitePeople": {
+      "withCompany": "邀请他人加入 {{name}}",
+      "default": "邀请他人"
+    },
+    "companySettings": "团队设置",
+    "signOut": {
+      "pending": "正在退出登录……",
+      "label": "退出登录"
+    }
+  },
+  "instanceSidebar": {
+    "heading": "实例设置",
+    "nav": {
+      "profile": "个人资料",
+      "general": "通用",
+      "access": "访问权限",
+      "heartbeats": "心跳",
+      "experimental": "实验性",
+      "plugins": "插件",
+      "adapters": "适配器"
+    }
+  },
+  "systemNotice": {
+    "defaultLabel": {
+      "notice": "系统通知",
+      "warning": "系统警告",
+      "alert": "系统警报"
+    },
+    "hideDetails": "隐藏详情",
+    "details": "详情"
+  },
+  "newAgentDialog": {
+    "clipboardUnavailableTitle": "剪贴板不可用",
+    "copyPromptManuallyBelow": "请从下方字段手动复制智能体引导提示。",
+    "inviteCreatedTitle": "智能体邀请已创建",
+    "inviteCreatedBodyCopied": "智能体引导提示已在下方准备就绪，并已复制到剪贴板。",
+    "inviteCreatedBody": "智能体引导提示已在下方准备就绪。",
+    "inviteFailedTitle": "创建智能体邀请失败",
+    "unknownError": "未知错误",
+    "headerTitle": "添加新智能体",
+    "choicesIntro": "请负责人提议添加智能体、自行配置运行时，或向外部智能体发送引导提示。",
+    "choicesIntroNoOrchestrator": "目前还没有可委派的编排者。请直接创建你的第一个智能体——你添加的第一个智能体通常就是编排者。",
+    "askOrchestratorButton": "请编排者创建一个新智能体",
+    "configureRuntimeButton": "手动配置运行时",
+    "inviteExternalButton": "邀请外部智能体",
+    "inviteExternalHint": "（OpenClaw、Hermes，或任何能调用邀请 API 的智能体。）",
+    "backButton": "返回",
+    "runtimeIntro": "选择 Workcell 应直接启动或恢复的运行时。",
+    "recommendedBadge": "推荐",
+    "inviteHeading": "邀请外部智能体",
+    "inviteDescription": "生成一次性引导提示，任何兼容的智能体都可借此请求访问、等待批准并领取其 Workcell API 密钥。",
+    "optionalMessageLabel": "给智能体的可选留言",
+    "optionalMessagePlaceholder": "补充引导上下文、预期角色或首批指令。",
+    "inviteApprovalNote": "智能体邀请会先创建一个加入请求。在智能体领取其 API 密钥之前，仍需团队管理员批准该请求。",
+    "generatingButton": "正在生成……",
+    "generatePromptButton": "生成引导提示",
+    "promptHeading": "智能体引导提示",
+    "copiedIndicator": "已复制",
+    "promptDescription": "将此提示发送给应加入此团队的外部智能体。",
+    "copyPromptManuallyAbove": "请从上方字段手动复制智能体引导提示。",
+    "copiedPromptButton": "已复制提示",
+    "copyPromptButton": "复制提示",
+    "askOrchestratorIssueTitle": "创建新智能体",
+    "askOrchestratorIssueDescription": "（在此输入你想要的智能体类型）",
+    "pairOrLabel": "或让两个智能体协作",
+    "pairButton": "设置一对结对（两个智能体）",
+    "pairHint": "两个智能体分多轮轮流协作，共同产出结果。"
+  },
+  "kanbanBoard": {
+    "column": {
+      "showMore": "再显示 {{count}} 个",
+      "showingCount": "显示 {{shown}} / {{total}}"
+    },
+    "card": {
+      "nextStep": {
+        "title": "此议题需要下一步操作",
+        "ariaLabel": "需要下一步",
+        "label": "下一步"
+      },
+      "live": "实时",
+      "ownerRole": "负责人角色：{{role}}",
+      "proof": {
+        "title": "已附上证据包——可供签核",
+        "ariaLabel": "已附证据",
+        "label": "证据"
+      },
+      "cost": {
+        "title": "已累计成本：${{amount}}"
+      },
+      "compound": {
+        "title": "由复合清单的后续项派生而来",
+        "ariaLabel": "来自复合清单",
+        "label": "复合"
+      },
+      "pair": {
+        "title": "结对协作模式（多智能体轮次）",
+        "ariaLabel": "结对模式",
+        "label": "结对"
+      }
+    }
+  },
+  "issueFiltersPopover": {
+    "trigger": {
+      "withCount": "筛选：{{count}}",
+      "label": "筛选"
+    },
+    "heading": "筛选",
+    "clear": "清除",
+    "quickFilters": "快速筛选",
+    "section": {
+      "status": "状态",
+      "priority": "优先级",
+      "assignee": "受指派者",
+      "creator": "创建者",
+      "project": "项目",
+      "labels": "标签",
+      "workspace": "工作区",
+      "visibility": "可见性"
+    },
+    "noAssignee": "无受指派者",
+    "me": "我",
+    "removeCreator": "移除创建者 {{creator}}",
+    "searchCreatorsPlaceholder": "搜索创建者……",
+    "noCreatorsMatch": "没有匹配的创建者。",
+    "liveRunsOnly": "仅实时运行",
+    "hideRoutineRuns": "隐藏例程运行"
+  },
+  "approvalCard": {
+    "requestedBy": "请求人",
+    "requestCreated": "审批请求已于 {{time}} 创建",
+    "decisionNote": "决策备注。",
+    "approving": "正在批准……",
+    "approve": "批准",
+    "rejecting": "正在拒绝……",
+    "reject": "拒绝",
+    "viewDetails": "查看详情"
+  },
+  "companySwitcher": {
+    "selectCompany": "选择团队",
+    "companies": "团队",
+    "noCompanies": "无团队",
+    "archived": "已归档",
+    "companySettings": "团队设置",
+    "manageCompanies": "管理团队"
+  },
+  "companySettingsSidebar": {
+    "company": "团队",
+    "companySettings": "团队设置"
+  },
+  "sidebarAgents": {
+    "editAgent": "编辑智能体"
+  },
+  "sidebarNavItem": {
+    "live": "{{count}} 个实时"
+  },
+  "keyboardShortcuts": {
+    "then": "然后",
+    "pressBefore": "按",
+    "pressAfter": "以关闭 · 在文本字段中快捷键被禁用",
+    "title": "键盘快捷键"
+  },
+  "layout": {
+    "skipToMain": "跳到主要内容"
+  },
+  "errorBoundary": {
+    "title": "出错了",
+    "description": "此视图遇到了意外错误。你可以重试，或重新加载页面。",
+    "retry": "重试",
+    "reload": "重新加载页面",
+    "detailsLabel": "技术详情"
+  },
+  "issueColumns": {
+    "desktopIssueRows": "桌面端议题行",
+    "resetDefaults": "重置为默认",
+    "user": "用户",
+    "subIssue": "子议题",
+    "noProject": "无项目",
+    "filterByWorkspace": "按工作区筛选"
+  },
+  "newProjectDialog": {
+    "newProject": "新建项目",
+    "repoUrl": "仓库 URL",
+    "optional": "可选",
+    "repoUrlHint": "关联一个 GitHub 仓库，使智能体能够为此项目克隆、读取并推送代码。",
+    "localFolder": "本地文件夹",
+    "localFolderHint": "设置本机上的一个绝对路径，本地智能体将在此为该项目读写文件。",
+    "addGoal": "+ 目标",
+    "goal": "目标",
+    "noGoal": "无目标",
+    "allGoalsSelected": "所有目标均已选择。",
+    "createFailed": "创建项目失败。",
+    "creating": "正在创建……",
+    "createProject": "创建项目"
+  },
+  "ui": {
+    "dialog": {
+      "close": "关闭"
+    },
+    "breadcrumb": {
+      "more": "更多"
+    }
+  },
+  "projectProperties": {
+    "saving": "正在保存",
+    "saved": "已保存",
+    "failed": "失败",
+    "noDescription": "无描述",
+    "goal": "目标",
+    "allGoalsLinked": "所有目标均已关联。",
+    "envHint": "应用于此项目中议题的所有运行。键冲突时项目值会覆盖智能体环境变量。",
+    "codebase": "代码库",
+    "codebaseHelp": "仓库标识事实来源。本地文件夹是智能体写入代码的默认位置。",
+    "repo": "仓库",
+    "changeRepo": "更改仓库",
+    "notSet": "未设置。",
+    "setRepo": "设置仓库",
+    "localFolder": "本地文件夹",
+    "managedFolder": "由 Workcell 管理的文件夹。",
+    "changeLocalFolder": "更改本地文件夹",
+    "setLocalFolder": "设置本地文件夹",
+    "legacyWorkspaces": "此项目上还存在额外的旧版工作区记录。Workcell 正在使用主工作区作为代码库视图。",
+    "noUrl": "无 URL",
+    "save": "保存",
+    "cancel": "取消",
+    "saveWorkspaceFailed": "保存工作区失败。",
+    "deleteWorkspaceFailed": "删除工作区失败。",
+    "updateWorkspaceFailed": "更新工作区失败。",
+    "executionWorkspaces": "执行工作区",
+    "executionWorkspacesHelp": "用于隔离议题检出和执行工作区行为的项目级默认设置。",
+    "enableIsolated": "启用隔离议题检出",
+    "enableIsolatedHint": "允许议题在项目主检出和隔离执行工作区之间进行选择。",
+    "enabled": "已启用",
+    "disabled": "已禁用",
+    "newIssuesIsolated": "新议题默认采用隔离检出",
+    "newIssuesIsolatedHint": "若禁用，除非有人主动选择，新议题将保留在项目主检出上。",
+    "hideAdvanced": "隐藏高级检出设置",
+    "showAdvanced": "显示高级检出设置",
+    "hostManaged": "宿主托管的实现：",
+    "gitWorktree": "Git 工作树",
+    "environment": "环境",
+    "noEnvironment": "无环境",
+    "baseRef": "基准引用",
+    "branchTemplate": "分支模板",
+    "worktreeParentDir": "工作树父目录",
+    "provisionCommand": "预配命令",
+    "teardownCommand": "拆除命令",
+    "provisionTeardownHint": "预配在智能体执行前于派生的工作树内运行。拆除命令存储在此处，供将来的清理流程使用。",
+    "dangerZone": "危险区域",
+    "archive": "归档",
+    "unarchive": "取消归档",
+    "archiveHint": "归档此项目以将其从侧边栏和项目选择器中隐藏。",
+    "unarchiveHint": "取消归档此项目以在侧边栏和项目选择器中恢复它。",
+    "archiving": "正在归档……",
+    "unarchiving": "正在取消归档……",
+    "confirmAction": "{{action}}“{{name}}”？",
+    "confirm": "确认",
+    "archiveProject": "{{action}}项目"
+  },
+  "liveUpdates": {
+    "action": {
+      "viewRef": "查看 {{ref}}",
+      "viewInbox": "查看收件箱",
+      "viewAgent": "查看智能体",
+      "viewRun": "查看运行"
+    },
+    "joinRequest": {
+      "titleAgent": "智能体想要加入",
+      "titleSomeone": "有人想要加入",
+      "body": "有一个新的加入请求正在等待批准。"
+    }
+  },
+  "routines": {
+    "composer": {
+      "assignee": {
+        "none": "无负责人",
+        "search": "搜索负责人...",
+        "empty": "未找到负责人。",
+        "placeholder": "负责人"
+      },
+      "in": "在",
+      "project": {
+        "placeholder": "项目",
+        "none": "无项目",
+        "search": "搜索项目...",
+        "empty": "未找到项目。"
+      },
+      "instructionsPlaceholder": "添加说明...",
+      "advanced": {
+        "title": "高级交付设置",
+        "subtitle": "将策略控制置于工作定义之后。"
+      },
+      "concurrency": "并发",
+      "catchUp": "补执行",
+      "footerHint": "创建后，Workcell 将直接引导您设置触发器。草稿例程保持暂停状态，直到您添加默认代理。",
+      "creating": "创建中...",
+      "createFailed": "创建例程失败",
+      "eyebrow": "新建例程",
+      "subtitle": "先定义周期性工作。默认项目和智能体对草稿例程而言是可选的。",
+      "cancel": "取消",
+      "titlePlaceholder": "例程标题",
+      "for": "针对"
+    },
+    "loadFailed": "加载例程失败",
+    "concurrencyDescriptions": {
+      "coalesce_if_active": "若已有运行中的任务，仅保留一个后续运行排队等待。",
+      "always_enqueue": "每次触发均加入队列，即使例程正在运行。",
+      "skip_if_active": "若运行仍在进行中，丢弃新的触发事件。"
+    },
+    "catchUpDescriptions": {
+      "skip_missed": "忽略调度器或例程暂停期间错过的时间窗口。",
+      "enqueue_missed_with_cap": "恢复后，以上限批次补执行错过的调度窗口。"
+    },
+    "breadcrumb": "例程",
+    "toast": {
+      "created": {
+        "title": "例程已创建",
+        "bodyReady": "添加第一个触发器，将其转化为实时工作流。",
+        "bodyDraft": "草稿已保存。请在启用自动化之前添加默认智能体。"
+      },
+      "updateFailed": {
+        "title": "更新例程失败",
+        "body": "Workcell 无法更新该例程。"
+      },
+      "runFailed": {
+        "title": "例程运行失败",
+        "body": "Workcell 无法启动该例程的运行。"
+      },
+      "defaultAgentRequired": {
+        "title": "需要默认智能体",
+        "body": "请在启用例程自动化之前设置默认智能体。"
+      }
+    },
+    "tabs": {
+      "recentRuns": "最近运行",
+      "routines": "例程"
+    },
+    "empty": {
+      "noCompany": "选择一个团队以查看例程。",
+      "noRoutines": "尚无例程。使用「创建例程」定义第一个周期性工作流。"
+    },
+    "heading": "例程",
+    "subheading": "周期性工作定义，可具体化为可审计的执行议题。",
+    "actions": {
+      "create": "创建例程"
+    },
+    "count": "{{count}} 个例程",
+    "sort": {
+      "title": "排序",
+      "label": "排序",
+      "asc": "升序",
+      "desc": "降序",
+      "options": {
+        "updated": "更新时间",
+        "created": "创建时间",
+        "lastRun": "上次运行",
+        "title": "标题"
+      }
+    },
+    "group": {
+      "title": "分组",
+      "label": "分组",
+      "options": {
+        "project": "项目",
+        "assignee": "智能体",
+        "none": "无"
+      }
+    }
+  },
+  "routineDetail": {
+    "trigger": {
+      "next": "下次：{{time}}",
+      "webhook": "Webhook",
+      "api": "API",
+      "label": "标签",
+      "schedule": "调度",
+      "signingMode": "签名模式",
+      "replayWindow": "重放窗口（秒）",
+      "last": "上次：{{result}}",
+      "rotateSecret": "轮换密钥",
+      "save": "保存触发器"
+    },
+    "dirtyFields": {
+      "title": "标题",
+      "description": "描述",
+      "project": "项目",
+      "defaultAgent": "默认代理",
+      "priority": "优先级",
+      "concurrencyPolicy": "并发策略",
+      "catchUpPolicy": "补执行策略",
+      "variables": "变量",
+      "secrets": "密钥"
+    },
+    "breadcrumb": "例程",
+    "secretBanner": {
+      "copied": "已复制 {{label}}",
+      "copyFailed": "复制 {{label}} 失败",
+      "clipboardDenied": "剪贴板访问被拒绝。",
+      "webhookCreated": "Webhook 触发器已创建",
+      "webhookRotated": "Webhook 密钥已轮换",
+      "saveHint": "请立即保存。Workcell 不会再次显示该密钥值。",
+      "entryLabel": "第 {{index}} / {{total}} 个 Webhook 触发器",
+      "webhookUrlLabel": "Webhook URL",
+      "url": "URL",
+      "webhookSecretLabel": "Webhook 密钥",
+      "secret": "密钥",
+      "webhookRestoredOne": "Webhook 触发器已恢复",
+      "webhookRestoredMany": "已恢复 {{count}} 个 Webhook 触发器"
+    },
+    "toast": {
+      "routineChanged": {
+        "title": "例程已更改",
+        "body": "其他人更新了此例程。请重新加载以查看最新版本。"
+      },
+      "saveFailed": {
+        "title": "保存例程失败",
+        "body": "Workcell 无法保存该例程。"
+      },
+      "runStarted": "例程运行已启动",
+      "runFailed": {
+        "title": "例程运行失败",
+        "body": "Workcell 无法启动例程运行。"
+      },
+      "routineSaved": "例程已保存",
+      "automationPaused": "自动化已暂停。",
+      "automationEnabled": "自动化已启用。",
+      "updateFailed": {
+        "title": "更新例程失败",
+        "body": "Workcell 无法更新该例程。"
+      },
+      "triggerAdded": {
+        "title": "触发器已添加",
+        "body": "例程调度已保存。"
+      },
+      "addTriggerFailed": {
+        "title": "添加触发器失败",
+        "body": "Workcell 无法创建触发器。"
+      },
+      "triggerSaved": {
+        "title": "触发器已保存",
+        "body": "例程节奏更新已保存。"
+      },
+      "updateTriggerFailed": {
+        "title": "更新触发器失败",
+        "body": "Workcell 无法更新触发器。"
+      },
+      "triggerDeleted": "触发器已删除",
+      "deleteTriggerFailed": {
+        "title": "删除触发器失败",
+        "body": "Workcell 无法删除触发器。"
+      },
+      "rotateSecretFailed": {
+        "title": "轮换 Webhook 密钥失败",
+        "body": "Workcell 无法轮换 Webhook 密钥。"
+      },
+      "defaultAgentRequired": {
+        "title": "需要默认代理",
+        "body": "启用例程自动化前，请先设置默认代理。"
+      }
+    },
+    "empty": {
+      "noCompany": "选择团队以查看例程。"
+    },
+    "notFound": "未找到例程",
+    "automation": {
+      "archived": "已归档",
+      "draft": "草稿",
+      "active": "活跃",
+      "paused": "已暂停",
+      "pauseAria": "暂停自动触发",
+      "enableAria": "启用自动触发"
+    },
+    "titlePlaceholder": "例程标题",
+    "managedByPlugin": "由 {{name}} 管理",
+    "conflict": {
+      "title": "版本已过期",
+      "body": "您编辑期间，此例程已被修改。请重新加载并合并最新版本后再保存。",
+      "reload": "加载最新版本"
+    },
+    "defaultAgentNotice": "需要默认代理。此例程可保留为草稿并手动运行，但在分配默认代理之前，自动化将保持暂停状态。",
+    "assignment": {
+      "for": "对象",
+      "assignee": {
+        "placeholder": "负责人",
+        "none": "无负责人",
+        "search": "搜索负责人...",
+        "empty": "未找到负责人。"
+      },
+      "in": "在",
+      "project": {
+        "placeholder": "项目",
+        "none": "无项目",
+        "search": "搜索项目...",
+        "empty": "未找到项目。"
+      }
+    },
+    "instructionsPlaceholder": "添加说明...",
+    "advanced": {
+      "title": "高级交付设置",
+      "concurrency": "并发",
+      "catchUp": "补执行"
+    },
+    "unsavedChanges": "未保存的更改",
+    "saveRoutine": "保存例程",
+    "tabs": {
+      "triggers": "触发器",
+      "runs": "运行记录",
+      "activity": "活动",
+      "secrets": "密钥",
+      "history": "历史"
+    },
+    "addTrigger": {
+      "title": "添加触发器",
+      "kind": "类型",
+      "comingSoon": " — 即将推出",
+      "schedule": "调度",
+      "signingMode": "签名模式",
+      "replayWindow": "重放窗口（秒）",
+      "adding": "添加中..."
+    },
+    "triggers": {
+      "empty": "尚未配置触发器。"
+    },
+    "runs": {
+      "empty": "暂无运行记录。"
+    },
+    "activity": {
+      "empty": "暂无活动。"
+    },
+    "secrets": {
+      "description": "例程密钥适用于此例程创建的每个问题。它们会覆盖项目和代理环境中的同名键。",
+      "reservedSuffix": "变量已被保留。"
+    },
+    "concurrencyDescriptions": {
+      "coalesce_if_active": "在活跃运行进行期间，保留一个后续运行排队等待。",
+      "always_enqueue": "每次触发均加入队列，即使多个运行堆积也不例外。",
+      "skip_if_active": "例程已在活跃运行时，丢弃重叠的触发事件。"
+    },
+    "catchUpDescriptions": {
+      "skip_missed": "忽略例程或调度器暂停期间错过的调度窗口。",
+      "enqueue_missed_with_cap": "恢复后，以上限批次补执行错过的调度窗口。"
+    },
+    "signingModeDescriptions": {
+      "bearer": "在 Authorization 头中期望共享的 Bearer 令牌。",
+      "hmac_sha256": "使用共享密钥对请求进行 HMAC SHA-256 签名验证。",
+      "github_hmac": "接受 GitHub 风格的 X-Hub-Signature-256 头（对原始请求体的 HMAC，无时间戳）。",
+      "none": "无身份验证 — Webhook URL 本身充当共享密钥。"
+    }
+  },
+  "costs": {
+    "breadcrumb": "费用",
+    "emptyNoCompany": "选择团队以查看费用。",
+    "title": "费用",
+    "subtitle": "推理支出、平台费用、积分及实时配额窗口。",
+    "dateRange": {
+      "to": "至"
+    },
+    "tabs": {
+      "overview": "概览",
+      "budgets": "预算",
+      "providers": "提供商",
+      "billers": "账单方",
+      "finance": "财务"
+    },
+    "selectDatePrompt": "选择开始和结束日期以加载数据。",
+    "metrics": {
+      "inferenceSpend": {
+        "label": "推理支出",
+        "subtitle": "{{tokens}} 个令牌，涵盖请求范围内的事件"
+      },
+      "budget": {
+        "label": "预算",
+        "open": "开放",
+        "pausedSubtitle": "{{agents}} 个代理已暂停 · {{projects}} 个项目已暂停",
+        "utilizationSubtitle": "{{spend}} / {{budget}}",
+        "noCapSubtitle": "未配置月度上限"
+      },
+      "financeNet": {
+        "label": "财务净额",
+        "subtitle": "{{debits}} 笔借记 · {{credits}} 笔贷记"
+      },
+      "financeEvents": {
+        "label": "财务事件",
+        "subtitle": "范围内预计 {{estimated}} 笔"
+      }
+    },
+    "overview": {
+      "inferenceLedger": {
+        "title": "推理账本",
+        "description": "所选时段的请求范围推理支出。"
+      },
+      "budgetAmount": "预算 {{budget}}",
+      "unlimitedBudget": "无限预算",
+      "usage": "使用量",
+      "utilizationConsumed": "此范围内已消耗月度预算的 {{percent}}%。",
+      "byAgent": {
+        "title": "按代理",
+        "description": "各代理在所选时段的消耗情况。",
+        "empty": "暂无费用事件。",
+        "inOut": "输入 {{input}} · 输出 {{output}}",
+        "apiRuns": "{{count}} 次 API",
+        "subscriptionRuns": "{{count}} 次订阅",
+        "deletedAgent": "已删除的代理"
+      },
+      "byProject": {
+        "title": "按项目",
+        "description": "通过项目关联问题归因的运行费用。",
+        "empty": "暂无项目归因的运行费用。",
+        "unattributed": "未归因"
+      },
+      "financeTimelineEmpty": "暂无财务事件。在账单方发票或积分到账后添加账户级别费用。"
+    },
+    "budgets": {
+      "controlPlane": {
+        "title": "预算控制面板",
+        "description": "代理和项目的硬性支出限额。提供商订阅配额单独管理，显示在「提供商」标签下。"
+      },
+      "metrics": {
+        "activeIncidents": {
+          "label": "活跃事件",
+          "subtitle": "未解决的软阈值或硬阈值超标"
+        },
+        "pendingApprovals": {
+          "label": "待审批",
+          "subtitle": "等待委员会处理的预算超额审批"
+        },
+        "pausedAgents": {
+          "label": "已暂停代理",
+          "subtitle": "因预算阻止的代理心跳"
+        },
+        "pausedProjects": {
+          "label": "已暂停项目",
+          "subtitle": "因预算阻止的项目执行"
+        }
+      },
+      "activeIncidents": {
+        "heading": "活跃事件",
+        "description": "通过提高预算或明确保持范围暂停来解决硬性停止问题。"
+      },
+      "scopeHeading": "{{scope}} 预算",
+      "scopeDescription": {
+        "company": "团队级别的月度策略。",
+        "agent": "各代理的每月重复支出策略。",
+        "project": "执行绑定项目的生命周期支出策略。"
+      },
+      "noPolicies": "暂无预算策略。请从各详情页面设置代理和项目预算，或使用现有的团队月度预算控制。"
+    },
+    "providers": {
+      "allProviders": "所有提供商",
+      "empty": "此时段内无费用事件。"
+    },
+    "billers": {
+      "allBillers": "所有账单方",
+      "empty": "此时段内无计费事件。"
+    },
+    "finance": {
+      "ledgerTitle": "财务账本",
+      "ledgerDescription": "不映射到单个推理请求的账户级别费用。",
+      "debits": {
+        "label": "借记",
+        "subtitle_one": "范围内共 {{count}} 个事件",
+        "subtitle_other": "范围内共 {{count}} 个事件"
+      },
+      "credits": {
+        "label": "贷记",
+        "subtitle": "退款、抵扣及积分返还"
+      },
+      "net": {
+        "label": "净额",
+        "subtitle": "所选时段的借记减贷记"
+      },
+      "estimated": {
+        "label": "预估",
+        "subtitle": "尚未具备发票权威性的预估借记"
+      },
+      "byBiller": {
+        "title": "按账单方",
+        "description": "按收费或贷记方分组的账户级财务事件。",
+        "empty": "暂无财务事件。"
+      }
+    }
+  },
+  "org": {
+    "breadcrumb": "组织架构图",
+    "emptyNoCompany": "选择团队以查看组织架构图。",
+    "emptyNoAgents": "组织中没有代理。创建代理以构建您的组织架构图。"
+  },
+  "orgChart": {
+    "breadcrumb": "组织架构图",
+    "emptyNoCompany": "选择团队以查看组织架构图。",
+    "emptyNoHierarchy": "未定义组织层级。",
+    "importCompany": "导入团队",
+    "exportCompany": "导出团队",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "fitToScreen": "适应屏幕",
+    "fitChartToScreen": "将图表适应屏幕",
+    "loadError": "加载组织架构图失败。请重试。"
+  },
+  "workspaces": {
+    "breadcrumb": "工作区",
+    "heading": "工作区",
+    "emptyNoActivity": "暂无工作区活动。",
+    "workspaceCount_one": "{{count}} 个工作区",
+    "workspaceCount_other": "{{count}} 个工作区"
+  },
+  "secrets": {
+    "breadcrumb": "密钥",
+    "toast": {
+      "secretCreated": "密钥已创建",
+      "rotated": "已轮换",
+      "statusUpdateFailed": "状态更新失败",
+      "secretDeleted": "密钥已删除",
+      "deleteFailed": "删除失败",
+      "providerVaultUpdated": "提供商密钥库已更新",
+      "providerVaultCreated": "提供商密钥库已创建",
+      "providerVaultDisabled": "提供商密钥库已禁用",
+      "disableFailed": "禁用失败",
+      "providerVaultRemoved": "提供商密钥库已移除",
+      "removeFailed": "移除失败",
+      "defaultVaultSet": "默认密钥库已设置",
+      "defaultUpdateFailed": "默认值更新失败",
+      "healthChecked": "健康检查已完成",
+      "healthCheckFailed": "健康检查失败",
+      "tryAgain": "重试"
+    },
+    "selectCompany": "选择团队以管理密钥。",
+    "title": "密钥",
+    "tab": {
+      "secrets": "密钥",
+      "vaults": "提供商密钥库"
+    },
+    "searchPlaceholder": "按名称、键、引用搜索",
+    "searchAriaLabel": "搜索密钥",
+    "newSecret": "新建密钥",
+    "loadError": "加载密钥失败：",
+    "retry": "重试",
+    "emptyMessage": "暂无密钥。创建您的第一个托管密钥或链接外部引用。",
+    "noMatch": "没有符合筛选条件的密钥。",
+    "table": {
+      "name": "名称",
+      "mode": "模式",
+      "provider": "提供商",
+      "status": "状态",
+      "version": "版本",
+      "lastRotated": "上次轮换",
+      "lastResolved": "上次解析",
+      "references": "引用",
+      "reference": "引用"
+    },
+    "viewReferencesFor": "查看 {{name}} 的引用",
+    "owned": "已托管",
+    "open": "打开",
+    "updateReference": "更新引用",
+    "updateValue": "更新值",
+    "disable": "禁用",
+    "activate": "启用",
+    "unarchive": "取消归档",
+    "archive": "归档",
+    "delete": "删除",
+    "detailTab": {
+      "details": "详情",
+      "usageCount": "使用情况（{{count}}）",
+      "usage": "使用情况",
+      "events": "访问事件"
+    },
+    "references": {
+      "title": "密钥引用",
+      "summary": "{{name}} 被 {{count}} 个 {{places}} 引用。"
+    },
+    "create": {
+      "title": "创建密钥",
+      "description": "选择 Workcell 是否托管未来的提供商写入，还是仅在运行时解析现有提供商引用。",
+      "managedTab": "托管值",
+      "externalTab": "外部引用",
+      "nameLabel": "名称",
+      "keyLabel": "键",
+      "keyPlaceholder": "根据名称自动生成",
+      "providerLabel": "提供商",
+      "providerNotConfigured": "（未配置）",
+      "providerExternalOnly": "（仅外部）",
+      "deploymentLevelHint": "现有部署级别的提供商设置仍可用于向后兼容。",
+      "managedInfo": "Workcell 托管的密钥在所选提供商中创建，后续轮换将通过 Workcell 写入新的提供商版本。",
+      "awsManagedPath": "AWS 托管路径：",
+      "valueLabel": "值",
+      "valuePlaceholder": "仅存储一次，不再显示",
+      "externalRefLabel": "外部引用",
+      "externalRefHint": "现有提供商密钥在 Workcell 中仅可解析。请在提供商中轮换值，仅当路径、ARN 或版本发生变化时才更新此引用。",
+      "descriptionLabel": "描述",
+      "descriptionPlaceholder": "此密钥的用途是什么？（请勿填写值）",
+      "submitManaged": "创建密钥",
+      "submitExternal": "链接引用"
+    },
+    "optional": "（可选）",
+    "providerVault": "提供商密钥库",
+    "deploymentDefault": "部署默认值",
+    "defaultSuffix": "（默认）",
+    "cancel": "取消",
+    "vault": {
+      "editTitle": "编辑提供商密钥库",
+      "createTitle": "创建提供商密钥库",
+      "description": "仅保存非敏感的路由元数据。凭据保留在运行时环境或提供商身份中。",
+      "providerLabel": "提供商",
+      "displayNameLabel": "显示名称",
+      "displayNamePlaceholder": "生产本地密钥库",
+      "statusLabel": "状态",
+      "statusReady": "就绪",
+      "statusWarning": "警告",
+      "statusComingSoon": "即将上线",
+      "statusDisabled": "已禁用",
+      "defaultFor": "{{provider}} 的默认值",
+      "comingSoonNote": "此提供商可保存草稿路由元数据，但在提供商模块实现并审核完成之前，运行时写入和解析功能仍不可用。",
+      "saveButton": "保存密钥库",
+      "createButton": "创建密钥库"
+    },
+    "rotate": {
+      "titleExternal": "更新外部引用",
+      "titleManaged": "更新密钥值",
+      "descriptionExternal": "创建指向现有提供商密钥的新 Workcell 元数据版本。Workcell 不会写入新的提供商值。",
+      "descriptionManaged": "创建新的提供商支持版本。固定到最新版本的消费者将在下次运行时获取新值。",
+      "deploymentDefaultHint": "使用部署默认值轮换可保留当前的回退行为。",
+      "externalRefLabel": "外部引用",
+      "externalRefPlaceholder": "更新后的引用",
+      "externalRefHint": "在更改此 Workcell 引用之前，请先在提供商中轮换实际值。",
+      "newValueLabel": "新值",
+      "newValuePlaceholder": "粘贴新值"
+    },
+    "deleteDialog": {
+      "title": "删除密钥",
+      "before": "永久删除",
+      "after": "。活动绑定将失效，直到您重新映射。"
+    },
+    "removeVault": {
+      "title": "移除提供商密钥库",
+      "before": "移除",
+      "fromWorkcell": "仅从 Workcell 中移除。",
+      "noDeleteAws": "此操作不会删除远程 AWS Secrets Manager 密钥库、密钥或任何 AWS 数据。",
+      "noDeleteGeneric": "此操作不会删除任何远程提供商数据。",
+      "loseAssociation": "使用此密钥库的密钥将失去关联，直到您分配另一个密钥库。",
+      "confirmButton": "从 Workcell 中移除"
+    },
+    "howTo": {
+      "heading": "通过将密钥绑定到运行时环境变量来使用密钥。",
+      "body1Before": "在此处创建或链接密钥，然后打开代理的环境变量或项目的 Env 字段。添加进程所需的 env 键，例如",
+      "body1Choose": "，选择",
+      "secretWord": "密钥",
+      "body1After": "，然后选择存储的密钥版本。",
+      "body2": "Workcell 在运行开始时在服务端解析该值，并将其作为环境变量注入。项目环境变量适用于项目中的每个任务，并在匹配的键上覆盖代理环境变量。"
+    },
+    "filters": {
+      "statusActive": "活跃",
+      "statusAll": "所有状态",
+      "statusDisabled": "已禁用",
+      "statusArchived": "已归档",
+      "titleActive": "筛选条件：{{count}}",
+      "title": "筛选",
+      "heading": "筛选条件",
+      "clear": "清除",
+      "statusGroup": "状态",
+      "providerGroup": "提供商",
+      "allProviders": "所有提供商"
+    },
+    "inlineWarning": {
+      "defaultVault": "默认密钥库",
+      "vault": "密钥库"
+    },
+    "import": {
+      "disabledTitle": "配置 AWS 提供商密钥库以启用远程导入",
+      "disabledLabel": "AWS 密钥库已禁用 — 管理",
+      "button": "从密钥库导入"
+    },
+    "vaults": {
+      "loading": "正在加载提供商密钥库",
+      "loadError": "加载提供商密钥库失败：",
+      "comingSoon": "即将上线",
+      "addVault": "添加密钥库",
+      "notSupported": "暂不支持。",
+      "empty": "暂无团队专属密钥库。密钥仍可使用部署默认提供商设置。"
+    },
+    "card": {
+      "default": "默认",
+      "healthPrefix": "健康状态",
+      "healthNotChecked": "未检查健康状态",
+      "checkHealth": "检查健康状态",
+      "makeDefault": "设为默认",
+      "remove": "移除"
+    },
+    "fields": {
+      "backupReminder": "我了解备份和恢复需要同时使用数据库元数据和本地加密主密钥文件。",
+      "awsRegion": "AWS 区域",
+      "namespace": "命名空间",
+      "secretNamePrefix": "密钥名称前缀",
+      "kmsKeyId": "KMS 密钥 ID",
+      "ownerTag": "所有者标签",
+      "environmentTag": "环境标签",
+      "projectId": "项目 ID",
+      "location": "位置",
+      "address": "地址",
+      "mountPath": "挂载路径",
+      "secretPathPrefix": "密钥路径前缀"
+    },
+    "discovery": {
+      "title": "AWS 发现",
+      "description": "使用当前草稿路由字段检查 AWS Secrets Manager 元数据。不会读取值。",
+      "findButton": "查找现有 AWS 值",
+      "enterRegion": "请在发现前输入 AWS 区域。",
+      "searching": "正在搜索 AWS Secrets Manager 元数据",
+      "noCandidates": "未找到 AWS 密钥库元数据候选项。仍可手动输入。",
+      "noStableNamespace": "未检测到稳定的命名空间或前缀",
+      "useValues": "使用这些值"
+    },
+    "optionalSuffix": "（可选）",
+    "details": {
+      "description": "描述",
+      "custody": "托管方",
+      "provider": "提供商",
+      "providerVault": "提供商密钥库",
+      "latestVersion": "最新版本",
+      "created": "创建时间",
+      "updated": "更新时间",
+      "lastRotated": "上次轮换",
+      "lastResolved": "上次解析",
+      "linkedReference": "已链接的提供商引用",
+      "managedPath": "提供商托管路径",
+      "neverRedisplays": "Workcell 不会再次显示已存储的值。"
+    },
+    "loading": "加载中…",
+    "usage": {
+      "empty": "暂无活动绑定。在代理、项目、环境或插件配置中添加此密钥以开始使用。",
+      "required": "· 必填",
+      "optional": "· 可选"
+    },
+    "events": {
+      "empty": "暂无访问事件记录。每次运行时解析都会在此处写入一条脱敏记录。"
+    }
+  },
+  "issueProperties": {
+    "scheduledRetry": {
+      "alreadyPromotedRunStarting": "已提前触发 — 运行即将开始",
+      "promotedRunStarting": "已提前 — 运行即将开始",
+      "pullsContinuationForward": "立即提前继续执行",
+      "pullsRetryForward": "立即提前重试",
+      "pendingSchedule": "待排程",
+      "actionContinuation": "继续",
+      "actionRetry": "重试",
+      "actionDueNow": "{{action}}现已到期",
+      "actionRelative": "{{action}} {{relative}}",
+      "scheduledContinuation": "已排程的继续",
+      "scheduledRetry": "已排程的重试",
+      "reason": "原因",
+      "nextAttempt": "下次尝试",
+      "replacesRun": "替换运行",
+      "agent": "代理",
+      "lastError": "上次错误",
+      "retrying": "重试中…",
+      "alreadyPromoted": "已提升",
+      "promoted": "已提升",
+      "retryNow": "立即重试",
+      "promotingScheduledRetry": "正在提升已排程的重试"
+    },
+    "labels": {
+      "noLabels": "无标签",
+      "addLabel": "添加标签",
+      "searchLabels": "搜索标签...",
+      "newLabel": "新建标签",
+      "creating": "创建中…",
+      "createLabel": "创建标签"
+    },
+    "assignee": {
+      "unassigned": "未分配",
+      "noAssignee": "无负责人",
+      "assignToMe": "分配给我",
+      "assignToNamed": "分配给 {{name}}",
+      "assignToRequester": "分配给请求者",
+      "searchPlaceholder": "搜索负责人...",
+      "pairOption": "协作（双代理）"
+    },
+    "participants": {
+      "searchReviewers": "搜索评审人...",
+      "searchApprovers": "搜索审批人...",
+      "noReviewers": "无评审人",
+      "noApprovers": "无审批人",
+      "requester": "请求者"
+    },
+    "project": {
+      "noProject": "无项目",
+      "searchPlaceholder": "搜索项目..."
+    },
+    "parent": {
+      "noParent": "无父级"
+    },
+    "blockedBy": {
+      "searchAria": "搜索要添加为阻塞项的议题",
+      "noBlockers": "无阻塞项",
+      "searching": "正在搜索议题...",
+      "noMatching": "无匹配议题。",
+      "addBlocker": "添加阻塞项"
+    },
+    "row": {
+      "status": "状态",
+      "priority": "优先级",
+      "labels": "标签",
+      "assignee": "负责人",
+      "model": "模型",
+      "project": "项目",
+      "parent": "父级",
+      "blockedBy": "被阻塞于",
+      "blocking": "阻塞中",
+      "subIssues": "子议题",
+      "relatedTasks": "相关任务",
+      "reviewers": "评审人",
+      "approvers": "审批人",
+      "execution": "执行",
+      "scheduledRetry": "计划重试",
+      "monitor": "监控",
+      "depth": "深度",
+      "service": "服务",
+      "workspace": "工作区",
+      "branch": "分支",
+      "folder": "文件夹",
+      "createdBy": "创建者",
+      "started": "开始时间",
+      "completed": "完成时间",
+      "created": "创建时间",
+      "updated": "更新时间"
+    },
+    "none": "无",
+    "user": "用户",
+    "cheapLane": {
+      "sends": "发送",
+      "adapterDefault": "· 适配器默认值",
+      "usesProfile": "· 使用代理配置的低成本配置文件",
+      "fallback": "· 若未配置低成本配置文件，则回退到主模型"
+    },
+    "searchIssues": "搜索 issue...",
+    "runReviewNow": "立即运行审查",
+    "runApprovalNow": "立即运行审批",
+    "attempt": "第 {{count}} 次尝试",
+    "addSubIssue": "添加子 issue",
+    "viewWorkspace": "查看工作区",
+    "copyable": {
+      "copied": "已复制！",
+      "clickToCopy": "点击复制"
+    },
+    "blocker": {
+      "removeAria": "移除 {{label}} 作为阻塞项",
+      "issueAria": "Issue {{label}}：{{title}}",
+      "removeTitle": "移除阻塞项？",
+      "removeDescription": "移除 {{label}} 作为此 issue 的阻塞项。",
+      "cancel": "取消",
+      "removeConfirm": "移除阻塞项"
+    },
+    "model": {
+      "cheapModel": "低成本模型",
+      "chrome": "Chrome",
+      "custom": "自定义",
+      "customAdapterOptions": " 适配器选项",
+      "primaryModel": "主模型",
+      "modelLane": "模型通道",
+      "lanePrimary": "主要",
+      "laneCheap": "低成本",
+      "laneCustom": "自定义",
+      "model": "模型",
+      "defaultModel": "默认模型",
+      "searchModels": "搜索模型...",
+      "noModelsFound": "未找到模型。",
+      "thinkingEffort": "思考强度",
+      "enableChrome": "启用 Chrome（--chrome）",
+      "noEditableOverrides": "此受理人的适配器未提供可编辑的 issue 覆盖项。",
+      "selectCompatibleAgent": "选择一个兼容的代理受理人以编辑这些覆盖项。",
+      "clearAdapterOptions": "清除适配器选项"
+    },
+    "execution": {
+      "review": "审查",
+      "approval": "审批",
+      "changesRequestedBy": "{{participant}} 在{{stage}}阶段请求了修改",
+      "changesRequested": "{{stage}}阶段已请求修改",
+      "pendingWith": "{{stage}}阶段待 {{participant}} 处理",
+      "pending": "{{stage}}阶段待处理"
+    },
+    "monitor": {
+      "nextCheck": "下次检查 {{when}}",
+      "cleared": "已清除",
+      "lastTriggered": "上次触发 {{when}}",
+      "notScheduled": "未排程",
+      "notesPlaceholder": "代理应重新检查什么？",
+      "externalServicePlaceholder": "外部服务",
+      "schedule": "排程",
+      "clear": "清除"
+    }
+  },
+  "devRestartBanner": {
+    "relativeTime": {
+      "justNow": "刚刚",
+      "minutesAgo": "{{count}} 分钟前",
+      "hoursAgo": "{{count}} 小时前",
+      "daysAgo": "{{count}} 天前"
+    },
+    "reason": {
+      "backendChangesAndPendingMigrations": "后端文件已更改且存在待处理的迁移",
+      "pendingMigrations": "待处理的迁移需要重新启动",
+      "backendChanges": "服务器启动后后端文件已更改"
+    },
+    "confirm": {
+      "withRuns": "现在重启 Workcell？这可能会中断 {{runs}}。",
+      "simple": "现在重启 Workcell？"
+    },
+    "error": {
+      "requestFailed": "重启请求失败"
+    },
+    "title": "需要重启",
+    "autoRestartOn": "自动重启已开启",
+    "updatedSuffix": " · 更新于 {{changedAt}}",
+    "changedLabel": "已更改：",
+    "pendingMigrationsLabel": "待处理的迁移：",
+    "moreSuffix": " +{{count}} 项",
+    "waitingForRuns": "等待 {{runs}} 完成",
+    "autoRestartIdle": "实例空闲时将自动触发重启",
+    "manualRestartPrefix": "重启",
+    "manualRestartSuffix": "在活跃工作可以安全中断之后",
+    "button": {
+      "requested": "已请求重启",
+      "restartNow": "立即重启"
+    }
+  },
+  "issueBlockedNotice": {
+    "recoveryLabel": {
+      "needed": "需要恢复",
+      "in_progress": "恢复中",
+      "observe_only": "观察活跃运行",
+      "escalated": "恢复已升级"
+    },
+    "recoveryTitle": "{{label}} — 打开源议题以执行操作。",
+    "scheduleDueNow": "现在到期",
+    "scheduleRelative": "计划于 {{relative}}",
+    "scheduled": "已计划",
+    "correctiveWake": "纠正性唤醒 {{schedule}}。立即重试将直接进入相同的恢复路径。",
+    "retrying": "重试中...",
+    "alreadyPromoted": "已提前触发",
+    "promoted": "已提前",
+    "retryNow": "立即重试",
+    "blockerLabelSingular": "关联议题",
+    "blockerLabelPlural": "关联议题",
+    "needsNextStep": "此议题仍需下一步操作。",
+    "runFinishedPrefix": "某次运行已成功完成，但此议题仍处于开放状态，位于",
+    "runFinishedSuffix": "下一步操作没有明确负责人。",
+    "optionMarkDone": "将其标记为已完成或已取消。",
+    "optionReview": "提交审核或请求意见。",
+    "optionBlocked": "标记为被阻塞并指定阻塞负责人。",
+    "optionDelegate": "委派后续工作或排队继续执行。",
+    "correctiveWakeQueued": "已为 {{assignee}} 排队纠正性唤醒",
+    "assigneeFallback": "负责人",
+    "detectedProgress": "检测到进展：{{summary}}",
+    "blockedStalledPlural": "此议题的工作被 {{blockerLabel}} 阻塞，但审核链停滞且没有明确的下一步。请解决以下停滞的审核或将其从阻塞项中移除。",
+    "blockedStalledSingular": "此议题的工作被 {{blockerLabel}} 阻塞，但审核链停滞且没有明确的下一步。请解决以下停滞的审核或将其从阻塞项中移除。",
+    "blockedUntilComplete": "此议题的工作被 {{blockerLabel}} 阻塞，直到 {{completion}} 完成。评论仍会唤醒负责人以处理问题或分类。",
+    "completionSingular": "其",
+    "completionPlural": "它们",
+    "blockedMovedBack": "此议题的工作被阻塞，直到其移回待办状态。评论仍会唤醒负责人以处理问题或分类。",
+    "stalledInReview": "审核停滞",
+    "ultimatelyWaitingOn": "最终等待",
+    "blockedByParkedWork": "被暂停工作阻塞"
+  },
+  "issueRecoveryActionCard": {
+    "outcomeLabel": {
+      "restored": "已恢复",
+      "delegated": "已委派跟进",
+      "false_positive": "误报",
+      "blocked": "已阻塞",
+      "escalated": "已升级",
+      "cancelled": "已取消"
+    },
+    "headlineResolved": "恢复已解决为 {{outcome}}。",
+    "kindHeadline": {
+      "missing_disposition": "此议题的运行已完成，但未选择下一步操作。",
+      "stranded_assigned_issue": "Workcell 重试了此议题的最后一次运行，但仍无可用的执行路径。",
+      "active_run_watchdog": "活跃运行已无响应。恢复正在观察但不中断它。",
+      "issue_graph_liveness": "Workcell 检测到此议题失去了活跃的操作路径。恢复负责人需要采取行动。"
+    },
+    "ariaState": {
+      "needed": "需要",
+      "inProgress": "进行中",
+      "observeOnly": "观察活跃运行",
+      "escalated": "已升级",
+      "resolved": "已解决"
+    },
+    "sectionAriaLabel": "恢复操作：{{state}}",
+    "stateLabel": {
+      "needed": "需要恢复",
+      "in_progress": "恢复中",
+      "observe_only": "观察活跃运行",
+      "escalated": "恢复已升级",
+      "resolved": "恢复已解决"
+    },
+    "kindLabel": {
+      "missing_disposition": "缺失处置",
+      "stranded_assigned_issue": "搁置议题",
+      "active_run_watchdog": "活跃监控",
+      "issue_graph_liveness": "图存活性"
+    },
+    "metaOwner": "负责人",
+    "ownerRecovery": "恢复：",
+    "ownerBoard": "看板",
+    "ownerUser": "用户 {{id}}",
+    "ownerSystem": "系统",
+    "ownerUnassigned": "未分配 — 选择一人以唤醒",
+    "returnsTo": "→ 返回至：",
+    "metaSourceRun": "源运行",
+    "metaCorrectiveRun": "纠正运行",
+    "metaEvidence": "证据",
+    "metaNextAction": "下一步操作",
+    "metaWake": "唤醒",
+    "attemptOf": "第 {{attempt}} / {{max}} 次尝试",
+    "timesOut": "{{time}} 超时",
+    "timesOutSoon": "即将",
+    "metaResolution": "解决方案",
+    "resolvedAs": "解决为 {{outcome}}",
+    "resolveAriaLabel": "解决恢复",
+    "resolveTrigger": "解决…",
+    "resolveHeading": "解决恢复",
+    "resolveOption": {
+      "todo": {
+        "label": "重试",
+        "description": "关闭恢复并将源议题返回待办。"
+      },
+      "done": {
+        "label": "标记议题已完成",
+        "description": "通过将请求的工作记录为已完成来恢复。"
+      },
+      "in_review": {
+        "label": "提交审核",
+        "description": "移交给评审人并建立真实的审核路径。"
+      },
+      "false_positive_done": {
+        "label": "误报，已完成",
+        "description": "关闭恢复并将源议题标记为已完成。"
+      },
+      "false_positive_in_review": {
+        "label": "误报，审核",
+        "description": "关闭恢复并将源议题提交审核。"
+      }
+    },
+    "observeHint": "恢复正在观察，不中断活跃运行。",
+    "stayOpenHint": "卡片保持开放，直到记录明确的决定。"
+  },
+  "issueScheduledRetryCard": {
+    "badgeContinuation": "已计划继续",
+    "badgeRetry": "已计划重试",
+    "titleActionContinuation": "自动继续",
+    "titleActionRetry": "自动重试",
+    "suffixDueNow": "现在到期",
+    "suffixPending": "等待计划",
+    "title": "{{action}} {{suffix}}",
+    "helperIdleContinuation": "立即提前继续执行",
+    "helperIdleRetry": "立即提前重试",
+    "attempt": "第 {{count}} 次尝试",
+    "replacesRun": "替换运行",
+    "lastAttemptFailed": "上次尝试失败：{{error}}。Workcell 将自动重试。",
+    "retrying": "重试中…",
+    "alreadyPromoted": "已提前触发",
+    "promoted": "已提前",
+    "retryNow": "立即重试",
+    "helperPromoting": "正在提前计划重试",
+    "helperAlreadyPromoted": "已提前触发 — 运行即将开始",
+    "helperPromoted": "已提前 — 运行即将开始",
+    "errorTitle": "无法立即重试",
+    "tryAgain": "再试一次"
+  },
+  "issueContinuationHandoff": {
+    "titleFallback": "继续交接",
+    "collapseAriaLabel": "折叠继续交接",
+    "expandAriaLabel": "展开继续交接",
+    "badge": "交接",
+    "updated": "更新于 {{time}}",
+    "revisionSuffix": " - 修订版 {{revision}}",
+    "copied": "已复制",
+    "copy": "复制"
+  },
+  "issueAssignedBacklogNotice": {
+    "assigneeFallback": "负责人",
+    "parked": "已暂停",
+    "notWokenPrefix": " 在状态更改为 ",
+    "or": " 或 ",
+    "commentsHint": "评论仍会唤醒负责人以处理问题或分类。仅在工作有意暂停时保持此状态。",
+    "resuming": "恢复中…",
+    "resumeNow": "立即恢复"
+  },
+  "issueMonitorActivityCard": {
+    "scheduledTitle": "监控已计划",
+    "nextCheck": "下次检查 {{absolute}}（{{relative}}）",
+    "attempt": "第 {{count}} 次尝试",
+    "checking": "检查中...",
+    "checkNow": "立即检查"
+  },
+  "issueSiblingNavigation": {
+    "navAriaLabel": "子议题导航",
+    "previousLabel": "上一个",
+    "nextLabel": "下一个",
+    "previousAriaDirection": "上一个子议题",
+    "nextAriaDirection": "下一个子议题",
+    "linkAriaLabel": "{{ariaDirection}}：{{identifier}} - {{title}}"
+  },
+  "activeAgentsPanel": {
+    "title": "代理",
+    "emptyMessage": "暂无最近的代理运行记录。",
+    "recoveryChip": {
+      "title": "{{label}} — 打开源议题以执行操作。"
+    },
+    "runCard": {
+      "liveNow": "正在运行",
+      "finished": "完成于 {{time}}",
+      "started": "开始于 {{time}}"
+    }
+  },
+  "workspaceRuntimeControls": {
+    "action": {
+      "run": "运行",
+      "start": "启动",
+      "stop": "停止",
+      "restart": "重启"
+    },
+    "servicesEmpty": "此工作区未配置任何服务。",
+    "jobsEmpty": "此工作区未配置任何一次性任务。",
+    "heading": "工作区命令",
+    "servicesRunning": "{{count}} 个服务运行中",
+    "noServicesRunning": "无服务运行中",
+    "commandsIndependent": "每个命令可独立控制。",
+    "servicesTitle": "服务",
+    "servicesDescription": "Workcell 可为此工作区监督的长期运行命令。",
+    "jobsTitle": "任务",
+    "jobsDescription": "立即运行并在完成后退出的一次性命令。",
+    "untrackedTitle": "未跟踪的服务",
+    "untrackedDescription": "不再匹配当前工作区命令配置的运行中服务。",
+    "port": "端口 {{port}}"
+  },
+  "blockedInboxView": {
+    "error": {
+      "title": "无法加载「已阻塞」标签页。",
+      "body": "其他收件箱标签页仍可正常使用。{{message}}",
+      "retrying": "尝试中…",
+      "retry": "重试"
+    },
+    "empty": {
+      "title": "没有停止的工作。",
+      "description": "需要决策、恢复或外部操作的议题将显示在此处。"
+    },
+    "noSearchResults": "没有符合搜索条件的停止项。"
+  },
+  "runInvocationCard": {
+    "heading": "调用",
+    "adapterLabel": "适配器：",
+    "workingDirLabel": "工作目录：",
+    "details": "详情",
+    "commandLabel": "命令：",
+    "commandNotes": "命令备注",
+    "prompt": "提示词",
+    "context": "上下文",
+    "environment": "环境"
+  },
+  "issueRunLedger": {
+    "sectionLabel": "议题运行台账",
+    "title": "运行台账",
+    "forRecoveryContext": "用于恢复上下文。",
+    "retryOf": "重试自",
+    "olderItemsNotShown": "{{count}} 条较早记录未显示",
+    "waitingFirstRun": "等待第一条运行记录。",
+    "noRunsLinked": "暂无关联运行。",
+    "latestRun": "最新运行",
+    "childWork": "子任务",
+    "watchdog": {
+      "staleAlert": "过期运行看门狗警报",
+      "silenceWarning": "输出静默看门狗警告",
+      "extendedPeriod": "较长时间",
+      "continue": "继续监控",
+      "snooze": "暂停提醒 1 小时",
+      "falsePositive": "标记为误报"
+    },
+    "empty": {
+      "withActivity": "此议题有历史记录后，运行和活动将在此显示。",
+      "runsOnly": "关联到此议题后，不含实时元数据的历史运行记录将在此显示。"
+    },
+    "run": {
+      "label": "运行",
+      "byAgent": "由 {{name}}",
+      "live": "实时",
+      "exhausted": "已耗尽",
+      "elapsed": "已用时间",
+      "unknown": "未知",
+      "lastUsefulAction": "最近有效操作",
+      "stop": "停止",
+      "cheapProfileFallback": "经济配置已回退至主配置",
+      "nextAction": "下一步操作："
+    }
+  },
+  "commentThread": {
+    "copyButton": {
+      "copied": "已复制",
+      "failed": "复制失败",
+      "copy": "复制",
+      "ariaLabel": "以 Markdown 格式复制评论"
+    },
+    "comment": {
+      "you": "你",
+      "queuedBadge": "已排队",
+      "followUpBadge": "跟进",
+      "queueing": "排队中...",
+      "sending": "发送中...",
+      "runLabel": "运行 {{id}}"
+    },
+    "timeline": {
+      "requestedFollowUp": "请求了跟进",
+      "updatedTask": "更新了此任务",
+      "statusLabel": "状态",
+      "assigneeLabel": "负责人",
+      "workspaceLabel": "工作区",
+      "empty": "暂无时间线记录。",
+      "run": "运行",
+      "environment": "环境",
+      "provider": "提供方",
+      "lease": "租约",
+      "failure": "失败："
+    },
+    "heading": "时间线 ({{count}})",
+    "queuedComments": "排队评论 ({{count}})",
+    "interrupting": "中断中...",
+    "interrupt": "中断",
+    "composer": {
+      "placeholder": "留下评论...",
+      "attachImage": "附加图片",
+      "assignee": "负责人",
+      "noAssignee": "无负责人",
+      "searchAssignees": "搜索负责人...",
+      "noAssigneesFound": "未找到负责人。",
+      "posting": "发布中...",
+      "comment": "评论"
+    }
+  },
+  "issueChatThread": {
+    "assigneePaused": {
+      "budgetDetail": "已被预算硬停止暂停。",
+      "systemDetail": "已被系统暂停。",
+      "manualDetail": "已被手动暂停。",
+      "message": "已暂停。在代理恢复之前，不会启动新的运行。"
+    },
+    "fallback": {
+      "errorTitle": "聊天渲染器遇到内部状态错误。",
+      "errorDescription": "显示安全回退转录，以避免议题页面崩溃。",
+      "noContent": "无消息内容。"
+    },
+    "chainOfThought": {
+      "working": "处理中",
+      "forDuration": "已用 {{duration}}",
+      "worked": "已处理"
+    },
+    "copy": "复制",
+    "toolPart": {
+      "input": "输入",
+      "result": "结果"
+    },
+    "userMessage": {
+      "deferredWake": "⏸ 延迟唤醒",
+      "queued": "已排队",
+      "followUp": "跟进",
+      "interrupting": "中断中...",
+      "interrupt": "中断",
+      "cancel": "取消",
+      "sending": "发送中..."
+    },
+    "copyMessage": "复制消息",
+    "assistantMessage": {
+      "stopRun": "停止运行",
+      "stopping": "停止中...",
+      "followUp": "跟进",
+      "running": "运行中"
+    },
+    "moreActions": "更多操作",
+    "viewRun": "查看运行",
+    "feedback": {
+      "helpful": "有帮助",
+      "needsWork": "需要改进",
+      "whatBetter": "哪里可以做得更好？",
+      "addNote": "添加简短备注",
+      "dismiss": "关闭",
+      "saving": "保存中...",
+      "saveNote": "保存备注"
+    },
+    "sharingDialog": {
+      "title": "保存你的反馈共享偏好设置",
+      "description": "选择是否将已投票的 AI 输出共享给 Workcell Labs。此选项将作为今后点赞和点踩操作的默认设置。",
+      "savedLocally": "此投票始终保存在本地。",
+      "chooseBefore": "选择",
+      "chooseMiddle": "以共享此投票及今后已投票的 AI 输出。选择",
+      "chooseAfter": "以将此投票及今后的投票保存在本地。",
+      "alwaysAllow": "始终允许",
+      "dontAllow": "不允许",
+      "changeLater": "你可以稍后在实例设置 > 常规中更改此设置。",
+      "readTerms": "阅读服务条款"
+    },
+    "expiredConfirmation": {
+      "updatedTask": "更新了此任务",
+      "hide": "隐藏确认",
+      "expired": "已过期确认"
+    },
+    "staleDisposition": {
+      "noDetails": "无其他详情。",
+      "title": "过期处置警告"
+    },
+    "systemNotice": {
+      "copyLink": "复制链接",
+      "copyLinkAria": "复制系统通知链接",
+      "copyText": "复制通知文本",
+      "copyTextAria": "复制系统通知"
+    },
+    "systemEvent": {
+      "requestedFollowUp": "请求了跟进",
+      "updatedTask": "更新了此任务",
+      "statusLabel": "状态",
+      "assigneeLabel": "负责人",
+      "workspaceLabel": "工作区",
+      "run": "运行"
+    },
+    "composer": {
+      "noAssigneeToastTitle": "未选择负责人",
+      "noAssigneeToastBody": "请选择负责人，或再次点击发送以不指定负责人发布。",
+      "unsupportedFileType": "此文件类型无法在此处附加",
+      "uploadFailed": "上传失败",
+      "dropToUpload": "拖放以上传",
+      "dropDescription": "图片将插入回复中，其他文件将附加到此议题。",
+      "replyPlaceholder": "回复",
+      "replyPlaceholderAgent": "向 {{agent}} 发送消息——发送后将唤醒代理处理你的回复",
+      "attachmentUploading": "上传到议题中",
+      "attachmentInline": "已内联插入",
+      "attachmentAttached": "已附加到议题",
+      "attachFile": "附加文件",
+      "moreOptions": "更多编辑器选项",
+      "switchToStandard": "切换到标准模式",
+      "switchToPlanning": "切换到规划模式",
+      "planningToggleTitle": "此次提交已开启规划模式。点击切换到标准模式。",
+      "planning": "规划",
+      "assignee": "负责人",
+      "noAssignee": "无负责人",
+      "searchAssignees": "搜索负责人...",
+      "noAssigneesFound": "未找到负责人。",
+      "posting": "发布中...",
+      "send": "发送"
+    },
+    "emptyEmbedded": "暂无运行输出。",
+    "emptyFull": "此议题对话为空。请在下方发送消息开始。",
+    "jumpToLatest": "跳转到最新",
+    "liveWorkBar": {
+      "working": "{{agent}} 正在工作…",
+      "workingUnknown": "代理正在工作…",
+      "expand": "显示实时输出",
+      "collapse": "隐藏实时输出"
+    },
+    "legacyRecovery": {
+      "label": "旧版恢复议题",
+      "body": "旧版恢复议题。较新的恢复操作位于源议题上"
+    }
+  },
+  "issueThreadInteractionCard": {
+    "taskTree": {
+      "includeAria": "包含 {{title}}",
+      "childTask": "子任务",
+      "skipped": "已跳过",
+      "assignee": "负责人",
+      "billing": "计费",
+      "project": "项目",
+      "label": "标签",
+      "hiddenOne": "预览中隐藏了 1 个后续任务",
+      "hiddenMany": "预览中隐藏了 {{count}} 个后续任务"
+    },
+    "suggestTasks": {
+      "draftOne": "1 个草稿议题",
+      "draftMany": "{{count}} 个草稿议题",
+      "defaultParent": "默认父级",
+      "resolutionSummary": "解决摘要",
+      "createdWithSkipped": "已创建 {{created}} 个草稿{{noun}}，并在审核中跳过了 {{skipped}} 个。",
+      "createdAll": "已创建全部 {{created}} 个草稿{{noun}}。",
+      "rejectionReason": "拒绝原因",
+      "noReason": "未提供原因。",
+      "allSelected": "已选择全部 {{total}} 个草稿{{noun}}",
+      "someSelected": "已选择 {{total}} 个草稿{{noun}}中的 {{selected}} 个",
+      "willBeSkipped": "接受此交互后，{{count}} 个将被跳过。",
+      "accepting": "接受中...",
+      "acceptDrafts": "接受草稿",
+      "acceptSelectedDrafts": "接受选中的草稿",
+      "reject": "拒绝",
+      "resetSelection": "重置选择",
+      "rejectPlaceholder": "添加拒绝此建议的简短原因",
+      "saving": "保存中...",
+      "saveRejection": "保存拒绝"
+    },
+    "askQuestions": {
+      "badge": "向用户提问",
+      "questionOne": "1 个问题",
+      "questionMany": "{{count}} 个问题",
+      "questionNumber": "问题 {{number}}",
+      "pick": "单选",
+      "pickMany": "多选",
+      "required": "必填",
+      "optional": "选填",
+      "submitHint": "填写完整表单后再提交一次。",
+      "cancelling": "取消中...",
+      "cancelQuestion": "取消问题",
+      "submitting": "提交中...",
+      "submitAnswers": "提交答案",
+      "cancelled": "问题已取消",
+      "noAnswerRecordedLong": "未记录任何答案。",
+      "answer": "答案",
+      "noAnswerRecorded": "未记录答案。",
+      "submittedSummary": "已提交摘要"
+    },
+    "confirmation": {
+      "confirmed": "已确认",
+      "declined": "已拒绝",
+      "expiredByComment": "因评论已过期",
+      "expiredByTargetChange": "因目标变更已过期",
+      "supersededByComment": "此确认在解决前被看板评论取代。",
+      "targetChanged": "此确认在解决前请求的目标已变更。",
+      "jumpToComment": "跳转到评论",
+      "couldNotResolve": "此请求无法解决。请重试或创建新请求。",
+      "declinePlaceholderPlan": "可选：你希望修改哪些内容？",
+      "declinePlaceholderDefault": "可选：告诉代理你想更改什么。",
+      "tryAgain": "重试",
+      "confirming": "确认中...",
+      "confirm": "确认",
+      "decline": "拒绝",
+      "declineReasonRequired": "必须填写拒绝原因。",
+      "cancelDecline": "取消拒绝",
+      "saving": "保存中...",
+      "autoApproved": "自主模式下已自动批准"
+    },
+    "sourceRunActive": "代理仍在完成此工作——完成后你可以做出决定。",
+    "resolvedBySystem": "系统（自主模式）",
+    "wakesOnConfirm": "确认后唤醒",
+    "wakesAssignee": "唤醒负责人",
+    "titleSuggestTasks": "建议的任务树",
+    "titleAskQuestions": "向操作员提问",
+    "titleConfirmation": "请求确认",
+    "proposedBy": "由 {{name}} 提议",
+    "createdAt": "创建于 {{date}}",
+    "resolvedBy": "解决者",
+    "resolvedOn": " 于 {{date}}"
+  },
+  "agentInstructionsEditor": {
+    "label": "自定义指令",
+    "save": "保存",
+    "saving": "保存中...",
+    "saved": "已保存",
+    "help": "设置此代理的行为方式。保存到其托管指令中；代理将优先读取此内容。",
+    "placeholder": "# 此代理的行为方式\n\n在此编写自定义指令...",
+    "externalNotice": "此代理使用外部指令文件。请在磁盘上的文件位置编辑，或在「指令」选项卡中切换到托管模式以在线编辑。",
+    "saveErrorTitle": "无法保存指令"
+  },
+  "markdownEditor": {
+    "fallback": {
+      "notice": "此 Markdown 的富文本编辑器不可用，正在显示原始源码。",
+      "retry": "重试富文本编辑器"
+    },
+    "mention": {
+      "kind": {
+        "project": "项目",
+        "user": "用户",
+        "skill": "技能",
+        "routine": "例程"
+      }
+    },
+    "dropToUpload": "将{{target}}拖放至此上传",
+    "dropTarget": {
+      "file": "文件",
+      "image": "图片"
+    }
+  },
+  "fileTree": {
+    "ariaLabel": "文件",
+    "errorBadge": "错误",
+    "retry": "重试",
+    "empty": {
+      "title": "暂无文件",
+      "description": "文件就绪后将显示在此处。"
+    },
+    "collapse": "折叠 {{name}}",
+    "expand": "展开 {{name}}"
+  },
+  "routineHistoryTab": {
+    "toast": {
+      "restored": {
+        "title": "已将修订版 {{from}} 恢复为修订版 {{to}}",
+        "bodyWithSecrets": "触发器启用状态已从快照中恢复。新的 Webhook 密钥可在上方横幅中查看。",
+        "body": "触发器启用状态已从快照中恢复。"
+      },
+      "restoreFailed": {
+        "title": "恢复修订版失败",
+        "body": "Workcell 无法恢复该修订版。"
+      }
+    },
+    "loadError": {
+      "title": "无法加载修订版",
+      "unknown": "加载修订版时发生未知错误。",
+      "retry": "重试"
+    },
+    "empty": {
+      "message": "暂无编辑记录",
+      "description": "修订版 1 是此例程的唯一历史记录。保存编辑后将创建第一个额外修订版。"
+    },
+    "preview": {
+      "viewing": "正在查看修订版 {{number}}（只读）",
+      "restoreExplainer": "恢复此修订版将以相同内容创建新的修订版 {{number}}。历史记录仅追加，不可修改。",
+      "returnToCurrent": "返回当前版本",
+      "restoreAsNew": "恢复为新修订版",
+      "restoreThis": "恢复此修订版",
+      "savedBy": "由 {{actor}} 于 {{time}} 保存",
+      "compareWithCurrent": "与当前版本比较"
+    },
+    "conflict": {
+      "title": "例程有未保存的编辑",
+      "body": "您已修改 {{fields}}，但尚未保存。请在预览或恢复旧修订版前保存或放弃更改。",
+      "discard": "放弃更改",
+      "save": "保存并继续"
+    },
+    "revisionList": {
+      "heading": "修订版",
+      "total": "共 {{count}} 个",
+      "rev": "修订版 {{number}}",
+      "current": "当前",
+      "restored": "已恢复",
+      "showOlder": "显示 {{count}} 个更早的…"
+    },
+    "field": {
+      "title": "标题",
+      "priority": "优先级",
+      "status": "状态",
+      "defaultAgent": "默认代理",
+      "project": "项目",
+      "concurrency": "并发",
+      "catchUp": "补跑",
+      "env": "环境"
+    },
+    "structuredFields": "结构化字段",
+    "differsFromCurrent": "与当前版本不同",
+    "description": "描述",
+    "noDescription": "暂无描述",
+    "triggers": "触发器（{{count}}）",
+    "noTriggers": "此修订版中无触发器。",
+    "trigger": {
+      "enabled": "已启用",
+      "disabled": "已禁用"
+    },
+    "webhookNote": "Webhook 密钥不存储在修订版中。如果恢复的 Webhook 触发器需要重新创建，Workcell 将在恢复时生成新的密钥材料。",
+    "variables": "变量（{{count}}）",
+    "variableDefault": "默认值：{{value}}",
+    "confirm": {
+      "title": "恢复修订版 {{number}}？",
+      "description": "这将以修订版 {{targetNumber}} 的相同内容创建新的修订版 {{newNumber}}。修订版 {{targetNumber}}–{{rangeEnd}} 保留在历史记录中且不会被修改。",
+      "revertFields": "例程字段值、变量和计划 cron 将恢复。",
+      "revertSecrets": "例程密钥将恢复：{{counts}}。",
+      "historyPreserved": "之前的运行历史记录已保留。",
+      "webhookRecreated": "Webhook 触发器 {{label}} 将以新的 URL 和密钥重新创建。Workcell 将在恢复后显示密钥一次 — 请在关闭前复制。",
+      "summaryLabel": "变更摘要（可选）",
+      "summaryPlaceholder": "为什么要恢复？将显示在历史记录中。",
+      "cancel": "取消",
+      "restoring": "恢复中…",
+      "restoreAsRevision": "恢复为修订版 {{number}}"
+    },
+    "diff": {
+      "title": "比较例程修订版",
+      "old": "旧版",
+      "new": "新版",
+      "fieldChanges": "字段变更",
+      "noFieldChanges": "无结构化字段变更。",
+      "colField": "字段",
+      "colOldValue": "旧值",
+      "colNewValue": "新值",
+      "descriptionDiff": "描述差异",
+      "close": "关闭",
+      "restoreRev": "将修订版 {{number}} 恢复为新修订版",
+      "noDescriptionEither": "两个修订版均无描述。",
+      "identical": "描述内容相同。",
+      "colOld": "旧版",
+      "colNew": "新版",
+      "colContent": "内容"
+    },
+    "picker": {
+      "option": "修订版 {{number}} — {{time}}"
+    }
+  },
+  "executionWorkspaceClose": {
+    "toast": {
+      "closeRetried": "已重试关闭工作空间",
+      "closed": "工作空间已关闭",
+      "closeFailed": "关闭工作空间失败",
+      "unknownError": "未知错误"
+    },
+    "action": {
+      "retryClose": "重试关闭",
+      "closeWorkspace": "关闭工作空间"
+    },
+    "descriptionBefore": "归档",
+    "descriptionAfter": "并清理所有归属的工作空间产物。Workcell 保留工作空间记录和议题历史，但将其从活跃工作空间视图中移除。",
+    "checkingSafe": "正在检查此工作空间是否可以安全关闭...",
+    "inspectFailed": "检查工作空间关闭就绪状态失败。",
+    "state": {
+      "blocked": "关闭被阻止",
+      "warnings": "允许关闭，但有警告",
+      "ready": "可以关闭"
+    },
+    "detail": {
+      "shared": "这是一个共享工作空间会话。归档后将移除此会话记录，但底层项目工作空间保持不变。",
+      "ownCheckout": "此执行工作空间有其自己的检出路径，可以独立归档。",
+      "projectPrimary": "此执行工作空间当前指向项目的主工作空间路径。",
+      "disposable": "此工作空间为一次性，可以归档。"
+    },
+    "section": {
+      "blockingIssues": "阻塞议题",
+      "blockingReasons": "阻塞原因",
+      "warnings": "警告",
+      "gitStatus": "Git 状态",
+      "otherLinkedIssues": "其他关联议题",
+      "runtimeServices": "已附加的运行时服务",
+      "cleanupActions": "清理操作"
+    },
+    "git": {
+      "branch": "分支",
+      "baseRef": "基础引用",
+      "mergedIntoBase": "已合并至基础",
+      "aheadBehind": "领先 / 落后",
+      "dirtyTracked": "已修改的已跟踪文件",
+      "untracked": "未跟踪文件",
+      "unknown": "未知",
+      "notSet": "未设置",
+      "yes": "是",
+      "no": "否"
+    },
+    "noAdditionalDetails": "无更多详情",
+    "cleanupFailedNotice": "此工作空间之前的清理已失败。重试关闭将重新运行清理流程，若成功则更新工作空间状态。",
+    "alreadyArchived": "此工作空间已归档。",
+    "repoRoot": "仓库根目录：",
+    "workspacePath": "工作空间路径：",
+    "lastChecked": "上次检查于 {{time}}",
+    "cancel": "取消"
+  },
+  "cloudAccessGate": {
+    "bootstrap": {
+      "title": "需要完成实例设置",
+      "body": "尚无实例管理员。在您的 Workcell 环境中运行以下命令以生成首个管理员邀请链接：",
+      "bodyActiveInvite": "尚无实例管理员。引导邀请已激活。请查看 Workcell 启动日志获取首个管理员邀请链接，或运行以下命令轮换："
+    },
+    "noAccess": {
+      "title": "无团队访问权限",
+      "body1": "此账户已登录，但在此 Workcell 实例上没有有效的团队成员资格或实例管理员权限。",
+      "body2": "请使用团队邀请，或使用已属于此组织的账户登录。"
+    },
+    "loading": "加载中...",
+    "loadFailed": "加载应用状态失败"
+  },
+  "missingPluginTab": {
+    "notAvailable": "工作空间插件选项卡不可用。"
+  },
+  "issueLinkQuicklook": {
+    "unableToLoad": "无法加载议题预览。"
+  },
+  "pathInstructionsModal": {
+    "title": "如何获取完整路径",
+    "descriptionBefore": "将绝对路径（例如",
+    "descriptionAfter": "）粘贴到输入框中。",
+    "choose": "选择"
+  },
+  "activityCharts": {
+    "noRuns": "暂无运行记录",
+    "noIssues": "暂无议题",
+    "status": {
+      "todo": "待办",
+      "in_progress": "进行中",
+      "in_review": "审查中",
+      "done": "已完成",
+      "blocked": "已阻塞",
+      "cancelled": "已取消",
+      "backlog": "待办列表"
+    }
+  },
+  "billerSpendCard": {
+    "in": "入",
+    "out": "出",
+    "providerCount_one": "{{count}} 个提供商",
+    "providerCount_other": "{{count}} 个提供商",
+    "modelCount_one": "{{count}} 个模型",
+    "modelCount_other": "{{count}} 个模型",
+    "meteredRuns_one": "{{count}} 次计量运行",
+    "meteredRuns_other": "{{count}} 次计量运行",
+    "subscriptionRuns_one": "{{count}} 次订阅运行",
+    "subscriptionRuns_other": "{{count}} 次订阅运行",
+    "thisWeek": "本周 {{amount}}",
+    "billingTypes": "计费类型",
+    "upstreamProviders": "上游提供商",
+    "tok": "{{tokens}} tok"
+  },
+  "financeBillerCard": {
+    "summary": "{{events}}，涵盖 {{kinds}}",
+    "eventCount_one": "{{count}} 个事件",
+    "eventCount_other": "{{count}} 个事件",
+    "kindCount_one": "{{count}} 种类型",
+    "kindCount_other": "{{count}} 种类型",
+    "net": "净额",
+    "debits": "借记",
+    "credits": "贷记",
+    "estimated": "预估"
+  },
+  "financeKindCard": {
+    "title": "财务事件构成",
+    "description": "按事件类型分组的账户级别费用。",
+    "empty": "本期无财务事件。",
+    "counts": "{{events}} · {{billers}}",
+    "eventCount_one": "{{count}} 个事件",
+    "eventCount_other": "{{count}} 个事件",
+    "billerCount_one": "{{count}} 个计费方",
+    "billerCount_other": "{{count}} 个计费方",
+    "debits": "{{amount}} 借记"
+  },
+  "financeTimelineCard": {
+    "title": "近期财务事件",
+    "description": "充值、手续费、抵扣、承诺及其他非请求费用。",
+    "empty": "本期无财务事件。",
+    "invoice": "发票 {{id}}",
+    "region": "地区 {{region}}",
+    "tier": "层级 {{tier}}",
+    "estimated": "预估"
+  },
+  "claudeSubscriptionPanel": {
+    "heading": "Anthropic 订阅",
+    "subheading": "实时 Claude 配额窗口。",
+    "resets": "重置于 {{time}}",
+    "percentUsed": "已使用 {{percent}}%"
+  },
+  "codexSubscriptionPanel": {
+    "heading": "Codex 订阅",
+    "subheading": "实时 Codex 配额窗口。",
+    "accountWindows": "账户窗口",
+    "modelWindows": "模型窗口",
+    "resets": "重置于 {{time}}",
+    "percentUsed": "已使用 {{percent}}%"
+  },
+  "approvalPayload": {
+    "skills": "技能",
+    "name": "名称",
+    "capabilities": "能力",
+    "adapter": "适配器",
+    "limit": "限额 {{limit}}",
+    "observed": "已观测 {{observed}}",
+    "title": "标题",
+    "summary": "摘要",
+    "recommendedAction": "建议操作",
+    "onApproval": "批准后",
+    "risks": "风险",
+    "proposedComment": "拟发评论"
+  },
+  "budgetIncidentCard": {
+    "state": {
+      "resolved": "已解决",
+      "dismissed": "已忽略",
+      "escalated": "已升级",
+      "pending": "待审批",
+      "open": "待处理"
+    },
+    "hardStop": "{{scope}} 强制停止",
+    "spendingReached": "支出已达 {{observed}}，超出限额 {{limit}}。",
+    "pausedProject": "项目执行已暂停。在您解决预算事件之前，此项目中的新工作不会启动。",
+    "pausedScope": "此范围已暂停。在您解决预算事件之前，新的心跳不会启动。",
+    "newBudget": "新预算（美元）",
+    "applying": "应用中…",
+    "raiseAndResume": "提高预算并恢复",
+    "mustExceed": "新预算必须超过当前已观测的支出。",
+    "keepPaused": "保持暂停"
+  },
+  "budgetPolicyCard": {
+    "lifetimeBudget": "终身预算",
+    "monthlyBudget": "月度 UTC 预算",
+    "observed": "已观测",
+    "percentOfLimit": "限额的 {{percent}}%",
+    "noCapConfigured": "未配置上限",
+    "budget": "预算",
+    "disabled": "已禁用",
+    "softAlertAt": "软警报于 {{percent}}%",
+    "remaining": "剩余",
+    "unlimited": "无限制",
+    "pausedProject": "此项目的执行已暂停，直至预算提高或事件被忽略。",
+    "pausedScope": "此范围的心跳已暂停，直至预算提高或事件被忽略。",
+    "budgetUsd": "预算（美元）",
+    "saving": "保存中…",
+    "updateBudget": "更新预算",
+    "setBudget": "设置预算",
+    "status": {
+      "paused": "已暂停",
+      "warning": "警告",
+      "hardStop": "强制停止",
+      "healthy": "正常"
+    },
+    "invalidAmount": "请输入有效的非负美元金额。"
+  },
+  "agentActionButtons": {
+    "resume": "恢复",
+    "pause": "暂停"
+  },
+  "executionParticipantPicker": {
+    "user": "用户",
+    "reviewers": "审阅者",
+    "approvers": "审批者",
+    "noReviewers": "无审阅者",
+    "noApprovers": "无审批者",
+    "assignToMe": "分配给我"
+  },
+  "filterBar": {
+    "clearAll": "清除全部"
+  },
+  "goalProperties": {
+    "none": "无"
+  },
+  "goalTree": {
+    "noGoals": "暂无目标。"
+  },
+  "worktreeBanner": {
+    "label": "工作树",
+    "copied": "已复制！"
+  },
+  "propertiesPanel": {
+    "title": "属性"
+  },
+  "reportsToPicker": {
+    "disabledEmpty": "汇报对象：不适用（编排者）",
+    "choose": "汇报对象…",
+    "unknownManager": "未知管理者（ID 已失效）",
+    "reportsTo": "汇报给 {{name}}",
+    "reportsToTerminated": "汇报给 {{name}}（已离职）",
+    "noManager": "无管理者",
+    "currentTerminated": "当前：{{name}}（已离职）",
+    "savedMissing": "已保存的管理者不在此团队中。请选择新的管理者或清除。"
+  },
+  "projectWorkspacesContent": {
+    "empty": "暂无非默认工作区活动。",
+    "cleanupAttention": "需要清理"
+  },
+  "projectWorkspaceSummaryCard": {
+    "kind": {
+      "execution": "执行工作区",
+      "project": "项目工作区"
+    },
+    "updated": "更新于 {{time}}",
+    "services": "{{running}}/{{total}} 个服务",
+    "stopServices": "停止服务",
+    "startServices": "启动服务",
+    "retryClose": "重试关闭",
+    "closeWorkspace": "关闭工作区",
+    "branch": "分支",
+    "path": "路径",
+    "service": "服务",
+    "linkedIssues": "关联问题",
+    "moreIssues": "+{{count}} 项"
+  },
+  "managedRoutinesList": {
+    "schedule": "计划 {{cron}}"
+  },
+  "providerQuotaCard": {
+    "percentUsed": "已使用 {{percent}}%",
+    "rollingWindows": "滚动窗口",
+    "subscriptionQuota": "订阅配额",
+    "in": "输入",
+    "out": "输出",
+    "subscription": "订阅",
+    "runs": "次运行",
+    "total": "合计"
+  },
+  "sourceResolvedFold": {
+    "heading": "来源已解决折叠",
+    "systemAudit": "系统审计",
+    "body": "此次运行已作为来源已解决的误报被折叠。",
+    "at": "于 {{time}}",
+    "silenceStarted": "（静默开始于 {{time}}）",
+    "unknown": "未知"
+  },
+  "productivityReviewBadge": {
+    "productivityReview": "生产力审查",
+    "underReview": "审查中",
+    "open": "生产力审查已开启",
+    "trigger": "触发原因：",
+    "noCommentStreak": "无评论连续次数：",
+    "runs": "{{count}} 次运行",
+    "review": "审查："
+  },
+  "agentMemory": {
+    "heading": "记忆",
+    "graphLabel": "智能体记忆图",
+    "loading": "加载记忆中…",
+    "loadError": "无法加载此智能体的记忆。",
+    "empty": "此智能体尚无记忆——它会在工作过程中自动积累。",
+    "selectHint": "选择一条记忆以查看详情。",
+    "content": "内容",
+    "metadata": "元数据",
+    "provenance": "来源运行",
+    "noProvenance": "—",
+    "updated": "已更新",
+    "close": "关闭",
+    "forget": "遗忘",
+    "confirmForget": "确认遗忘",
+    "forgetting": "遗忘中…",
+    "forgetError": "无法遗忘此记忆。",
+    "add": "添加记忆",
+    "kindLabel": "类型",
+    "labelPlaceholder": "标签",
+    "contentPlaceholder": "要记住的内容…",
+    "cancel": "取消",
+    "save": "记住",
+    "saving": "保存中…",
+    "saveError": "无法保存此记忆。",
+    "kind": {
+      "fact": "事实",
+      "preference": "偏好",
+      "entity": "实体",
+      "decision": "决策",
+      "todo": "待办",
+      "other": "其他"
+    }
+  },
+  "knowledgeGraph": {
+    "heading": "知识图谱",
+    "kind": {
+      "issue": "问题",
+      "code": "代码",
+      "plan_section": "计划",
+      "decision": "决策",
+      "run": "运行",
+      "skill": "技能",
+      "plugin": "插件",
+      "capability": "能力"
+    },
+    "edge": {
+      "implements": "实现",
+      "depends_on": "依赖于",
+      "references": "引用",
+      "spawned_by": "派生自",
+      "supersedes": "取代",
+      "related": "相关"
+    },
+    "direction": {
+      "out": "至",
+      "in": "来自"
+    }
+  },
+  "pairTimeline": {
+    "dualBrain": {
+      "heading": "双脑自我审查",
+      "workBrain": "工作脑",
+      "reviewBrain": "审查脑"
+    },
+    "unassigned": "未分配",
+    "heading": "配对协作",
+    "roundSummary": "第 {{current}}/{{max}} 轮 · 已记录 {{count}} 个回合",
+    "status": {
+      "active": "进行中",
+      "completed": "已完成",
+      "aborted": "已中止"
+    },
+    "running": "运行中…",
+    "roundInFlight": "轮次进行中…",
+    "autoRoundInFlight": "自动运行正在推进此轮次…",
+    "manualRoundInFlight": "轮次进行中…",
+    "runRound": "运行轮次",
+    "runToConvergence": "运行至收敛",
+    "runToConvergenceHint": "运行剩余轮次，直至配对收敛、中止或达到轮次上限。",
+    "noTurns": "暂无回合。按\"运行轮次\"启动第一轮。",
+    "round": "第 {{number}} 轮",
+    "loadingState": "加载配对组状态中…",
+    "noActiveGroup": "此问题已设置配对模式，但尚无活跃的配对组。",
+    "mode": {
+      "live": "实时",
+      "liveHint": "回合针对真实模型运行。",
+      "simulated": "模拟",
+      "simulatedHint": "回合针对确定性存根运行——未调用真实模型。"
+    },
+    "stoppedBecause": "已停止：{{reason}}",
+    "stopReason": {
+      "max_rounds_reached": "已达轮次上限",
+      "convergence_reached": "已收敛",
+      "aborted": "已中止"
+    },
+    "autoRun": {
+      "label": "自动运行",
+      "onHint": "轮次自动推进。",
+      "offHint": "手动模式——使用按钮推进轮次。"
+    }
+  },
+  "liveRunWidget": {
+    "heading": "实时运行",
+    "subheading": "使用问题活动中共享的聊天式运行界面。",
+    "stopping": "停止中…",
+    "stop": "停止",
+    "openRun": "打开运行"
+  },
+  "liveRunTail": {
+    "heading": "实时输出",
+    "waiting": "等待输出中…"
+  },
+  "outputFeedback": {
+    "helpful": "有帮助",
+    "needsWork": "需要改进",
+    "whatBetter": "哪里可以做得更好？",
+    "dismiss": "忽略",
+    "saving": "保存中…",
+    "saveNote": "保存备注",
+    "alwaysAllow": "始终允许",
+    "dontAllow": "不允许",
+    "dialog": {
+      "title": "保存您的反馈分享偏好",
+      "description": "选择是否允许将点赞的 AI 输出分享给 Workcell Labs。此选择将作为日后点赞和点踩投票的默认设置。",
+      "savedLocally": "此投票始终保存在本地。",
+      "chooseBefore": "选择",
+      "chooseMiddle": "以分享此次投票及日后点赞的 AI 输出。选择",
+      "chooseAfter": "以将此次投票及日后的投票保存在本地。",
+      "changeLater": "您可以稍后在实例设置 > 常规中更改此设置。",
+      "terms": "阅读我们的服务条款"
+    }
+  },
+  "routineVariables": {
+    "variables": "变量",
+    "detectedBefore": "检测自",
+    "detectedAfter": "例程标题和说明中的占位符。",
+    "promptUser": "每次手动运行前提示用户输入此值。",
+    "label": "标签",
+    "type": "类型",
+    "defaultValue": "默认值",
+    "required": "必填",
+    "noDefault": "无默认值",
+    "true": "是",
+    "false": "否",
+    "options": "选项",
+    "defaultOption": "默认选项",
+    "hintBefore": "使用",
+    "hintAfter": "说明中的占位符，在例程运行时提示输入。",
+    "dialogTitle": "例程变量",
+    "dialogDescription": "如何提示输入以及 Workcell 自动填充哪些变量。",
+    "customVariables": "自定义变量",
+    "typeBefore": "在标题或说明的任意位置输入",
+    "typeMiddle": "。Workcell 会检测每个占位符，将其列于",
+    "typeAfter": "下，并在每次运行前提示输入值。",
+    "ruleNames": "名称必须以字母开头，可使用字母、数字和下划线。",
+    "rulePick": "选择类型（文本、文本域、数字、布尔值、下拉选择）、默认值，以及是否为必填项。",
+    "ruleReuse": "在标题和说明中重复使用相同名称将被视为同一个变量。",
+    "builtinVariables": "内置变量",
+    "builtinDescription": "这些变量自动填充——无需设置，也不会出现在变量列表中。",
+    "colPlaceholder": "占位符",
+    "colExample": "示例",
+    "colDescription": "描述"
+  },
+  "scheduleEditor": {
+    "fiveFields": "五个字段：分钟 小时 日 月 星期",
+    "at": "于",
+    "atMinute": "于第",
+    "on": "在",
+    "onDay": "在第"
+  },
+  "secretBindingPicker": {
+    "loading": "加载中…",
+    "missingSecret": "缺少密钥 ({{id}}…)",
+    "latest": "最新",
+    "statusPrefix": "状态：{{status}}。",
+    "boundTo": "已绑定至 {{version}} · {{key}}",
+    "noLongerAvailable": "之前选择的密钥已不可用。请选择其他密钥或移除绑定。",
+    "createNew": "新建密钥",
+    "name": "名称",
+    "value": "值",
+    "valueNote": "该值仅存储一次，之后不再显示。如需替换请重新轮换。",
+    "description": "描述",
+    "cancel": "取消",
+    "createAndBind": "创建并绑定"
+  },
+  "runTranscript": {
+    "user": "用户",
+    "running": "运行中",
+    "errored": "出错",
+    "completed": "已完成",
+    "input": "输入",
+    "result": "结果",
+    "commandFailed": "命令执行失败"
+  },
+  "pluginPage": {
+    "selectCompany": "请选择一个团队以查看此页面。",
+    "loading": "加载中...",
+    "loadingEllipsis": "加载中…",
+    "extensionsUnavailable": "插件扩展不可用：{{message}}",
+    "conflictSettingsBefore": "多个插件声明了相同的团队设置路由",
+    "conflictSettingsAfter": "。请禁用其中一个插件或修改其路由。",
+    "conflictRouteBefore": "多个插件声明了相同的路由",
+    "conflictRouteAfter": "。请使用插件 ID 路由，直至冲突解决。"
+  },
+  "newAgentPage": {
+    "title": "新建智能体",
+    "subtitle": "高级智能体配置",
+    "namePlaceholder": "智能体名称",
+    "titlePlaceholder": "职称（例如：工程副总裁）",
+    "createFailed": "创建智能体失败",
+    "creating": "创建中…",
+    "createAgent": "创建智能体",
+    "companySkills": "团队技能",
+    "companySkillsHint": "来自团队技能库的可选技能。Workcell 内置运行时技能将自动添加。",
+    "noSkills": "尚未安装任何可选团队技能。",
+    "willBeOrchestrator": "此智能体将成为编排者"
+  },
+  "workcellPrinciples": {
+    "heading": "Workcell 的工作原理",
+    "direction": {
+      "title": "由您掌舵方向",
+      "body": "董事会——也就是您——负责把握方向、审批决策和制定策略。您的智能体团队从不决定什么事情更重要。"
+    },
+    "projects": {
+      "title": "项目精细化管理",
+      "body": "团队以项目为单位运作，而非按部门划分。每个项目从启动到完成，均进行详细的规划、追踪与管理。"
+    },
+    "designTruth": {
+      "title": "设计是唯一真实依据",
+      "body": "每个项目的设计系统是计划的锚点。设计师提案，您审批，开发人员按已批准的设计构建，QA 对照设计进行验证。"
+    },
+    "proof": {
+      "title": "没有证明，就不算完成",
+      "body": "每个任务都经历「计划 → 执行 → 验证」的流程。结果需有据可查，而非自行声称——已完成的工作将沉淀为团队知识积累。"
+    }
+  },
+  "agentDetail": {
+    "breadcrumb": {
+      "agents": "代理",
+      "agentFallback": "代理",
+      "runs": "运行",
+      "run": "运行 {{id}}",
+      "instructions": "指令",
+      "configuration": "配置",
+      "budget": "预算",
+      "dashboard": "仪表板"
+    },
+    "duplicateConfirm": "将 {{name}} 复制为 {{nextName}}？",
+    "toast": {
+      "duplicated": "代理已复制",
+      "duplicateFailed": "无法复制代理",
+      "saveFailed": "保存失败"
+    },
+    "leftNotice": "您已离开此代理，它不再显示在您的侧边栏中。",
+    "dismissMembershipNotice": "关闭代理成员通知",
+    "assignTask": "分配任务",
+    "runHeartbeat": "运行心跳",
+    "live": "实时",
+    "overflow": {
+      "more": "更多操作"
+    },
+    "menu": {
+      "duplicate": "复制代理",
+      "copyId": "复制代理 ID",
+      "resetSessions": "重置会话",
+      "terminate": "终止"
+    },
+    "tabs": {
+      "dashboard": "仪表板",
+      "instructions": "指令",
+      "skills": "技能",
+      "configuration": "配置",
+      "memory": "记忆",
+      "runs": "运行",
+      "budget": "预算"
+    },
+    "pendingApproval": "此代理正在等待董事会批准，暂不可调用。",
+    "approveAgent": "批准代理",
+    "cancel": "取消",
+    "save": "保存",
+    "saving": "保存中…",
+    "liveRun": "实时运行",
+    "latestRun": "最近运行",
+    "viewDetails": "查看详情",
+    "charts": {
+      "runActivity": "运行活动",
+      "last14Days": "最近 14 天",
+      "issuesByPriority": "按优先级划分的任务",
+      "issuesByStatus": "按状态划分的任务",
+      "successRate": "成功率"
+    },
+    "recentIssues": "最近任务",
+    "seeAll": "查看全部",
+    "noRecentIssues": "暂无最近任务。",
+    "moreIssues": "+{{count}} 个更多任务",
+    "costs": {
+      "inputTokens": "输入 token",
+      "outputTokens": "输出 token",
+      "cachedTokens": "缓存 token",
+      "totalCost": "总费用",
+      "colDate": "日期",
+      "colRun": "运行",
+      "colInput": "输入",
+      "colOutput": "输出",
+      "colCost": "费用"
+    },
+    "apiKeys": "API 密钥",
+    "configRevisions": "配置版本",
+    "noConfigRevisions": "暂无配置版本。",
+    "restore": "恢复",
+    "changedLabel": "已更改：",
+    "noTrackedChanges": "无追踪变更",
+    "permissions": "权限",
+    "canCreateAgents": "可创建新代理",
+    "canCreateAgentsHint": "允许此代理创建或雇用代理并隐式分配任务。",
+    "canAssignTasks": "可分配任务",
+    "taskAssign": {
+      "orchestrator": "编排器自动启用。",
+      "agentCreator": "当此代理可创建新代理时自动启用。",
+      "explicitGrant": "通过显式团队权限授予启用。",
+      "simpleDefault": "通过简单的团队范围任务分配默认值启用。",
+      "disabled": "除非显式授予，否则禁用。"
+    },
+    "prompts": {
+      "localOnly": "指令包仅适用于本地适配器。",
+      "advanced": "高级",
+      "mode": "模式",
+      "modeTooltip": "托管：Workcell 存储并提供指令包。外部：您提供指令所在的磁盘路径。",
+      "managed": "托管",
+      "external": "外部",
+      "rootPath": "根路径",
+      "rootPathTooltip": "指令包所在磁盘上的绝对目录。托管模式下由 Workcell 自动设置。",
+      "managedPlaceholder": "（托管）",
+      "entryFile": "入口文件",
+      "entryFileTooltip": "代理加载指令时首先读取的主文件。默认为 AGENTS.md。",
+      "files": "文件",
+      "create": "创建",
+      "cancel": "取消",
+      "virtualFile": "虚拟文件",
+      "virtualFileTooltip": "旧版内联提示 — 此已弃用的虚拟文件保留了旧版 promptTemplate 内容",
+      "entry": "条目",
+      "deprecatedVirtualFile": "已弃用的虚拟文件",
+      "languageFile": "{{language}} 文件",
+      "newFile": "此包中的新文件",
+      "newFileAria": "此包中的新文件",
+      "closePanelAria": "关闭文件面板",
+      "openFilePanelAria": "打开文件面板",
+      "copyAsMarkdownAria": "将指令文件复制为 Markdown",
+      "copyAsMarkdown": "复制为 Markdown",
+      "copied": "已复制",
+      "deleteConfirm": "删除 {{file}}？",
+      "delete": "删除",
+      "editorPlaceholder": "# 智能体指令",
+      "fileContentsPlaceholder": "文件内容"
+    },
+    "skills": {
+      "keptInWorkspace": "保留在工作区",
+      "appliedWhenRuns": "智能体运行时应用",
+      "trackedOnly": "仅跟踪",
+      "unknown": "未知",
+      "unsupportedOpenclaw": "Workcell 无法在此管理 OpenClaw 技能。请访问您的 OpenClaw 实例以管理此智能体的技能。",
+      "unsupportedGeneric": "Workcell 暂不支持管理此适配器的技能，请直接在适配器中管理。",
+      "savingChanges": "正在保存更改...",
+      "savingSoon": "即将保存...",
+      "viewLibrary": "查看团队技能库",
+      "view": "查看",
+      "locationLabel": "位置：{{location}}",
+      "manageInAdapter": "直接在适配器中管理技能。",
+      "emptyState": "请先将技能导入团队库，然后在此处附加。",
+      "requiredByWorkcell": "Workcell 必需",
+      "unmanagedHeader": "({{count}}) 用户自行安装的技能，未由 Workcell 管理",
+      "missingTitle": "团队库中缺少所请求的技能",
+      "adapter": "适配器",
+      "skillsApplied": "已应用技能",
+      "selectedSkills": "已选技能"
+    },
+    "runs": {
+      "noRuns": "暂无运行记录。",
+      "backToRuns": "返回运行列表"
+    },
+    "runDetail": {
+      "cancelling": "正在取消…",
+      "cancel": "取消",
+      "resuming": "正在恢复…",
+      "resume": "恢复",
+      "retrying": "正在重试…",
+      "retry": "重试",
+      "durationLabel": "耗时：",
+      "runningClaudeLogin": "正在执行 claude login...",
+      "loginToClaude": "登录 Claude Code",
+      "loginUrl": "登录 URL：",
+      "exitCode": "退出码 {{code}}",
+      "signal": "（信号：{{signal}}）",
+      "input": "输入",
+      "output": "输出",
+      "cached": "已缓存",
+      "cost": "费用",
+      "session": "会话",
+      "changed": "（已变更）",
+      "before": "之前",
+      "id": "ID",
+      "after": "之后",
+      "clearingSession": "正在清除会话...",
+      "clearSessionForIssues": "清除这些问题的会话",
+      "issuesTouched": "涉及的问题 ({{count}})",
+      "stderr": "stderr",
+      "stdout": "stdout"
+    },
+    "logViewer": {
+      "loadingLogs": "正在加载运行日志...",
+      "noLogEvents": "暂无日志事件。",
+      "transcript": "记录 ({{count}})",
+      "jumpToLive": "跳转到实时",
+      "live": "实时",
+      "waitingTranscript": "等待记录...",
+      "noPersistedTranscript": "此次运行没有持久化记录。",
+      "loading": "加载中...",
+      "loadMoreLog": "加载更多日志",
+      "showingFirstKb": "显示前 {{kb}} KB",
+      "ofKb": " 共 {{kb}} KB",
+      "failureDetails": "失败详情",
+      "errorLabel": "错误：",
+      "stderrExcerpt": "stderr 摘录",
+      "adapterResultJson": "适配器结果 JSON",
+      "stdoutExcerpt": "stdout 摘录",
+      "events": "事件 ({{count}})"
+    },
+    "keys": {
+      "created": "API 密钥已创建 — 请立即复制，此后将不再显示。",
+      "hide": "隐藏",
+      "show": "显示",
+      "copy": "复制",
+      "copied": "已复制！",
+      "dismiss": "关闭",
+      "createTitle": "创建 API 密钥",
+      "createDescription": "API 密钥允许此智能体对 Workcell 服务器进行身份验证调用。",
+      "namePlaceholder": "密钥名称（例如：production）",
+      "create": "创建",
+      "loading": "正在加载密钥...",
+      "noActive": "暂无有效的 API 密钥。",
+      "activeKeys": "有效密钥",
+      "createdAt": "创建于 {{date}}",
+      "revoke": "撤销",
+      "revokedKeys": "已撤销密钥",
+      "revokedAt": "撤销于 {{date}}"
+    },
+    "workspaceOp": {
+      "hideFullLog": "隐藏完整日志",
+      "showFullLog": "显示完整日志",
+      "loadingLog": "正在加载日志...",
+      "noPersistedLines": "暂无持久化日志行。",
+      "sectionTitle": "工作区 ({{count}})",
+      "createdByRun": "由本次运行创建",
+      "reusedWorkspace": "复用已有工作区",
+      "stderrExcerpt": "stderr 摘录",
+      "stdoutExcerpt": "stdout 摘录",
+      "command": "命令：",
+      "workingDir": "工作目录：",
+      "branch": "分支：",
+      "baseRef": "基础引用：",
+      "worktree": "工作树：",
+      "repoRoot": "仓库根目录：",
+      "cleanup": "清理：",
+      "phaseWorktreePrepare": "工作树设置",
+      "phaseProvision": "预配置",
+      "phaseTeardown": "拆除",
+      "phaseWorktreeCleanup": "工作树清理"
+    },
+    "costsHeading": "费用",
+    "invocationSource": {
+      "timer": "定时器",
+      "assignment": "任务分配",
+      "on_demand": "按需",
+      "automation": "自动化"
+    }
+  },
+  "inviteLanding": {
+    "awaiting": {
+      "defaultApprover": "团队管理员",
+      "title": "申请加入 {{company}}",
+      "pendingApproval": "您的申请仍在等待审批。{{approver}} 必须批准您的加入申请。",
+      "approvalPage": "审批页面",
+      "membersLink": "团队设置 → 成员",
+      "askToVisitPrefix": "请让他们访问",
+      "askToVisitSuffix": "以批准您的申请。",
+      "refreshHint": "批准后请刷新此页面 — 系统将自动跳转。",
+      "claimSecret": "认领密钥",
+      "onboardingLabel": "入职引导："
+    },
+    "companyFallback": "此 Workcell 团队",
+    "sessionFallback": "此账户",
+    "joinButton": {
+      "continue": "继续",
+      "openCompany": "打开团队",
+      "acceptInvite": "接受邀请",
+      "submitRequest": "提交申请"
+    },
+    "invalidToken": "无效的邀请令牌。",
+    "loadingInvite": "正在加载邀请...",
+    "checkingAccess": "正在验证您的访问权限...",
+    "openingCompany": "正在打开团队...",
+    "notAvailable": {
+      "title": "邀请不可用",
+      "expiredRevokedUsed": "此邀请可能已过期、已撤销或已被使用。",
+      "rejected": "此加入申请未获批准。",
+      "alreadyUsed": "此邀请已被使用。"
+    },
+    "bootstrapComplete": {
+      "title": "引导完成"
+    },
+    "openBoard": "打开看板",
+    "joinedCompany": {
+      "title": "您已加入团队"
+    },
+    "eyebrow": "您已被邀请加入 Workcell",
+    "heading": {
+      "setUp": "设置 Workcell",
+      "join": "加入 {{company}}"
+    },
+    "intro": {
+      "agent": "查看邀请详情，然后在下方填写智能体信息以提交加入申请。",
+      "createAccount": "请先创建您的 Workcell 账户。如果您已有账户，请切换到登录并使用相同邮箱继续接受邀请。",
+      "ready": "您的账户已就绪。查看邀请详情后，接受邀请以继续。"
+    },
+    "details": {
+      "company": "团队",
+      "invitedBy": "邀请人",
+      "invitedByFallback": "Workcell 看板",
+      "requestedAccess": "已申请访问",
+      "agentJoinRequest": "智能体加入申请",
+      "companyAccess": "团队访问权限",
+      "inviteExpires": "邀请有效期至"
+    },
+    "messageFromInviter": "来自邀请人的留言",
+    "signedInAsPrefix": "当前登录账户：",
+    "signedInAsSuffix": "。",
+    "agentForm": {
+      "title": "提交智能体详情",
+      "description": "此邀请将为 {{company}} 中的新智能体创建审批申请。",
+      "agentName": "智能体名称",
+      "adapterType": "适配器类型",
+      "comingSoon": "（即将推出）",
+      "capabilities": "功能"
+    },
+    "working": "处理中...",
+    "auth": {
+      "createTitle": "创建账户",
+      "signInTitle": "登录以继续",
+      "createDescription": "先创建 Workcell 账户，之后将返回此页面以接受 {{company}} 的邀请。",
+      "signInDescription": "请使用与此邀请匹配的 Workcell 账户登录。如果您还没有账户，请切换回创建账户。",
+      "modeCreate": "创建账户",
+      "modeExisting": "我已有账户",
+      "name": "姓名",
+      "email": "邮箱",
+      "password": "密码",
+      "requiredFields": "请填写所有必填字段。",
+      "signInContinue": "登录并继续",
+      "createContinue": "创建账户并继续",
+      "helperSignUp": "之前已注册过？请使用已有账户选项，确保邀请关联到正确的 Workcell 用户。",
+      "helperSignIn": "还没有账户？请切换回创建账户，以便使用新登录接受邀请。"
+    },
+    "accept": {
+      "alreadyMemberTitle": "已在此团队中",
+      "completingTitle": "正在完成团队访问权限",
+      "bootstrapTitle": "接受引导邀请",
+      "companyTitle": "接受团队邀请",
+      "grantingAccess": "正在授予您访问 {{company}} 的权限。",
+      "alreadyBelongs": "此账户已属于 {{company}}。",
+      "willFinishSetup": "此操作将完成 Workcell 的初始设置。",
+      "willGrantAccess": "此操作将授予或完善您对 {{company}} 的访问权限。",
+      "submittingRequest": "正在提交申请...",
+      "finishingSignIn": "正在完成登录..."
+    },
+    "error": {
+      "acceptFailed": "接受邀请失败"
+    }
+  },
+  "companySettings": {
+    "breadcrumbCompany": "团队",
+    "breadcrumbSettings": "设置",
+    "noCompany": "未选择团队。请从上方切换器中选择一个团队。",
+    "heading": "团队设置",
+    "section": {
+      "general": "常规",
+      "appearance": "外观",
+      "hiring": "招募",
+      "packages": "团队套餐",
+      "dangerZone": "危险区域"
+    },
+    "name": {
+      "label": "团队名称",
+      "hint": "您团队的显示名称。"
+    },
+    "description": {
+      "label": "描述",
+      "hint": "在团队资料中显示的可选描述。",
+      "placeholder": "可选团队描述"
+    },
+    "planLanguage": {
+      "label": "计划报告语言",
+      "hint": "编排器将以此语言撰写计划报告和问题草稿。"
+    },
+    "logo": {
+      "label": "Logo",
+      "hint": "上传 PNG、JPEG、WEBP、GIF 或 SVG 格式的 Logo 图片。",
+      "removing": "正在移除...",
+      "remove": "移除 Logo",
+      "uploadFailed": "Logo 上传失败",
+      "uploading": "正在上传 Logo..."
+    },
+    "brandColor": {
+      "label": "品牌色",
+      "hint": "设置团队图标的色调。留空则自动生成颜色。",
+      "placeholder": "自动",
+      "clear": "清除"
+    },
+    "attachment": {
+      "label": "附件大小限制",
+      "hint": "接受范围：1-{{max}} MiB。",
+      "invalid": "请输入 1 到 {{max}} 之间的整数。"
+    },
+    "save": {
+      "saving": "正在保存...",
+      "save": "保存更改",
+      "saved": "已保存",
+      "failed": "保存失败"
+    },
+    "hiring": {
+      "label": "新成员招募需要看板审批",
+      "hint": "新智能体招募将保持待审状态，直至看板批准。"
+    },
+    "toggle": {
+      "saveFailed": "保存失败 — 请重试。"
+    },
+    "autonomy": {
+      "heading": "自主性",
+      "subtitle": "决定您的 AI 团队自主运行的范围，以及在哪些环节等待您的决策。",
+      "recommended": "默认 · 推荐",
+      "approvals": {
+        "title": "计划与确认审批",
+        "on": "自动批准 — 系统立即接受智能体请求，工作无需您介入即可继续。",
+        "off": "需要您的审批 — 智能体发出请求后将等待您接受或拒绝。"
+      },
+      "routing": {
+        "title": "自动分配新问题",
+        "on": "您创建的问题将由编排器自动接手并执行。",
+        "off": "您自行为每个新问题选择负责人。"
+      },
+      "pair": {
+        "title": "配对自动运行默认值",
+        "on": "新配对将自动推进各轮次（可按配对单独关闭）。",
+        "off": "新配对默认以手动运行模式启动。"
+      },
+      "designFirst": {
+        "title": "设计优先",
+        "hint": "开启后，此团队中的任何问题都必须获得已批准的设计方案才能完成。各问题可单独选择退出。"
+      },
+      "info": {
+        "autoStart": "工作开始时，问题自动移入进行中状态。",
+        "pairConverge": "配对在收敛（双方互相确认）时自动完成。"
+      }
+    },
+    "packages": {
+      "movedPrefix": "导入和导出已迁移到可从以下位置访问的专属页面：",
+      "orgChartLink": "组织架构图",
+      "movedSuffix": " 标头。",
+      "sendToCloud": "发送到 Workcell Cloud",
+      "export": "导出",
+      "import": "导入"
+    },
+    "danger": {
+      "description": "归档此团队以将其从侧边栏隐藏。此操作会持久保存在数据库中。",
+      "confirm": "归档团队「{{name}}」？它将从侧边栏隐藏。",
+      "archiving": "正在归档…",
+      "alreadyArchived": "已归档",
+      "archive": "归档团队",
+      "failed": "操作失败。请重试。",
+      "archivedNote": "此团队已归档并从侧边栏隐藏。取消归档以使其重新激活。",
+      "unarchive": "取消归档团队",
+      "unarchiving": "正在取消归档…",
+      "delete": "删除团队",
+      "deleteDescription": "永久删除此团队及其所有智能体、议题和数据。此操作无法撤销。",
+      "deleteConfirmLabel": "输入团队名称以确认：",
+      "deleteConfirmButton": "永久删除",
+      "deleting": "正在删除…",
+      "deleteFailed": "删除团队失败"
+    }
+  },
+  "companySkills": {
+    "pane": {
+      "modeLabel": "模式",
+      "modeEditable": "可编辑",
+      "modeReadOnly": "只读",
+      "usedByLabel": "使用者",
+      "noAgents": "未关联任何代理",
+      "viewTab": "查看",
+      "codeTab": "代码",
+      "cancel": "取消",
+      "saving": "保存中...",
+      "save": "保存",
+      "selectFile": "选择要检查的文件。",
+      "selectSkill": "选择一个技能以查看其文件。",
+      "removeBlockedReason": "在移除此技能前，请先将其从所有代理上分离。",
+      "removing": "移除中…",
+      "remove": "移除",
+      "stopEditing": "停止编辑",
+      "edit": "编辑",
+      "sourceLabel": "来源",
+      "copiedPath": "已复制路径",
+      "copySourcePath": "复制来源路径",
+      "pinLabel": "固定",
+      "untracked": "未跟踪",
+      "tracking": "正在跟踪 {{ref}}",
+      "checkUpdates": "检查更新",
+      "installUpdate": "安装更新",
+      "upToDate": "已是最新",
+      "keyLabel": "键"
+    },
+    "breadcrumb": {
+      "skills": "技能",
+      "detail": "详情"
+    },
+    "toast": {
+      "imported": "技能已导入",
+      "importWarnings": "导入警告",
+      "importFailed": "技能导入失败",
+      "importFailedBody": "导入技能来源失败。",
+      "created": "技能已创建",
+      "createdBody": "{{name}} 现在可在 Workcell 工作区中编辑。",
+      "createFailed": "技能创建失败",
+      "createFailedBody": "创建技能失败。",
+      "scanComplete": "项目技能扫描完成",
+      "conflictsFound": "发现技能冲突",
+      "scanWarnings": "扫描警告",
+      "scanFailed": "项目技能扫描失败",
+      "scanFailedBody": "扫描项目工作区失败。",
+      "saved": "技能已保存",
+      "saveFailed": "保存失败",
+      "saveFailedBody": "保存技能文件失败。",
+      "updated": "技能已更新",
+      "pinnedTo": "已固定到 {{ref}}",
+      "updateFailed": "更新失败",
+      "updateFailedBody": "安装技能更新失败。",
+      "removed": "技能已移除",
+      "removedBody": "{{name}} 已从团队技能库中移除。",
+      "removeFailed": "移除失败",
+      "removeFailedBody": "移除技能失败。"
+    },
+    "scan": {
+      "scanning": "正在扫描项目工作区中的技能...",
+      "refreshing": "正在刷新技能列表..."
+    },
+    "selectCompany": "选择一个团队来管理技能。",
+    "deleteDialog": {
+      "title": "移除技能",
+      "description": "从团队库中移除此技能。若仍有代理在使用该技能，则需先解除关联才能移除。",
+      "confirmNamed": "您即将移除 {{name}}。",
+      "confirmGeneric": "您即将移除此技能。",
+      "currentlyUsedBy": "当前正在被 {{agents}} 使用。",
+      "detachHint": "请先将此技能从所有代理中解除关联，然后再移除。",
+      "close": "关闭",
+      "cancel": "取消",
+      "removing": "移除中...",
+      "remove": "移除技能"
+    },
+    "sourceDialog": {
+      "title": "添加技能来源",
+      "description": "请先将本地路径、GitHub URL 或 `skills.sh` 命令粘贴到输入框中。",
+      "browseTitle": "浏览 skills.sh",
+      "browseDescription": "查找安装命令并粘贴到此处。",
+      "searchTitle": "搜索 GitHub",
+      "searchDescription": "搜索包含 `SKILL.md` 的仓库，然后将仓库 URL 粘贴到此处。"
+    },
+    "sidebar": {
+      "title": "技能",
+      "available": "可用",
+      "scanTitle": "扫描项目工作区中的技能",
+      "filterPlaceholder": "筛选技能",
+      "sourcePlaceholder": "粘贴路径、GitHub URL 或 skills.sh 命令",
+      "add": "添加",
+      "newSkill": "新建技能"
+    },
+    "newForm": {
+      "namePlaceholder": "技能名称",
+      "slugPlaceholder": "可选的简称",
+      "descriptionPlaceholder": "简短描述",
+      "cancel": "取消",
+      "creating": "创建中…",
+      "create": "创建技能"
+    },
+    "list": {
+      "noMatch": "没有技能匹配此筛选条件。",
+      "collapse": "收起 {{name}}",
+      "expand": "展开 {{name}}"
+    }
+  },
+  "instanceAccess": {
+    "activeMembershipsCount": "{{count}} 个活跃团队成员资格",
+    "breadcrumbAccess": "访问权限",
+    "breadcrumbInstanceSettings": "实例设置",
+    "companyAccessDescription": "切换此用户的团队成员资格。新授权默认为活跃的运营者成员资格。",
+    "companyAccessHeading": "团队访问权限",
+    "currentMembershipsHeading": "当前成员资格",
+    "errorAdminRequired": "需要实例管理员权限才能管理用户。",
+    "errorLoadUserAccess": "加载用户访问权限失败。",
+    "errorLoadUsers": "加载用户失败。",
+    "errorNoUserSelected": "未选择用户",
+    "loadingUserAccess": "正在加载用户访问权限…",
+    "loadingUsers": "正在加载实例用户…",
+    "promoteAdmin": "提升为实例管理员",
+    "removeAdmin": "移除实例管理员",
+    "roleUnset": "未设置",
+    "saveCompanyAccess": "保存团队访问权限",
+    "saving": "保存中…",
+    "searchPlaceholder": "按姓名或邮箱搜索",
+    "searchUsersLabel": "搜索用户",
+    "selectUserPrompt": "选择一个用户以查看实例访问权限。",
+    "subtitle": "搜索用户、管理实例管理员状态，以及控制其可访问的团队。",
+    "title": "实例访问权限",
+    "toastCompanyAccessUpdated": "团队访问权限已更新",
+    "toastInstanceRoleUpdated": "实例角色已更新"
+  },
+  "instanceExperimentalSettings": {
+    "autoRecoveryAriaLabel": "切换问题图活跃度自动恢复",
+    "autoRecoveryDescription": "让心跳调度器为配置的回溯窗口内发现的问题依赖链自动创建恢复任务。",
+    "autoRecoveryHeading": "自动创建问题恢复任务",
+    "autoRestartAriaLabel": "切换受保护的开发服务器自动重启",
+    "autoRestartDescription": "在 `pnpm dev:once` 中，等待所有排队和运行中的本地代理任务完成，然后在后端变更或迁移使当前启动过时时自动重启服务器。",
+    "autoRestartHeading": "空闲时自动重启开发服务器",
+    "autonomousModeAriaLabel": "切换自主无人值守模式",
+    "autonomousModeDescription": "端到端运行多代理工作流，无需人工干预：用户审核/审批步骤自动通过，新代理招募跳过委员会审批。代理 QA 和复合审查阶段仍会运行，预算限制依然有效。",
+    "autonomousModeHeading": "自主模式",
+    "breadcrumbExperimental": "实验性功能",
+    "breadcrumbInstanceSettings": "实例设置",
+    "cancel": "取消",
+    "cloudSyncAriaLabel": "切换云同步实验性设置",
+    "cloudSyncDescription": "显示本地 Workcell Cloud 上游连接、预览、推送、重试和激活审查界面。禁用时，已保存的连接和运行历史记录将被保留。",
+    "cloudSyncHeading": "云同步",
+    "currentWindowMany": "当前窗口：最近 {{count}} 小时。",
+    "currentWindowOne": "当前窗口：最近 {{count}} 小时。",
+    "dialogChecking": "启用前正在检查恢复候选项。",
+    "dialogDescriptionMany": "{{count}} 个恢复任务匹配最近 {{hours}} 小时。",
+    "dialogDescriptionOne": "{{count}} 个恢复任务匹配最近 {{hours}} 小时。",
+    "dialogNoTasks": "当前不会创建任何恢复任务。自动恢复仍可在此窗口内的未来活跃度事件中运行。",
+    "dialogTitle": "确认自动恢复",
+    "enable": "启用",
+    "enableAndCreate": "启用并创建 {{count}} 个",
+    "enableOnly": "仅启用",
+    "environmentsAriaLabel": "切换环境实验性设置",
+    "environmentsDescription": "在团队设置中显示环境管理，并允许项目和代理环境分配控制。",
+    "environmentsHeading": "启用环境",
+    "errorCreate": "创建恢复任务失败。",
+    "errorLoad": "加载实验性设置失败。",
+    "errorLookbackRange": "回溯小时数必须是 1 到 720 之间的整数。",
+    "errorPreview": "预览恢复任务失败。",
+    "errorUpdate": "更新实验性设置失败。",
+    "isolatedWorkspacesAriaLabel": "切换隔离工作区实验性设置",
+    "isolatedWorkspacesDescription": "在项目配置中显示执行工作区控制，并允许新建及现有问题运行使用隔离工作区行为。",
+    "isolatedWorkspacesHeading": "启用隔离工作区",
+    "loading": "正在加载实验性设置...",
+    "lookbackHoursLabel": "回溯小时数",
+    "preview": "预览",
+    "recoveryTarget": "恢复目标：",
+    "runNow": "立即运行",
+    "saveHours": "保存小时数",
+    "skippedMany": "{{count}} 个当前发现超出配置的回溯范围，不会被处理。",
+    "skippedOne": "{{count}} 个当前发现超出配置的回溯范围，不会被处理。",
+    "subtitle": "选择加入仍在评估中、尚未成为默认行为的功能。",
+    "title": "实验性功能"
+  },
+  "instanceGeneralSettings": {
+    "authNotReady": "未就绪",
+    "authReadinessLabel": "身份验证就绪状态",
+    "authReady": "已就绪",
+    "retestPrompt": {
+      "part1": "要在本地开发环境中重新测试首次使用提示，请移除",
+      "part2": "键，位于此实例的",
+      "part3": "JSON 行中，或将其重置为",
+      "part4": "未设置和",
+      "part5": "均表示尚未选择默认值。"
+    },
+    "backupDaily": "每日",
+    "backupDescription": "配置自动数据库备份的保留时长。备份大约每小时运行一次，并使用 gzip 压缩。每日窗口内保留所有备份；超出后每周保留一份，每月保留一份。",
+    "backupHeading": "备份保留",
+    "backupMonthly": "每月",
+    "backupWeekly": "每周",
+    "bootstrapInviteActive": "活跃",
+    "bootstrapInviteLabel": "引导邀请",
+    "bootstrapInviteNone": "无",
+    "bootstrapReady": "已就绪",
+    "bootstrapSetupRequired": "需要设置",
+    "bootstrapStatusLabel": "引导状态",
+    "breadcrumbGeneral": "常规",
+    "breadcrumbInstanceSettings": "实例设置",
+    "censorAriaLabel": "切换用户名日志脱敏",
+    "censorDescription": "在主目录路径及类似的运营者可见日志输出中隐藏用户名部分。路径之外的独立用户名提及在实时转录视图中暂未脱敏。默认关闭。",
+    "censorHeading": "日志中脱敏用户名",
+    "daysCount": "{{count}} 天",
+    "deploymentHeading": "部署与身份验证",
+    "deploymentLocalTrusted": "本地受信模式针对本地运营者优化。浏览器请求以本地委员会上下文运行，无需登录。",
+    "deploymentPrivate": "已认证私有模式需要登录，适用于局域网、VPN 或其他私有网络部署。",
+    "deploymentPublic": "已认证公开模式需要登录才能访问看板，适用于公共 URL。",
+    "errorLoad": "加载常规设置失败。",
+    "errorSignOut": "退出登录失败。",
+    "errorUpdate": "更新常规设置失败。",
+    "feedbackAllowDescription": "自动分享已投票的 AI 输出。",
+    "feedbackAllowLabel": "始终允许",
+    "feedbackDenyDescription": "仅在本地保留已投票的 AI 输出。",
+    "feedbackDenyLabel": "不允许",
+    "feedbackDescription": "控制点赞和踩的投票是否可将已投票的 AI 输出发送到 Workcell Labs。投票始终在本地保存。",
+    "feedbackHeading": "AI 反馈共享",
+    "feedbackPromptNotice": "尚未保存默认值。下次点赞或踩时将提示一次并将答案保存到此处。",
+    "feedbackTermsLink": "阅读我们的服务条款",
+    "loading": "正在加载常规设置...",
+    "monthOne": "1 个月",
+    "monthsCount": "{{count}} 个月",
+    "shortcutsAriaLabel": "切换键盘快捷键",
+    "shortcutsDescription": "启用应用键盘快捷键，包括收件箱导航和创建问题、切换面板等全局快捷键。默认关闭。",
+    "shortcutsHeading": "键盘快捷键",
+    "signOutButton": "退出登录",
+    "signOutDescription": "退出此 Workcell 实例。您将被重定向到登录页面。",
+    "signOutHeading": "退出登录",
+    "signingOut": "退出中...",
+    "subtitle": "配置实例级偏好设置，包括日志显示、键盘快捷键、备份保留和数据共享。",
+    "title": "常规",
+    "weekOne": "1 周",
+    "weeksCount": "{{count}} 周"
+  },
+  "instanceSettings": {
+    "badgeOff": "关闭",
+    "badgeOn": "开启",
+    "breadcrumbHeartbeats": "心跳",
+    "breadcrumbInstanceSettings": "实例设置",
+    "confirmDisableAll": "禁用所有 {{count}} 个已启用{{noun}}的计时器心跳？",
+    "disableAll": "全部禁用",
+    "disableTimerHeartbeat": "禁用计时器心跳",
+    "disabling": "禁用中...",
+    "emptyState": "没有符合当前条件的调度器心跳。",
+    "enableTimerHeartbeat": "启用计时器心跳",
+    "errorDisableAll": "禁用所有心跳失败。",
+    "errorDisableMany": "禁用 {{total}} 个计时器心跳中的 {{count}} 个失败。第一个错误：{{detail}}",
+    "errorDisableOne": "禁用 1 个计时器心跳失败：{{detail}}",
+    "errorLoad": "加载调度器心跳失败。",
+    "errorUpdateHeartbeat": "更新心跳失败。",
+    "fullAgentConfig": "完整代理配置",
+    "loading": "正在加载调度器心跳...",
+    "never": "从不",
+    "nounAgent": "代理",
+    "nounAgents": "代理",
+    "statActive": "活跃",
+    "statCompanies": "团队",
+    "statCompany": "团队",
+    "statDisabled": "已禁用",
+    "subtitle": "您所有团队中已启用计时器心跳的代理。",
+    "title": "调度器心跳",
+    "unknownError": "未知错误"
+  },
+  "profileSettings": {
+    "avatarHint": "点击头像上传新图片。{{hint}}",
+    "breadcrumbInstanceSettings": "实例设置",
+    "breadcrumbProfile": "个人资料",
+    "changePhoto": "更换照片",
+    "displayNameHint": "显示在侧边栏账户底部和评论作者处。",
+    "displayNameLabel": "显示名称",
+    "displayNamePlaceholder": "Board",
+    "emailHint": "邮箱由您的身份验证会话管理，此处为只读。",
+    "emailLabel": "邮箱",
+    "errorLoad": "加载个人资料失败。",
+    "errorRemoveAvatar": "移除头像失败。",
+    "errorSelectCompany": "上传个人资料头像前请先选择一个团队。",
+    "errorUpdate": "更新个人资料失败。",
+    "errorUploadAvatar": "上传头像失败。",
+    "loading": "正在加载个人资料...",
+    "noEmail": "无邮箱",
+    "removePhoto": "移除",
+    "saveProfile": "保存个人资料",
+    "saving": "保存中...",
+    "subtitle": "控制您的账户在侧边栏和其他看板界面中的显示方式。",
+    "title": "个人资料",
+    "uploadHintCompany": "存储在 {{company}} 的 Workcell 文件存储中。",
+    "uploadHintNoCompany": "选择一个团队以将头像上传到 Workcell 存储。",
+    "uploadPhoto": "上传照片"
+  },
+  "userProfile": {
+    "agentAttribution": "代理归因",
+    "billedThrough": "通过 {{biller}} 计费",
+    "breadcrumbUsers": "用户",
+    "completionDone": "{{rate}} 已完成",
+    "completions": "完成数",
+    "emptyNoCompany": "选择一个团队以查看用户资料。",
+    "emptyNotFound": "未找到此团队的用户资料。",
+    "hero7DayActions": "7 天操作数",
+    "heroAllTimeTokens": "累计 Token 数",
+    "heroCommentsHint": "{{value}} 条评论",
+    "heroCompleted": "已完成",
+    "heroCreatedHint": "{{value}} 个已创建",
+    "heroOpenAssigned": "已分配的待处理",
+    "heroRateHint": "{{rate}} 比率",
+    "heroSpentHint": "已花费 {{amount}}",
+    "issueLinkedUsage": "关联议题的用量",
+    "joinedDate": "{{date}} 加入",
+    "last14Days": "最近 14 天",
+    "metricActions": "操作",
+    "metricComments": "评论",
+    "metricCompleted": "已完成",
+    "metricTouched": "已触及",
+    "noActivity": "尚无直接用户操作记录。",
+    "noAgentUsage": "尚无关联议题的 Token 用量。",
+    "noProviderUsage": "尚未归因任何提供商用量。",
+    "noTouchedTasks": "尚无已触及的任务。",
+    "providerMix": "提供商分布",
+    "recentActivity": "近期活动",
+    "recentTasks": "近期任务",
+    "roleMember": "成员",
+    "statCreated": "已创建",
+    "statOpen": "待处理",
+    "statSpend": "花费",
+    "statTokens": "Token",
+    "tokensPerDay": "Token / 天",
+    "tokensTotal": "Token 总计"
+  },
+  "issueDetail": {
+    "welcome": {
+      "title": "您的代理将从这里接手",
+      "pairTitle": "您的两个代理已配对处理此任务",
+      "body": "已分配的代理将很快开始规划。在此处查看进度——随时在下方消息框中回复以引导它。",
+      "pairBody": "打开下方的协作面板，点击\"运行轮次\"以启动两个代理协同工作。随时在消息框中回复以引导它们。",
+      "dismiss": "知道了"
+    },
+    "actor": {
+      "system": "系统",
+      "board": "看板",
+      "unknown": "未知"
+    },
+    "badge": {
+      "routine": "例程",
+      "live": "实时",
+      "productivityReviewTooltip": "此任务是生产力审查。",
+      "productivityReview": "生产力审查",
+      "planningTooltip": "此议题处于规划模式。",
+      "planning": "规划中",
+      "parkedBlockerTooltip": "被搁置工作阻塞——至少有一个已分配的阻塞项在待办列表中，不会唤醒其负责人。",
+      "parkedBlocker": "被搁置工作阻塞"
+    },
+    "noProject": "无项目",
+    "toolbar": {
+      "backToInbox": "返回收件箱",
+      "archiveFromInbox": "从收件箱归档",
+      "moreActions": "更多操作"
+    },
+    "action": {
+      "copyAsMarkdown": "复制为 Markdown",
+      "properties": "属性",
+      "hideThisIssue": "隐藏此议题",
+      "addProofBundle": "添加证明包",
+      "compactContextTooltip": "从最近一次运行刷新续接摘要",
+      "compacting": "压缩中…",
+      "compactContext": "压缩上下文",
+      "copyAsMarkdownTooltip": "将议题复制为 Markdown",
+      "showProperties": "显示属性",
+      "moreIssueActions": "更多议题操作",
+      "newSubIssue": "新建子议题"
+    },
+    "comments": {
+      "loadingEarlier": "加载更早的评论...",
+      "loadEarlier": "加载更早的评论"
+    },
+    "run": {
+      "pauseWork": "暂停工作",
+      "pausing": "暂停中..."
+    },
+    "cost": {
+      "summaryTitle": "费用摘要",
+      "noDataYet": "暂无费用数据。",
+      "thisIssue": "此议题",
+      "noDirectData": "无直接费用数据。"
+    },
+    "toast": {
+      "updateFailed": {
+        "title": "议题更新失败",
+        "body": "无法保存议题更改"
+      },
+      "addProofFailed": {
+        "title": "无法添加证明包",
+        "body": "无法附加证明包"
+      },
+      "contextCompacted": {
+        "title": "上下文已压缩",
+        "body": "续接摘要已刷新。"
+      },
+      "compactFailed": {
+        "title": "无法压缩上下文",
+        "noRun": "请先在此议题上启动一次运行。"
+      },
+      "recoveryFailed": {
+        "title": "恢复解析失败",
+        "body": "无法解析恢复操作"
+      },
+      "treeControlFailed": {
+        "title": "无法应用子树控制",
+        "body": "请重试。"
+      },
+      "workPaused": {
+        "title": "工作已暂停",
+        "held": "工作已暂停。此议题将保持搁置直到恢复。"
+      },
+      "pauseWorkFailed": {
+        "title": "无法暂停工作",
+        "body": "请重试。"
+      },
+      "subIssueUpdateFailed": {
+        "body": "无法保存子议题更改"
+      },
+      "monitorQueued": {
+        "title": "监控检查已排队"
+      },
+      "monitorFailed": {
+        "title": "监控检查失败",
+        "body": "当前无法触发监控"
+      },
+      "approvalApproved": "审批已通过",
+      "approvalRejected": "审批已拒绝",
+      "approvalFailed": "审批失败",
+      "rejectionFailed": "拒绝失败",
+      "approvalUpdateFailed": {
+        "body": "无法更新审批"
+      },
+      "commentFailed": {
+        "title": "评论失败",
+        "body": "无法发布评论"
+      },
+      "cancelFailed": {
+        "title": "取消失败"
+      },
+      "cancelQueuedFailed": {
+        "body": "无法取消排队中的评论"
+      },
+      "cancelQuestionFailed": {
+        "body": "无法取消问题"
+      },
+      "requestConfirmed": "请求已确认",
+      "suggestedTasksAccepted": "建议任务已接受",
+      "acceptFailed": {
+        "title": "接受失败",
+        "body": "无法接受建议的任务"
+      },
+      "requestDeclined": "请求已拒绝",
+      "suggestionRejected": "建议已拒绝",
+      "rejectFailed": {
+        "title": "拒绝失败",
+        "body": "无法拒绝建议的任务"
+      },
+      "answersSubmitted": {
+        "title": "答案已提交"
+      },
+      "submitFailed": {
+        "title": "提交失败",
+        "body": "无法提交答案"
+      },
+      "questionCancelled": {
+        "title": "问题已取消"
+      },
+      "interruptRequested": {
+        "title": "已请求中断",
+        "body": "当前运行正在停止，以便排队的评论可在下次继续。"
+      },
+      "interruptFailed": {
+        "title": "中断失败",
+        "body": "无法中断当前运行"
+      },
+      "queuedCommentCanceled": {
+        "title": "排队评论已取消",
+        "body": "排队消息已还原至编辑器。"
+      },
+      "feedbackSavedShare": "反馈已保存。后续投票将共享",
+      "feedbackSavedLocal": "反馈已保存。后续投票将保持本地",
+      "feedbackSavedSharingEnabled": "反馈已保存并启用共享",
+      "feedbackSaved": "反馈已保存",
+      "feedbackFailed": {
+        "title": "保存反馈失败",
+        "body": "未知错误"
+      },
+      "archived": {
+        "title": "议题已从收件箱归档"
+      },
+      "archiveFailed": {
+        "title": "归档失败",
+        "body": "无法从收件箱归档此议题"
+      },
+      "copiedToClipboard": {
+        "title": "已复制到剪贴板"
+      }
+    },
+    "breadcrumb": {
+      "issues": "议题"
+    },
+    "reassign": {
+      "me": "我"
+    },
+    "treeControl": {
+      "pauseWork": "暂停工作",
+      "pauseAndStop": "暂停并停止工作",
+      "cancelIssues": "取消 {{count}} 个议题",
+      "restoreIssues": "恢复 {{count}} 个议题",
+      "resumeWork": "继续工作",
+      "resumeSubtree": "继续子树",
+      "cancelSubtreeMenu": "取消子树..."
+    },
+    "attachments": {
+      "uploading": "上传中...",
+      "uploadAttachment": "上传附件",
+      "upload": "上传",
+      "deleteConfirm": "确认删除？",
+      "deleteYes": "是",
+      "deleteNo": "否",
+      "deleteTooltip": "删除附件"
+    },
+    "notice": {
+      "hidden": "此议题已隐藏"
+    },
+    "pauseHold": {
+      "leafTitle": "已被看板暂停。",
+      "subtreeTitle": "子树暂停已激活。",
+      "leafDescription": "议题执行已搁置，直到恢复为止。人工评论仍可唤醒负责人进行分类处理。",
+      "subtreeDescription": "根节点及其后代的执行已搁置，直到恢复为止。人工评论仍可唤醒负责人进行分类处理。",
+      "oneIssueHeld": "1 个议题已搁置",
+      "viewAffected": "查看受影响项（{{count}}）",
+      "ancestorPausedPrefix": "此议题已被祖先议题暂停",
+      "ancestorPausedSuffix": "。请从根议题恢复以交付延迟的工作。"
+    },
+    "status": {
+      "attachProofFirst": "请先附加证明包"
+    },
+    "menu": {
+      "pauseWork": "暂停工作...",
+      "resumeWork": "继续工作",
+      "pauseSubtree": "暂停子树...",
+      "resumeSubtree": "继续子树",
+      "cancelSubtree": "取消子树...",
+      "restoreSubtree": "恢复子树...",
+      "hideIssue": "隐藏此议题"
+    },
+    "description": {
+      "placeholder": "添加描述..."
+    },
+    "section": {
+      "subIssues": "子议题",
+      "subIssueLabel": "子议题",
+      "attachments": "附件"
+    },
+    "tab": {
+      "chat": "聊天",
+      "activity": "动态",
+      "relatedWork": "相关工作"
+    },
+    "dialog": {
+      "cancelWarning": "取消子树是破坏性操作。非终态议题将被标记为已取消，运行中或排队中的工作将在可能的情况下被中断。",
+      "reasonLabel": "原因（可选）",
+      "reasonPlaceholder": "说明应用此子树控制的原因...",
+      "wakeAgents": "唤醒受影响的代理（{{count}}）",
+      "wakeNone": "此预览中没有符合唤醒条件的已分配代理。",
+      "wakeDescription": "操作完成后唤醒已分配的代理。",
+      "cancelConfirm": "我确认此操作将取消 {{count}} 个议题。",
+      "retryPreview": "重试预览",
+      "complete": "完成",
+      "previewUnavailable": "预览不可用。",
+      "close": "关闭",
+      "applying": "应用中..."
+    }
+  },
+  "cloudUpstream": {
+    "breadcrumbCompanyFallback": "团队",
+    "breadcrumbSettings": "设置",
+    "breadcrumbCloudUpstream": "云端上游",
+    "runLabel": "运行 {{id}} · {{status}}",
+    "noticeConnectionApproved": "云端上游连接已批准。",
+    "errorFinishConnection": "完成连接失败。",
+    "errorNoPendingConnection": "未找到待处理的云端上游连接。请重新开始连接。",
+    "errorConnectionNotApproved": "云端上游连接未获批准：{{error}}",
+    "errorStartConnection": "启动连接失败。",
+    "noticePushCompleted": "推送运行完成。取消暂停自动化前请检查激活状态。",
+    "noticePushFailed": "推送运行失败。请查看运行事件并在修正问题后重试。",
+    "errorRunPush": "执行推送失败。",
+    "noticeActivationUpdated": "激活清单已更新。",
+    "errorActivateEntities": "激活导入实体失败。",
+    "selectCompany": "选择一个团队以配置云端上游。",
+    "loadingExperimental": "加载实验性设置...",
+    "title": "云端上游",
+    "disabledIntro": "云同步已禁用。请在",
+    "instanceSettingsLink": "实例设置",
+    "disabledOutro": "中启用，以显示上游连接和推送工具。",
+    "intro": "将 {{companyName}} 推送到 Workcell 云端堆栈。自动化将保持暂停直到激活。",
+    "openCloud": "打开云端",
+    "connectionLabel": "连接",
+    "previewPush": "预览推送",
+    "stackUrlAriaLabel": "Workcell 云端堆栈 URL",
+    "connect": "连接",
+    "previewLabel": "预览",
+    "pushToCloud": "推送到云端",
+    "progressLabel": "进度与完成",
+    "downloadReport": "下载报告",
+    "retry": "重试",
+    "reRun": "重新运行",
+    "inProgress": "进行中",
+    "historyLabel": "历史",
+    "warningsHeading": "警告",
+    "conflictsHeading": "冲突",
+    "noConflicts": "此预览未检测到目标冲突。",
+    "activationChecklistHeading": "激活清单",
+    "activated": "已激活",
+    "activate": "激活",
+    "keepPaused": "保持暂停",
+    "step": {
+      "connect": "连接",
+      "scan": "扫描",
+      "preview": "预览",
+      "push": "推送",
+      "verify": "验证",
+      "activate": "激活"
+    },
+    "activationCategory": {
+      "agents": "代理",
+      "routines": "例程",
+      "monitors": "监控器"
+    },
+    "activationNoun": {
+      "agents_one": "个代理",
+      "agents_other": "个代理",
+      "routines_one": "个例程",
+      "routines_other": "个例程",
+      "monitors_one": "个监控器",
+      "monitors_other": "个监控器"
+    },
+    "activationCategoryDetail": {
+      "agents": "取消暂停导入的代理前，请确认云端密钥和适配器凭证。",
+      "routines": "启用导入的例程前，请检查时间表和触发器设置。",
+      "monitors": "在目标堆栈完成冒烟测试后再激活。"
+    },
+    "activationDetail": "{{count}} 个导入的 {{noun}} 默认已暂停。{{suffix}}",
+    "activationEmptyDetail": "此次运行中有 0 个导入的 {{noun}}。",
+    "activationStatusActivated": "{{count}} 个已激活",
+    "activationStatusImportedZero": "0 个已导入",
+    "activationStatusPaused": "{{count}} 个已暂停"
+  },
+  "executionWorkspaceDetail": {
+    "copied": "已复制",
+    "defaultAgentSet": "默认 Agent 集",
+    "chooseAgentWhenRunning": "运行时选择 Agent",
+    "lastRun": "上次运行",
+    "running": "运行中...",
+    "runNow": "立即运行",
+    "toastRoutineStartedTitle": "例程已启动",
+    "toastRoutineStartedBody": "Workcell 已使用此执行工作区创建运行。",
+    "toastRoutineRunFailedTitle": "例程运行失败",
+    "toastRoutineRunFailedBody": "Workcell 无法启动例程运行。",
+    "workspaceRoutinesTitle": "工作区例程",
+    "workspaceRoutinesDescription": "使用工作区特定变量的例程可针对此执行工作区运行。",
+    "loadingRoutines": "正在加载例程...",
+    "errorLoadRoutines": "加载例程失败。",
+    "noWorkspaceRoutines": "目前没有使用工作区特定变量的例程。",
+    "breadcrumbProjects": "项目",
+    "breadcrumbWorkspaces": "工作区",
+    "errorSaveWorkspace": "保存执行工作区失败。",
+    "runtimeJobCompleted": "工作区任务已完成。",
+    "runtimeServiceStopped": "工作区服务已停止。",
+    "runtimeServiceRestarted": "工作区服务已重启。",
+    "runtimeServiceStarted": "工作区服务已启动。",
+    "errorControlCommands": "控制工作区命令失败。",
+    "loading": "正在加载工作区…",
+    "errorLoad": "加载工作区失败",
+    "kicker": "执行工作区",
+    "serviceEmptyStarted": "此执行工作区尚未启动任何服务。",
+    "serviceEmptyNoConfig": "此执行工作区尚未定义工作区命令配置。",
+    "jobEmpty": "此执行工作区尚未配置任何一次性任务。",
+    "disabledHint": "执行工作区需要工作目录才能运行本地命令，服务还需要运行时配置。",
+    "workspaceSettingsTitle": "工作区设置",
+    "workspaceSettingsDescription": "编辑附加到此执行工作区的具体路径、仓库、分支、预置、销毁及运行时覆盖。",
+    "retryClose": "重试关闭",
+    "closeWorkspace": "关闭工作区",
+    "sectionGeneral": "常规",
+    "fieldWorkspaceName": "工作区名称",
+    "placeholderWorkspaceName": "执行工作区名称",
+    "sectionSourceControl": "源代码控制",
+    "fieldBranchName": "分支名称",
+    "hintBranchName": "适用于独立工作树",
+    "fieldBaseRef": "基础引用",
+    "fieldRepoUrl": "仓库 URL",
+    "sectionPaths": "路径",
+    "fieldWorkingDirectory": "工作目录",
+    "fieldProviderRef": "提供商路径 / 引用",
+    "sectionLifecycleCommands": "生命周期命令",
+    "fieldProvisionCommand": "预置命令",
+    "hintProvisionCommand": "Workcell 准备此执行工作区时运行",
+    "fieldTeardownCommand": "销毁命令",
+    "hintTeardownCommand": "执行工作区归档或清理时运行",
+    "fieldCleanupCommand": "清理命令",
+    "hintCleanupCommand": "销毁前的工作区专项清理",
+    "sectionRuntimeConfig": "运行时配置",
+    "runtimeConfigSource": "运行时配置来源",
+    "runtimeSourceOverride": "此执行工作区当前覆盖了项目工作区的运行时配置。",
+    "runtimeSourceInherit": "此执行工作区正在继承项目工作区的运行时配置。",
+    "runtimeSourceNone": "此执行工作区及其项目工作区当前均未定义运行时配置。",
+    "resetToInherit": "重置为继承",
+    "advancedRuntimeJsonSummary": "高级运行时 JSON",
+    "advancedRuntimeJsonDescription": "仅在此执行工作区确实需要不同的服务或任务行为时，才覆盖继承的工作区命令模型。",
+    "fieldWorkspaceCommandsJson": "工作区命令 JSON",
+    "hintWorkspaceCommandsJson": "旧版 `services` 数组仍然有效，但 `commands` 同时支持服务和任务。",
+    "inheritRuntimeConfigLabel": "继承项目工作区运行时配置",
+    "saveChanges": "保存更改",
+    "reset": "重置",
+    "noUnsavedChanges": "没有未保存的更改。",
+    "workspaceContextTitle": "工作区上下文",
+    "workspaceContextDescription": "关联对象与关系",
+    "detailProject": "项目",
+    "detailProjectWorkspace": "项目工作区",
+    "none": "无",
+    "detailSourceIssue": "来源问题",
+    "detailDerivedFrom": "派生自",
+    "detailWorkspaceId": "工作区 ID",
+    "concreteLocationTitle": "具体位置",
+    "concreteLocationDescription": "路径与引用",
+    "detailWorkingDir": "工作目录",
+    "detailProviderRef": "提供商引用",
+    "detailRepoUrl": "仓库 URL",
+    "detailBaseRef": "基础引用",
+    "detailBranch": "分支",
+    "detailOpened": "创建时间",
+    "detailLastUsed": "上次使用",
+    "detailCleanup": "清理",
+    "notScheduled": "未计划",
+    "runtimeLogsTitle": "运行时与清理日志",
+    "runtimeLogsDescription": "近期操作",
+    "loadingOperations": "正在加载工作区操作…",
+    "errorLoadOperations": "加载工作区操作失败。",
+    "noOperations": "尚未记录任何工作区操作。",
+    "loadingPlugin": "正在加载工作区插件...",
+    "backToIssues": "返回问题列表",
+    "tabs": {
+      "issues": "问题",
+      "services": "服务",
+      "configuration": "配置",
+      "runtime_logs": "运行时日志",
+      "routines": "例程"
+    }
+  },
+  "pluginManager": {
+    "breadcrumb": {
+      "company": "团队",
+      "settings": "设置",
+      "plugins": "插件"
+    },
+    "toast": {
+      "installed": "插件安装成功",
+      "installFailed": "安装插件失败",
+      "uninstalled": "插件卸载成功",
+      "uninstallFailed": "卸载插件失败",
+      "enabled": "插件已启用",
+      "enableFailed": "启用插件失败",
+      "disabled": "插件已禁用",
+      "disableFailed": "禁用插件失败"
+    },
+    "loading": "正在加载插件...",
+    "loadError": "加载插件失败。",
+    "title": "插件管理器",
+    "installButton": "安装插件",
+    "installDialog": {
+      "title": "安装插件",
+      "description": "输入要安装的插件的 npm 包名。",
+      "packageNameLabel": "npm 包名",
+      "cancel": "取消",
+      "installing": "安装中...",
+      "install": "安装"
+    },
+    "alphaNotice": {
+      "title": "插件功能处于 Alpha 阶段。",
+      "body": "插件运行时和 API 接口仍在变更中，在该功能稳定之前请预期会有破坏性变更。"
+    },
+    "available": {
+      "title": "可用插件",
+      "bundledBadge": "内置",
+      "loading": "正在加载内置插件...",
+      "loadError": "加载内置插件失败。",
+      "empty": "在此检出中未找到内置插件。",
+      "firstPartyBadge": "官方",
+      "exampleBadge": "示例",
+      "notInstalledBadge": "未安装",
+      "enable": "启用",
+      "openSettings": "打开设置",
+      "review": "查看",
+      "installing": "安装中...",
+      "installExample": "安装示例"
+    },
+    "installed": {
+      "title": "已安装插件",
+      "emptyTitle": "未安装任何插件",
+      "emptyBody": "安装插件以扩展功能。",
+      "exampleBadge": "示例",
+      "noDescription": "暂无描述。",
+      "pluginError": "插件错误",
+      "viewFullError": "查看完整错误",
+      "disableTitle": "禁用",
+      "enableTitle": "启用",
+      "uninstallTitle": "卸载",
+      "configure": "配置"
+    },
+    "uninstallDialog": {
+      "title": "卸载插件",
+      "bodyBefore": "确定要卸载",
+      "cannotUndo": "此操作无法撤销。",
+      "cancel": "取消",
+      "uninstalling": "卸载中...",
+      "uninstall": "卸载"
+    },
+    "errorDialog": {
+      "title": "错误详情",
+      "description": "{{name}} 出现错误状态。",
+      "pluginFallback": "插件",
+      "whatErrored": "错误来源",
+      "noSummary": "暂无错误摘要。",
+      "fullOutput": "完整错误输出",
+      "noStoredMessage": "没有存储的错误信息。",
+      "close": "关闭"
+    }
+  },
+  "adapterManager": {
+    "row": {
+      "sourceExternal": "外部",
+      "sourceBuiltin": "内置",
+      "installedFromLocalPath": "从本地路径安装",
+      "installedFromNpm": "从 npm 安装",
+      "overridesBuiltin": "覆盖内置",
+      "overriddenBy": "被 {{name}} 覆盖",
+      "hiddenFromMenus": "已从菜单隐藏",
+      "modelsCount": "{{count}} 个模型",
+      "reinstallTitle": "重新安装适配器（从 npm 拉取最新版本）",
+      "reloadTitle": "重新加载适配器（热替换）",
+      "showInMenus": "在 Agent 菜单中显示",
+      "hideFromMenus": "从 Agent 菜单中隐藏",
+      "removeTitle": "移除适配器",
+      "pauseOverride": "暂停外部覆盖",
+      "resumeOverride": "恢复外部覆盖",
+      "overridePaused": "覆盖已暂停"
+    },
+    "reinstallDialog": {
+      "title": "重新安装适配器",
+      "bodyBefore": "这将从 npm 拉取最新版本的",
+      "bodyAfter": "并热替换运行中的适配器模块。现有 Agent 将在下次运行时使用新版本。",
+      "package": "包",
+      "current": "当前版本",
+      "unknown": "未知",
+      "latestOnNpm": "npm 最新版本",
+      "checking": "检查中...",
+      "unavailable": "不可用",
+      "alreadyLatest": "已是最新版本。",
+      "cancel": "取消",
+      "reinstalling": "重新安装中...",
+      "reinstall": "重新安装"
+    },
+    "breadcrumb": {
+      "company": "团队",
+      "settings": "设置",
+      "adapters": "适配器"
+    },
+    "toast": {
+      "installed": {
+        "title": "适配器已安装",
+        "body": "类型 \"{{type}}\" 注册成功。"
+      },
+      "installFailed": {
+        "title": "安装失败"
+      },
+      "removed": {
+        "title": "适配器已移除"
+      },
+      "removalFailed": {
+        "title": "移除失败"
+      },
+      "toggleFailed": {
+        "title": "切换失败"
+      },
+      "overrideToggleFailed": {
+        "title": "覆盖切换失败"
+      },
+      "reloaded": {
+        "title": "适配器已重新加载",
+        "body": "类型「{{type}}」已重新加载。"
+      },
+      "reloadFailed": {
+        "title": "重新加载失败"
+      },
+      "reinstalled": {
+        "title": "适配器已重新安装",
+        "body": "类型「{{type}}」已从 npm 更新。"
+      },
+      "reinstallFailed": {
+        "title": "重新安装失败"
+      }
+    },
+    "loading": "正在加载适配器…",
+    "title": "适配器",
+    "alphaBadge": "Alpha",
+    "installButton": "安装适配器",
+    "installDialog": {
+      "title": "安装外部适配器",
+      "bodyBefore": "从 npm 或本地路径添加适配器。该适配器包必须导出",
+      "npmPackageTab": "npm 包",
+      "localPathTab": "本地路径",
+      "localPathLabel": "适配器包路径",
+      "localPathHint": "支持 Linux、WSL 和 Windows 路径。Windows 路径会自动转换。",
+      "packageNameLabel": "包名称",
+      "versionLabel": "版本（可选）",
+      "cancel": "取消",
+      "installing": "安装中…",
+      "install": "安装"
+    },
+    "alphaNotice": {
+      "title": "外部适配器处于 Alpha 阶段。",
+      "body": "适配器插件系统正在积极开发中。API 和存储格式可能会变化。使用电源图标可在不移除适配器的情况下将其从代理菜单中隐藏。"
+    },
+    "externalSection": {
+      "title": "外部适配器",
+      "emptyTitle": "未安装外部适配器",
+      "emptyBody": "安装适配器包以扩展模型支持。"
+    },
+    "builtinSection": {
+      "title": "内置适配器",
+      "empty": "未找到内置适配器。"
+    },
+    "removeDialog": {
+      "title": "移除适配器",
+      "bodyBefore": "你确定要移除该",
+      "bodyAfter": "适配器吗？它将被取消注册并从适配器存储中移除。",
+      "npmCleanup": "npm 包将从磁盘上清理。",
+      "cannotUndo": "此操作无法撤销。",
+      "cancel": "取消",
+      "removing": "移除中…",
+      "remove": "移除"
+    }
+  },
+  "grillMode": {
+    "toggle": "追问",
+    "toggleHint": "先追问我——规划器在起草前会提出有针对性的澄清问题，并为每个问题给出推荐答案。",
+    "askButton": "先提问",
+    "askingButtonPending": "提问中…",
+    "helper": "追问模式已开启——规划器会在起草前提出有针对性的澄清问题（每个问题都附带推荐答案）。",
+    "questionsHeading": "回答几个问题，然后根据明确的意图起草",
+    "noQuestions": "规划器没有需要澄清的问题——你的请求看起来已经很明确。直接按原样起草。",
+    "answerAriaLabel": "针对以下问题的回答：{{question}}",
+    "rationaleLabel": "原因",
+    "draftWithAnswers": "用这些答案起草",
+    "skipAndDraft": "跳过并起草",
+    "error": "无法获取澄清问题。请重试，或不带澄清问题直接起草。"
+  },
+  "agentIconPicker": {
+    "searchPlaceholder": "搜索图标…",
+    "noIconsMatch": "没有匹配的图标"
+  },
+  "documentDiffModal": {
+    "selectRevision": "选择修订版本",
+    "old": "旧版",
+    "new": "新版",
+    "content": "内容",
+    "loadingRevisions": "正在加载修订版本…",
+    "selectTwoRevisions": "选择两个修订版本进行比较。",
+    "sameRevision": "两侧是同一个修订版本。",
+    "diffPrefix": "差异 —"
+  },
+  "jsonSchemaForm": {
+    "selectAnOption": "选择一个选项",
+    "selectExistingSecret": "选择一个现有密钥",
+    "noConfigOptions": "没有可用的配置选项。",
+    "noItemsAdded": "尚未添加任何项。",
+    "addItem": "添加项",
+    "add": "添加",
+    "itemLabel": "项 {{number}}",
+    "removeItem": "移除项",
+    "hideSecret": "隐藏密钥",
+    "showSecret": "显示密钥",
+    "sensitiveHidden": "敏感内容——已隐藏 {{count}} 个字符。点击眼睛图标可显示。",
+    "secretDescription": "选择一个现有的团队密钥，或粘贴一个原始值（保存时 Workcell 会将其存储为密钥）。",
+    "noActiveSecrets": "尚无有效密钥。请创建一个，或在下方粘贴原始值。",
+    "orPasteRawValue": "或粘贴原始值",
+    "hideRawValueInput": "隐藏原始值输入框"
+  },
+  "envVarEditor": {
+    "createSecretTooltip": "从当前明文值创建密钥",
+    "sealTooltip": "将值存储为密钥并替换为引用",
+    "newButton": "新建",
+    "sealButton": "封存",
+    "keyPlaceholder": "键",
+    "sourcePlain": "明文",
+    "sourceSecret": "密钥",
+    "selectSecretOption": "选择密钥…",
+    "missingSecretOption": "缺失（{{id}}…）",
+    "versionAria": "版本",
+    "versionLatest": "最新",
+    "secretNamePrompt": "密钥名称",
+    "createSecretFailed": "创建密钥失败",
+    "helperText": "将键设置为进程期望的环境变量名，例如 GH_TOKEN。选择密钥可在运行开始时解析已存储的值。WORKCELL_* 变量会自动注入。"
+  },
+  "approvalDetail": {
+    "breadcrumb": {
+      "root": "审批",
+      "fallback": "审批"
+    },
+    "errors": {
+      "approveFailed": "批准失败",
+      "rejectFailed": "拒绝失败",
+      "revisionFailed": "修订请求失败",
+      "resubmitFailed": "重新提交失败",
+      "commentFailed": "评论失败",
+      "deleteFailed": "删除失败"
+    },
+    "notFound": "未找到审批。",
+    "cta": {
+      "reviewLinkedIssues": "查看关联议题",
+      "reviewLinkedIssue": "查看关联议题",
+      "openHiredAgent": "打开已雇用的智能体",
+      "backToApprovals": "返回审批"
+    },
+    "banner": {
+      "title": "审批已确认",
+      "description": "已通知发起请求的智能体查看此审批及关联议题。"
+    },
+    "requestedBy": "请求人",
+    "seeFullRequest": "查看完整请求",
+    "decisionNote": "决策备注：{{note}}",
+    "linkedIssues": {
+      "title": "关联议题",
+      "note": "关联议题在发起请求的智能体跟进并关闭它们之前将保持开启状态。"
+    },
+    "budgetStop": {
+      "prefix": "请在以下位置的预算控制中解决此预算停止："
+    },
+    "actions": {
+      "approve": "批准",
+      "reject": "拒绝",
+      "requestRevision": "请求修订",
+      "markResubmitted": "标记为已重新提交",
+      "deleteDisapprovedAgent": "删除未通过的智能体"
+    },
+    "confirmDeleteAgent": "删除这个未通过的智能体？此操作无法撤销。",
+    "comments": {
+      "heading": "评论（{{count}}）",
+      "boardAuthor": "看板",
+      "placeholder": "添加评论…",
+      "posting": "发布中…",
+      "post": "发布评论"
+    }
+  },
+  "agentConfig": {
+    "instructionsFileLabel": "智能体指令文件",
+    "runtimeServicesJsonLabel": "运行时服务 JSON",
+    "payloadTemplateJsonLabel": "负载模板 JSON",
+    "help": {
+      "name": "此智能体的显示名称。",
+      "title": "在组织架构图中显示的职位名称。",
+      "role": "组织角色。决定其位置和能力。",
+      "reportsTo": "在组织层级中此智能体向其汇报的智能体。",
+      "capabilities": "描述此智能体能做什么。会在组织架构图中显示，并用于任务路由。",
+      "adapterType": "此智能体的运行方式：本地 CLI（Claude/Codex/OpenCode）、OpenClaw Gateway、衍生进程或通用 HTTP webhook。",
+      "cwd": "本地适配器已弃用的旧版工作目录回退值。现有智能体可能仍带有此值，但新配置应改用项目工作区。",
+      "promptTemplate": "在每次心跳时发送。请保持简短且动态。用于当前任务的语境框定，而非大段静态指令。支持 {{ agent.id }}、{{ agent.name }}、{{ agent.role }} 及其他模板变量。",
+      "model": "覆盖适配器使用的默认模型。",
+      "thinkingEffort": "控制模型的推理深度。支持的值因适配器/模型而异。",
+      "chrome": "通过传入 --chrome 启用 Claude 的 Chrome 集成。",
+      "dangerouslySkipPermissions": "在支持时通过自动批准适配器的权限提示来无人值守运行。",
+      "dangerouslyBypassSandbox": "在没有沙箱限制的情况下运行 Codex。文件系统/网络访问需要此项。",
+      "search": "在运行期间启用 Codex 网络搜索功能。",
+      "fastMode": "启用 Codex 快速模式。这会更快地消耗额度/令牌，且仅在 GPT-5.4 和手动指定的 Codex 模型 ID 上受支持。",
+      "workspaceStrategy": "Workcell 应如何为此智能体实现执行工作区。常规 cwd 执行请保持 project_primary，或对议题范围内的隔离检出使用 git_worktree。",
+      "workspaceBaseRef": "创建工作树分支时使用的基础 git ref。留空则使用解析后的工作区 ref 或 HEAD。",
+      "workspaceBranchTemplate": "用于命名派生分支的模板。支持 {{issue.identifier}}、{{issue.title}}、{{agent.name}}、{{project.id}}、{{workspace.repoRef}} 和 {{slug}}。",
+      "worktreeParentDir": "应在其中创建派生工作树的目录。支持绝对路径、~ 前缀路径和相对于仓库的路径。",
+      "runtimeServicesJson": "可选的工作区运行时服务定义。用于附加到工作区的共享应用服务器、工作进程或其他长期运行的伴随进程。",
+      "maxTurnsPerRun": "每次心跳运行的最大智能体回合数（工具调用次数）。",
+      "command": "要执行的命令（例如 node、python）。",
+      "localCommand": "覆盖你希望适配器调用的 CLI 命令路径（例如 /usr/local/bin/claude、codex、opencode）。",
+      "args": "命令行参数，以逗号分隔。",
+      "extraArgs": "本地适配器的额外 CLI 参数，以逗号分隔。",
+      "envVars": "注入适配器进程的环境变量。使用明文值或密钥引用。",
+      "bootstrapPrompt": "仅在 Workcell 启动全新会话时发送。用于不应在每次心跳时重复的稳定设置指引。",
+      "payloadTemplateJson": "在 Workcell 添加其标准唤醒和工作区字段之前，合并到远程适配器请求负载中的可选 JSON。",
+      "webhookUrl": "调用智能体时接收 POST 请求的 URL。",
+      "heartbeatInterval": "按计时器自动运行此智能体。适用于诸如检查新工作之类的周期性任务。",
+      "intervalSec": "自动心跳调用之间的间隔秒数。",
+      "timeoutSec": "一次运行在被终止前可持续的最大秒数。0 表示无超时。",
+      "graceSec": "在发送中断后到强制终止进程前等待的秒数。",
+      "wakeOnDemand": "允许此智能体被分配、API 调用、UI 操作或自动化系统唤醒。",
+      "cooldownSec": "连续心跳运行之间的最小间隔秒数。",
+      "maxConcurrentRuns": "此智能体可同时执行的最大心跳运行数。",
+      "maxTurnContinuationEnabled": "当适配器因耗尽其每次运行回合上限而停止时，自动排队有限的续行运行。",
+      "maxTurnContinuationMaxAttempts": "一次回合上限停止后的最大自动续行次数。此项与每次运行的最大回合数相互独立。",
+      "maxTurnContinuationDelaySec": "在开始每次回合上限续行前等待的秒数。",
+      "budgetMonthlyCents": "每月支出上限（以分为单位）。0 表示无上限。"
+    },
+    "claudeLocal": {
+      "instructionsFileHint": "指向一个 markdown 文件（例如 AGENTS.md）的绝对路径，该文件定义此智能体的行为。会在运行时注入系统提示中。",
+      "enableChrome": "启用 Chrome",
+      "skipPermissions": "跳过权限",
+      "maxTurnsPerRun": "每次运行的最大轮数"
+    },
+    "codexLocal": {
+      "instructionsFileHint": "指向定义此智能体行为的 markdown 文件（例如 AGENTS.md）的绝对路径。运行时会注入到系统提示中。注意：Codex 仍可能自动应用工作区中仓库范围的 AGENTS.md 文件。",
+      "bypassSandbox": "绕过沙箱",
+      "enableSearch": "启用搜索",
+      "fastMode": "快速模式",
+      "fastModeManualMessage": "快速模式将透传给此手动模型。如果 Codex 拒绝它，请关闭此开关。",
+      "fastModeSupportedMessage": "快速模式消耗额度/令牌的速度远快于标准 Codex 运行。",
+      "fastModeUnsupportedMessage": "快速模式目前仅在 {{models}} 或手动模型 ID 上有效。在切换模型之前，Workcell 将忽略此开关。"
+    },
+    "http": {
+      "webhookUrl": "Webhook URL"
+    },
+    "process": {
+      "commandLabel": "命令",
+      "commandPlaceholder": "例如 node、python",
+      "argsLabel": "参数（以逗号分隔）",
+      "argsPlaceholder": "例如 script.js、--flag"
+    }
+  },
+  "companyAccess": {
+    "breadcrumb": {
+      "company": "团队",
+      "settings": "设置",
+      "members": "成员"
+    },
+    "toast": {
+      "memberUpdated": "成员已更新",
+      "memberUpdateFailed": "更新成员失败",
+      "unknownError": "未知错误",
+      "joinRequestApproved": "加入请求已批准",
+      "joinRequestApproveFailed": "批准加入请求失败",
+      "joinRequestRejected": "加入请求已拒绝",
+      "joinRequestRejectFailed": "拒绝加入请求失败",
+      "memberRemoved": "成员已移除",
+      "memberRemoveFailed": "移除成员失败"
+    },
+    "selectCompany": "选择一个团队以管理访问权限。",
+    "loading": "正在加载团队访问权限…",
+    "error": {
+      "forbidden": "您没有管理团队成员的权限。",
+      "loadFailed": "加载团队成员失败。"
+    },
+    "title": "团队成员",
+    "description": "管理可以在 {{company}} 中工作的人员。成员默认可在整个团队范围内协作。",
+    "coreNote": "Core 让此页面专注于成员资格、邀请审批和安全的成员移除。",
+    "instanceAdminNotice": "此账号可通过实例管理员权限在此处管理访问权限，但目前尚未持有有效的团队成员资格。",
+    "humans": {
+      "title": "人类成员",
+      "description": "在此处管理人类团队成员资格和状态。"
+    },
+    "pendingJoins": {
+      "title": "待处理的人类加入请求",
+      "description": "在加入请求成为正式团队成员之前审核待处理的请求。",
+      "pending": "待处理",
+      "unknownRequester": "未知的人类请求者",
+      "noEmail": "没有可用的电子邮件",
+      "inviteMetadataUnavailable": "邀请元数据不可用",
+      "submitted": "已提交",
+      "approve": "批准人类成员",
+      "reject": "拒绝人类成员"
+    },
+    "table": {
+      "userAccount": "用户账号",
+      "role": "角色",
+      "status": "状态",
+      "action": "操作",
+      "empty": "此团队尚无任何用户成员资格。",
+      "roleUnset": "未设置"
+    },
+    "actions": {
+      "edit": "编辑",
+      "remove": "移除"
+    },
+    "editDialog": {
+      "title": "编辑成员",
+      "description": "更新 {{member}} 的团队角色和成员资格状态。",
+      "companyRole": "团队角色",
+      "roleUnset": "未设置",
+      "membershipStatus": "成员资格状态",
+      "statusActive": "活跃",
+      "statusPending": "待处理",
+      "statusSuspended": "已暂停",
+      "cancel": "取消",
+      "saving": "正在保存…",
+      "save": "保存成员"
+    },
+    "removeDialog": {
+      "title": "移除成员",
+      "description": "在将此用户从分配字段隐藏之前，归档 {{member}} 并转移其活跃的分配任务。",
+      "checkingIssues": "正在检查已分配的议题…",
+      "reassignmentLabel": "议题重新分配",
+      "leaveUnassigned": "保持未分配",
+      "optgroupHumans": "人类成员",
+      "optgroupAgents": "智能体",
+      "cancel": "取消",
+      "removing": "正在移除…",
+      "confirm": "移除成员"
+    },
+    "legacy": {
+      "breadcrumbSettings": "设置",
+      "breadcrumbAccess": "访问权限",
+      "checking": "正在检查高级权限扩展…",
+      "title": "高级权限",
+      "description": "高级访问、范围限定的分配以及显式授权控制由已安装的团队设置扩展提供。",
+      "unavailableTitle": "高级权限不可用",
+      "unavailableBody": "Core Workcell 会继续强制执行团队边界和任何现有的限制性策略数据，但编辑高级权限需要已安装的扩展。",
+      "extensionsUnavailable": "插件扩展不可用：",
+      "openMembers": "打开成员",
+      "openInvites": "打开邀请"
+    }
+  },
+  "companyInvites": {
+    "toast": {
+      "clipboardUnavailable": "剪贴板不可用",
+      "inviteCreated": "邀请已创建",
+      "inviteReadyCopied": "邀请已在下方就绪并已复制到剪贴板。",
+      "inviteReady": "邀请已在下方就绪。",
+      "inviteCreateFailed": "创建邀请失败",
+      "unknownError": "未知错误",
+      "inviteRevoked": "邀请已撤销",
+      "inviteRevokeFailed": "撤销邀请失败"
+    },
+    "copy": {
+      "selectManually": "邀请 URL 已选中。请从该字段手动复制。",
+      "manualFallback": "请从下方字段手动复制邀请 URL。"
+    },
+    "breadcrumb": {
+      "company": "团队",
+      "settings": "设置",
+      "invites": "邀请"
+    },
+    "selectCompany": "选择一个团队以管理邀请。",
+    "loading": "正在加载邀请…",
+    "error": {
+      "forbidden": "您没有管理团队邀请的权限。",
+      "loadFailed": "加载邀请失败。"
+    },
+    "title": "团队邀请",
+    "description": "邀请他人请求访问此团队。新的邀请链接在生成时会复制到您的剪贴板。",
+    "invitePerson": {
+      "title": "邀请一个人",
+      "description": "生成人类邀请链接，并选择其应请求的默认访问权限。"
+    },
+    "chooseRole": "选择一个角色",
+    "roleOptions": {
+      "viewer": {
+        "label": "查看者",
+        "description": "可以查看团队工作并跟进。",
+        "gets": "仅查看的团队成员资格。"
+      },
+      "operator": {
+        "label": "操作员",
+        "description": "推荐给需要协助推进工作但无需管理访问权限的人员。",
+        "gets": "可以分配任务。"
+      },
+      "admin": {
+        "label": "管理员",
+        "description": "推荐给需要邀请人员、创建智能体和批准加入请求的操作员。",
+        "gets": "可以创建智能体、邀请用户、分配任务以及批准加入请求。"
+      },
+      "owner": {
+        "label": "所有者",
+        "description": "完整的团队访问权限，包括成员资格管理。",
+        "gets": "管理员的所有权限，外加管理成员。"
+      },
+      "defaultBadge": "默认"
+    },
+    "singleUseNote": "每个邀请链接均为一次性使用。人类受邀者在登录后立即获得所选角色；智能体邀请仍会创建一个待批准的加入请求。",
+    "creating": "正在创建…",
+    "createInvite": "创建邀请",
+    "auditTrailNote": "下方的邀请历史记录保留审计轨迹。",
+    "latestInvite": {
+      "title": "最新邀请链接",
+      "copied": "已复制",
+      "domainNote": "此 URL 包含服务器返回的当前 Workcell 域名。",
+      "urlLabel": "最新邀请 URL",
+      "copyLink": "复制链接",
+      "openInvite": "打开邀请"
+    },
+    "history": {
+      "title": "邀请历史",
+      "description": "查看邀请状态、受众、邀请人以及任何关联的加入请求。",
+      "openQueue": "打开加入请求队列",
+      "empty": "此团队尚未创建任何邀请。",
+      "columnState": "状态",
+      "columnFor": "针对",
+      "columnInvitedBy": "邀请人",
+      "columnCreated": "创建时间",
+      "columnJoinRequest": "加入请求",
+      "columnAction": "操作",
+      "unknownInviter": "未知邀请人",
+      "reviewRequest": "审核请求",
+      "revoke": "撤销",
+      "inactive": "未激活",
+      "loadingMore": "正在加载更多…",
+      "viewMore": "查看更多"
+    }
+  },
+  "companyEnvironments": {
+    "support": {
+      "yes": "是",
+      "no": "否"
+    },
+    "breadcrumb": {
+      "company": "团队",
+      "settings": "设置",
+      "environments": "环境"
+    },
+    "toast": {
+      "updated": "环境已更新",
+      "created": "环境已创建",
+      "ready": "{{name}} 已就绪。",
+      "saveFailed": "保存环境失败",
+      "saveFailedBody": "环境保存失败。",
+      "probePassed": "环境探测通过",
+      "probeFailed": "环境探测失败",
+      "probeFailedBody": "环境探测失败。",
+      "draftProbePassed": "草稿探测通过",
+      "draftProbeFailed": "草稿探测失败"
+    },
+    "selectCompany": "选择一个团队以管理环境。",
+    "title": "团队环境",
+    "disabledNote": "在实例实验性设置中启用「环境」以管理团队执行目标。",
+    "intro": "为项目、议题工作区以及支持远程的适配器定义可复用的执行目标。",
+    "matrixNote": "环境选项使用与代理默认值相同的适配器支持矩阵。SSH 始终可用于远程托管的适配器，而沙箱环境仅在安装了具备运行能力的沙箱提供方插件时才会出现。",
+    "installedProvidersLabel": "已安装的沙箱提供方：",
+    "installedProvidersSuffix": "。这些不是适配器类型。它们为支持沙箱执行的适配器提供 Sandbox 驱动。",
+    "table": {
+      "caption": "按适配器划分的环境支持",
+      "adapter": "适配器",
+      "local": "本地",
+      "ssh": "SSH",
+      "sandboxViaPlugin": "通过插件的沙箱"
+    },
+    "list": {
+      "empty": "该团队尚未保存任何环境。",
+      "sshHostFallback": "SSH 主机",
+      "sshUserFallback": "用户",
+      "localHost": "在此 Workcell 主机上运行。",
+      "testing": "测试中…",
+      "testConnection": "测试连接",
+      "testProvider": "测试提供方",
+      "editing": "编辑中",
+      "edit": "编辑"
+    },
+    "form": {
+      "editTitle": "编辑环境",
+      "addTitle": "添加环境",
+      "nameLabel": "名称",
+      "nameHint": "面向操作员的此执行目标名称。",
+      "descriptionLabel": "描述",
+      "descriptionHint": "关于此机器用途的可选备注。",
+      "driverLabel": "驱动",
+      "driverHint": "Local 在此主机上运行。SSH 存储远程机器目标。Sandbox 在共享环境接缝上存储由插件支持的提供方配置。",
+      "driverSsh": "SSH",
+      "driverSandbox": "Sandbox",
+      "driverLocal": "Local",
+      "hostLabel": "主机",
+      "hostHint": "远程机器的 DNS 名称或 IP 地址。",
+      "portLabel": "端口",
+      "portHint": "默认为 22。",
+      "usernameLabel": "用户名",
+      "usernameHint": "SSH 登录用户。",
+      "remotePathLabel": "远程工作区路径",
+      "remotePathHint": "Workcell 将在 SSH 连接测试期间验证的绝对路径。",
+      "privateKeyLabel": "私钥",
+      "privateKeyHint": "可选的 PEM 私钥。留空则依赖服务器的 SSH 代理或默认密钥链。",
+      "noSavedSecret": "无已保存的密钥",
+      "knownHostsLabel": "已知主机",
+      "knownHostsHint": "启用严格主机密钥检查时使用的可选 known_hosts 块。",
+      "strictHostKeyLabel": "严格主机密钥检查",
+      "strictHostKeyHint": "除非你有意要在探测时禁用主机密钥接受，否则请保持开启。",
+      "providerLabel": "提供方",
+      "providerHint": "已安装的具备运行能力的沙箱提供方插件会显示在此处。",
+      "noProviderConfig": "此提供方未声明额外的配置字段。",
+      "saving": "保存中…",
+      "creating": "创建中…",
+      "save": "保存环境",
+      "create": "创建环境",
+      "cancel": "取消",
+      "testingDraft": "测试中…",
+      "testDraft": "测试草稿",
+      "saveErrorFallback": "保存环境失败"
+    }
+  },
+  "pluginSettings": {
+    "breadcrumb": {
+      "company": "团队",
+      "settings": "设置",
+      "plugins": "插件",
+      "pluginDetails": "插件详情"
+    },
+    "loading": "正在加载插件详情…",
+    "backAria": "返回插件",
+    "noDescription": "未提供描述。",
+    "tabs": {
+      "configuration": "配置",
+      "status": "状态"
+    },
+    "about": {
+      "title": "关于",
+      "description": "描述",
+      "author": "作者",
+      "categories": "类别",
+      "none": "无"
+    },
+    "settings": {
+      "title": "设置",
+      "noSettingsRequired": "此插件不需要任何设置。"
+    },
+    "environments": {
+      "heading": "从「团队环境」中配置此插件。",
+      "body": "{{driver}} 在那里注册环境运行时设置，使凭据保持团队范围而非实例全局。",
+      "thisPlugin": "此插件",
+      "openButton": "打开团队环境"
+    },
+    "dashboard": {
+      "title": "运行时仪表盘",
+      "description": "工作进程、计划任务与 Webhook 投递",
+      "workerProcess": "工作进程",
+      "status": "状态",
+      "pid": "PID",
+      "uptime": "运行时长",
+      "pendingRpcs": "待处理 RPC",
+      "crashes": "崩溃次数",
+      "crashCounts": "连续 {{consecutive}} 次 / 共 {{total}} 次",
+      "lastCrash": "上次崩溃",
+      "noWorker": "未注册任何工作进程。",
+      "recentJobRuns": "近期任务运行",
+      "noJobRuns": "尚未记录任何任务运行。",
+      "recentWebhookDeliveries": "近期 Webhook 投递",
+      "noWebhookDeliveries": "尚未记录任何 Webhook 投递。",
+      "lastChecked": "上次检查：",
+      "unavailable": "运行时诊断当前不可用。"
+    },
+    "logs": {
+      "title": "近期日志",
+      "description": "最近 {{count}} 条日志记录"
+    },
+    "health": {
+      "title": "健康状态",
+      "checking": "正在检查健康状况…",
+      "overall": "总体",
+      "lifecycle": "生命周期",
+      "checksRunWhenReady": "插件就绪后即运行健康检查。"
+    },
+    "details": {
+      "title": "详情",
+      "pluginId": "插件 ID",
+      "pluginKey": "插件键",
+      "npmPackage": "NPM 包",
+      "version": "版本"
+    },
+    "permissions": {
+      "title": "权限",
+      "none": "未请求特殊权限。"
+    },
+    "localFolders": {
+      "selectCompany": "选择一个团队以配置此插件的本地文件夹。",
+      "title": "本地文件夹",
+      "loadError": "加载本地文件夹设置失败。",
+      "loading": "正在加载本地文件夹…"
+    },
+    "localFolderRow": {
+      "savedHealthy": "本地文件夹已保存。",
+      "savedNeedsAttention": "本地文件夹已保存，但验证仍需关注。",
+      "saveError": "保存本地文件夹失败。",
+      "pathRequired": "必须填写本地文件夹路径。",
+      "pathMustBeAbsolute": "本地文件夹必须是完整的绝对路径。",
+      "healthy": "健康",
+      "needsAttention": "需要关注",
+      "readWrite": "读/写",
+      "readOnly": "只读",
+      "metricConfigured": "已配置",
+      "metricReadable": "可读",
+      "metricWritable": "可写",
+      "yes": "是",
+      "no": "否",
+      "notRequested": "未请求",
+      "configuredPath": "已配置路径",
+      "pathLabel": "本地文件夹路径",
+      "save": "保存",
+      "validationProblems": "验证问题"
+    },
+    "requirements": {
+      "requiredDirectories": "必需目录",
+      "missingDirectories": "缺失目录",
+      "requiredFiles": "必需文件",
+      "missingFiles": "缺失文件",
+      "notInspected": "未检查",
+      "missingBadge": "缺失 {{count}} 个",
+      "present": "存在",
+      "noneDeclared": "未声明任何项。",
+      "rootNotInspected": "已配置的根目录未被检查。"
+    },
+    "configForm": {
+      "saved": "配置已保存。",
+      "saveError": "保存配置失败。",
+      "testPassed": "配置测试通过。",
+      "testFailed": "配置测试失败。",
+      "loading": "正在加载配置...",
+      "saving": "正在保存...",
+      "saveConfiguration": "保存配置",
+      "testing": "正在测试...",
+      "testConfiguration": "测试配置"
+    }
+  },
+  "companyExport": {
+    "preview": {
+      "selectFile": "选择一个文件以预览其内容。",
+      "binaryUnavailable": "此文件类型不支持二进制资源预览。"
+    },
+    "breadcrumb": {
+      "orgChart": "组织架构图",
+      "export": "导出"
+    },
+    "toast": {
+      "exportFailed": {
+        "title": "导出失败",
+        "loadBody": "加载导出数据失败。",
+        "buildBody": "构建导出包失败。"
+      },
+      "downloaded": {
+        "title": "导出已下载",
+        "exportedAs": "导出为"
+      }
+    },
+    "empty": {
+      "selectCompany": "选择一个团队进行导出。",
+      "loading": "正在加载导出数据..."
+    },
+    "bar": {
+      "company": "团队",
+      "export": "导出",
+      "selected": "已选择",
+      "building": "正在构建导出...",
+      "exportAction": "导出"
+    },
+    "packageFiles": "打包文件",
+    "searchPlaceholder": "搜索文件...",
+    "showMoreIssues": "显示更多问题（共 {{total}} 个中的 {{visible}} 个）"
+  },
+  "companyImport": {
+    "preview": {
+      "selectFile": "选择一个文件以预览其内容。",
+      "binaryUnavailable": "此文件类型不支持二进制资源预览。"
+    },
+    "conflicts": {
+      "title": "重命名",
+      "skipped": "已跳过",
+      "skip": "跳过",
+      "confirmed": "已确认",
+      "confirmRename": "确认重命名"
+    },
+    "adapters": {
+      "title": "适配器",
+      "agentBadge": "代理",
+      "configureAdapter": "配置适配器"
+    },
+    "localZipHelpText": "上传直接从 Workcell 导出的 .zip 文件。由 Finder、资源管理器或其他压缩工具重新打包的归档文件可能无法正确导入。",
+    "breadcrumb": {
+      "orgChart": "组织架构图",
+      "import": "导入"
+    },
+    "toast": {
+      "previewFailed": {
+        "title": "预览失败",
+        "body": "预览导入失败。"
+      },
+      "complete": {
+        "title": "导入完成",
+        "processed": "已处理。"
+      },
+      "importFailed": {
+        "title": "导入失败",
+        "body": "应用导入失败。"
+      },
+      "packageReadFailed": {
+        "title": "包读取失败",
+        "body": "读取文件夹失败。"
+      }
+    },
+    "empty": {
+      "selectCompany": "选择要导入到的团队。"
+    },
+    "source": {
+      "title": "导入来源",
+      "description": "选择一个 GitHub 仓库或上传本地 Workcell zip 包。",
+      "githubRepo": "GitHub 仓库",
+      "localZip": "本地 zip",
+      "chooseZip": "选择 zip",
+      "githubUrlLabel": "GitHub 网址",
+      "githubUrlHint": "指向 COMPANY.md 的仓库树路径或 blob 网址（例如 github.com/owner/repo/tree/main/company）。"
+    },
+    "target": {
+      "label": "目标",
+      "hint": "导入到此团队或创建一个新团队。",
+      "createNew": "创建新团队",
+      "existing": "现有团队：{{name}}"
+    },
+    "newCompanyName": {
+      "label": "新团队名称",
+      "hint": "可选覆盖。留空则使用包名称。",
+      "placeholder": "导入的团队"
+    },
+    "collision": {
+      "label": "冲突策略",
+      "hint": "看板导入可以重命名、跳过或替换匹配的团队内容。",
+      "rename": "冲突时重命名",
+      "skip": "冲突时跳过",
+      "replace": "替换现有内容"
+    },
+    "previewButton": {
+      "loading": "正在预览...",
+      "label": "预览导入"
+    },
+    "previewBar": {
+      "title": "导入预览",
+      "selected": "已选择"
+    },
+    "importButton": {
+      "loading": "正在导入...",
+      "label": "导入"
+    },
+    "packageFiles": "打包文件"
+  },
+  "routineRunVariablesDialog": {
+    "title": "运行例程",
+    "description": "为本次运行选择代理和可选项目。例程默认值已预填，且不会被更改。",
+    "agentLabel": "代理 *",
+    "agentPlaceholder": "代理",
+    "agentNoneLabel": "选择一个代理",
+    "agentSearchPlaceholder": "搜索代理...",
+    "agentEmptyMessage": "未找到代理。",
+    "projectLabel": "项目",
+    "projectPlaceholder": "项目",
+    "projectNoneLabel": "无项目",
+    "projectSearchPlaceholder": "搜索项目...",
+    "projectEmptyMessage": "未找到项目。",
+    "noValue": "无值",
+    "booleanTrue": "真",
+    "booleanFalse": "假",
+    "chooseValuePlaceholder": "选择一个值",
+    "defaultAgentRequired": "本次运行需要默认代理。",
+    "missingPrefix": "缺失：",
+    "chooseExistingWorkspace": "运行前请选择一个现有工作区。",
+    "cancel": "取消",
+    "running": "正在运行...",
+    "runRoutine": "运行例程"
+  },
+  "importFromVaultDialog": {
+    "statusImported": "已导入",
+    "statusConflict": "冲突",
+    "statusReady": "就绪",
+    "rowCreated": "已创建",
+    "rowSkipped": "已跳过",
+    "rowFailed": "失败",
+    "importFailedTitle": "导入失败",
+    "noSecretsImported": "未从 {{vaultName}} 导入任何密钥。",
+    "importCompletedWithErrors": "导入完成但存在错误",
+    "importComplete": "导入完成",
+    "importSummaryBody": "已创建 {{created}} 个 · 已跳过 {{skipped}} 个 · 失败 {{failed}} 个",
+    "couldNotLoadMore": "无法加载更多结果",
+    "discardConfirm": "放弃 {{count}} 个待导入项{{plural}}？",
+    "title": "从 AWS Secrets Manager 导入",
+    "description": "将 AWS 托管的密钥作为外部引用导入 Workcell。",
+    "closeAriaLabel": "关闭导入对话框",
+    "cancel": "取消",
+    "back": "返回",
+    "continueToReview": "继续 → 审核",
+    "importing": "正在导入…",
+    "importCount": "导入 {{count}} 个",
+    "done": "完成",
+    "stepSelect": "选择",
+    "stepReview": "审核",
+    "stepResult": "结果",
+    "noVaultConfigured": "未配置 AWS 提供方保险库。请添加一个以导入密钥。",
+    "manageVaults": "管理保险库",
+    "vaultLabel": "保险库",
+    "selectVaultAriaLabel": "选择 AWS 保险库",
+    "selectVaultPlaceholder": "选择一个 AWS 保险库",
+    "badgeDefault": "默认",
+    "badgeWarning": "警告",
+    "badgeComingSoon": "即将推出",
+    "searchPlaceholder": "按名称、ARN、标签搜索",
+    "searchAriaLabel": "搜索远程密钥",
+    "refreshAriaLabel": "刷新远程密钥",
+    "selectedNotVisible": "已选择 {{selected}} 个 · 当前搜索下有 {{notVisible}} 个不可见",
+    "showAll": "显示全部",
+    "showSelected": "显示已选择",
+    "selectAllLoadedAriaLabel": "选择所有已加载项（{{count}} 个）",
+    "columnRemoteName": "远程名称",
+    "columnReference": "引用",
+    "columnLastChanged": "最后更改",
+    "columnSuggestedName": "建议名称",
+    "columnState": "状态",
+    "selectRowAriaLabel": "选择 {{name}}",
+    "alreadyImported": "已导入",
+    "loadedCount": "已加载 {{count}} 个",
+    "selectableSuffix": "· {{count}} 个可选择",
+    "loading": "正在加载…",
+    "loadMore": "再加载 {{count}} 个",
+    "errorDeniedListAccess": "AWS 拒绝了列表访问",
+    "errorThrottledListing": "AWS 限流了列表请求",
+    "errorCouldNotLoad": "无法加载远程密钥",
+    "errorMissingListPermission": "此保险库背后的 AWS 主体缺少 secretsmanager:ListSecrets 权限。请更新 IAM 后重试。",
+    "retry": "重试",
+    "iamReference": "IAM 引用",
+    "noSecretsMatch": "没有匹配「{{query}}」的远程密钥。",
+    "noSecretsVisible": "此保险库无可见密钥。",
+    "noSecretsSelected": "未选择任何密钥。请返回选择要导入的远程密钥。",
+    "secretsReadyToImport": "{{count}} 个密钥已准备好导入",
+    "needAttention": "{{count}} 个在导入前需要处理",
+    "workcellNameLabel": "Workcell 名称",
+    "keyLabel": "键",
+    "descriptionOptionalLabel": "描述（可选）",
+    "removeRowAriaLabel": "移除 {{name}}",
+    "allSecretsImported": "全部 {{count}} 个密钥已导入",
+    "resultCreated": "✓ 已创建 {{count}} 个",
+    "resultSkipped": "⊘ 已跳过 {{count}} 个",
+    "resultFailed": "⨯ 失败 {{count}} 个",
+    "groupCreated": "已创建",
+    "groupSkipped": "已跳过",
+    "groupFailed": "失败",
+    "footerSelectPrompt": "选择要导入的远程密钥",
+    "footerSelectedCount": "已选择 {{count}} 个",
+    "footerReadyCount": "{{count}} 个就绪",
+    "footerBlockedCount": "· {{count}} 个被阻止",
+    "footerCreatedCount": "已创建 {{count}} 个",
+    "footerSkippedCount": "已跳过 {{count}} 个",
+    "footerFailedCount": "失败 {{count}} 个"
+  },
+  "issueRelatedWorkPanel": {
+    "references": {
+      "title": "引用",
+      "description": "此 issue 当前在其标题、描述、评论或文档中指向的其他任务。",
+      "empty": "此 issue 尚未引用任何其他任务。"
+    },
+    "referencedBy": {
+      "title": "被引用",
+      "description": "当前指向此 issue 的其他任务。",
+      "empty": "暂无其他任务引用此 issue。"
+    }
+  },
+  "issueDocumentsSection": {
+    "error": {
+      "deleteDocument": "删除文档失败",
+      "restoreRevision": "恢复文档修订版失败",
+      "processFollowups": "处理后续事项失败",
+      "requestAutofill": "请求清单自动填充失败",
+      "updateLock": "更新文档锁定状态失败",
+      "invalidKeyHint": "请使用小写字母、数字、- 或 _，并以字母或数字开头。",
+      "keyAndBodyRequired": "文档键和正文为必填项",
+      "bodyEmpty": "文档正文不能为空",
+      "invalidKey": "文档键必须以字母或数字开头，且只能使用小写字母、数字、- 或 _。",
+      "lockedBeforeEditing": "文档已锁定。请先解锁再编辑。",
+      "remoteChangedLoadFailed": "文档在远端已更改，且无法加载最新版本",
+      "saveDocument": "保存文档失败",
+      "copyDocument": "无法复制文档",
+      "saveBeforeViewingRevision": "查看旧版本前，请先保存或取消本地更改。",
+      "saveBeforeLock": "更改文档锁定状态前，请先保存或取消本地更改。"
+    },
+    "followups": {
+      "none": "没有需要创建的新后续事项——所有条目均已有子 issue。",
+      "createdOne": "已创建 1 个后续 issue。",
+      "createdMany": "已创建 {{count}} 个后续 issue。"
+    },
+    "autofill": {
+      "alreadyInFlight": "此清单已有一个自动填充请求正在进行中。",
+      "requested": "已请求代理填充清单——子 issue 已创建。"
+    },
+    "newDocument": "新建文档",
+    "newDocumentShort": "新建",
+    "heading": "文档",
+    "placeholder": {
+      "documentKey": "文档键",
+      "optionalTitle": "可选标题",
+      "markdownBody": "Markdown 正文"
+    },
+    "action": {
+      "cancel": "取消",
+      "saving": "保存中...",
+      "createDocument": "创建文档"
+    },
+    "planBadge": "计划",
+    "aria": {
+      "expandDocument": "展开 {{key}} 文档",
+      "collapseDocument": "折叠 {{key}} 文档"
+    },
+    "revisionShort": "修订版 {{number}}",
+    "revisionHistory": "修订历史",
+    "loadingRevisions": "正在加载修订版...",
+    "currentRevision": "当前",
+    "noRevisions": "暂无修订版",
+    "updatedAt": "更新于 {{time}}",
+    "lock": {
+      "unlockTitle": "解锁文档",
+      "lockTitle": "锁定文档",
+      "unlockAria": "解锁 {{key}} 文档",
+      "lockAria": "锁定 {{key}} 文档",
+      "lockedDocument": "已锁定的文档"
+    },
+    "copy": {
+      "copied": "已复制",
+      "copyDocument": "复制文档"
+    },
+    "documentActions": "文档操作",
+    "menu": {
+      "editDocument": "编辑文档",
+      "downloadDocument": "下载文档",
+      "viewDiff": "查看差异",
+      "requesting": "请求中...",
+      "askAgentFillChecklist": "请代理填充清单",
+      "processing": "处理中...",
+      "processFollowups": "处理后续事项",
+      "deleteDocument": "删除文档"
+    },
+    "autofillBanner": {
+      "title": "代理正在审阅此清单",
+      "childPrefix": "自动填充子项",
+      "statusLabel": "— 状态",
+      "childSuffix": "。代理保存后，下方正文会自动更新。"
+    },
+    "historical": {
+      "viewingRevision": "正在查看修订版 {{number}}",
+      "description": "这是历史预览。恢复它会创建一个新的最新修订版，并保持历史记录仅可追加。",
+      "returnToLatest": "返回最新版",
+      "restoring": "恢复中...",
+      "restoreThisRevision": "恢复此修订版"
+    },
+    "conflict": {
+      "outOfDate": "已过期",
+      "description": "此文档在你编辑期间发生了更改。你的本地草稿已保留，自动保存已暂停。",
+      "hideRemote": "隐藏远端",
+      "reviewRemote": "查看远端",
+      "keepMyDraft": "保留我的草稿",
+      "reloadRemote": "重新加载远端",
+      "overwriteRemote": "覆盖远端",
+      "remoteRevision": "远端修订版 {{number}}"
+    },
+    "status": {
+      "viewingHistorical": "正在查看历史修订版",
+      "autosaving": "自动保存中...",
+      "saved": "已保存",
+      "couldNotSave": "无法保存"
+    },
+    "delete": {
+      "confirm": "删除此文档？此操作无法撤销。",
+      "deleting": "删除中...",
+      "delete": "删除"
+    }
+  }
+}
